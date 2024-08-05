@@ -1,5 +1,5 @@
 using Keycloak.AuthServices.Authentication;
-using Microsoft.Extensions.Configuration;
+using Keycloak.AuthServices.Authorization;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +7,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddKeycloakWebApiAuthentication(builder.Configuration);
+ 
+builder.Services.AddAuthorization()
+    .AddKeycloakAuthorization(options =>
+    {
+        options.EnableRolesMapping = RolesClaimTransformationSource.ResourceAccess;
+        options.RolesResource = builder.Configuration["Keycloak:resource"];
+    })
+    .AddAuthorizationBuilder();
 
 AddSwaggerDoc(builder.Services);
 
@@ -24,7 +32,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

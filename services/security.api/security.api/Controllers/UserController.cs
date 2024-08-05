@@ -7,16 +7,18 @@ using System.Text.Json;
 
 namespace security.api.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Developer")]
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
+        private readonly string? _clientId;
 
-        public UserController(ILogger<UserController> logger)
+        public UserController(ILogger<UserController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _clientId = configuration["Keycloak:resource"];
         }
 
         [HttpGet(Name = "GetUserInfo")]
@@ -46,15 +48,15 @@ namespace security.api.Controllers
         {
             var roles = new List<Role>();
 
-            if (string.IsNullOrWhiteSpace(resourceAccessClaim))
+            if (string.IsNullOrWhiteSpace(resourceAccessClaim) || string.IsNullOrWhiteSpace(_clientId))
                 return roles;
 
             try
             {
                 using var doc = JsonDocument.Parse(resourceAccessClaim);
-                foreach (var resource in doc.RootElement.EnumerateObject())
+                if (doc.RootElement.TryGetProperty(_clientId, out var clientElement))
                 {
-                    if (resource.Value.TryGetProperty("roles", out JsonElement rolesElement))
+                    if (clientElement.TryGetProperty("roles", out JsonElement rolesElement))
                     {
                         roles.AddRange(rolesElement.EnumerateArray().Select(role => new Role
                         {
