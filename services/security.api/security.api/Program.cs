@@ -7,7 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddKeycloakWebApiAuthentication(builder.Configuration);
- 
+
+/// <summary>
+/// Keycloak roles can be automatically transformed to AspNetCore Roles. This feature is disabled by
+/// default and is based on KeycloakRolesClaimsTransformation
+/// </summary>
 builder.Services.AddAuthorization()
     .AddKeycloakAuthorization(options =>
     {
