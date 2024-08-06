@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\security.business\security.business.csproj" />
     <ProjectReference Include="..\security.data\security.data.csproj" />
   </ItemGroup>
 
