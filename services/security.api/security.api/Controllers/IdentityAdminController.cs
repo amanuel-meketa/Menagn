@@ -3,52 +3,56 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using security.business.Contracts;
 using security.data.Roles;
-using System.Data;
-using System;
 
 [ApiController]
 [Route("[controller]")]
-public class IdentityAdminController : ControllerBase
+public class IdentityAdminController(IIdentityService identityService, IConfiguration configuration) : ControllerBase
 {
-    private readonly IIdentityService _tokenService;
-    private readonly IConfiguration _configuration;
-
-    public IdentityAdminController(IIdentityService tokenService, IConfiguration configuration)
-    {
-        _tokenService = tokenService;
-        _configuration = configuration;
-    }
+    private readonly IIdentityService _identityService = identityService;
+    private readonly string _restApi = configuration.GetValue<string>("Keycloak:AdminRest:RestApi");
+    private readonly string _clientId = configuration.GetValue<string>("Keycloak:resource");
 
     [HttpGet("Roles")]
-    public async Task<IEnumerable<Role>> GetRoles()
+    public async Task<ActionResult<IEnumerable<Role>>> GetRoles()
     {
-        string accessToken = await _tokenService.GetAccessToken();
-        string restApi = _configuration.GetValue<string>("IdentityProvider:RestApi");
-        string clientId = await GetClientId(accessToken);
+        try
+        {
+            var accessToken = await _identityService.GetAccessTokenAsync();
+            var clientId = await GetClientIdAsync(accessToken);
+            var roles = await FetchRolesAsync(clientId, accessToken);
+            return Ok(roles);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
 
-        string url = $"http://localhost:8080/admin/realms/Menagn/clients/{clientId}/roles";
-        var response = await _tokenService.SendHttpRequestAsync(url, HttpMethod.Get, accessToken);
+    private async Task<string> GetClientIdAsync(string accessToken)
+    {
+        var url = $"{_restApi}/clients";
+        var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Get, accessToken);
 
-        if (!response.IsSuccessStatusCode)
-            throw new Exception("Roles could not be retreived.");
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync();
+        var clients = JsonConvert.DeserializeObject<List<JObject>>(content);
+        var client = clients.FirstOrDefault(c => c["clientId"]?.ToString() == _clientId);
+
+        if (client == null)
+            throw new Exception("Client could not be retrieved.");
+        
+        return client["id"]?.ToString();
+    }
+
+    private async Task<IEnumerable<Role>> FetchRolesAsync(string clientId, string accessToken)
+    {
+        var url = $"{_restApi}/clients/{clientId}/roles";
+        var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Get, accessToken);
+
+        response.EnsureSuccessStatusCode();
 
         var content = await response.Content.ReadAsStringAsync();
         return JsonConvert.DeserializeObject<List<Role>>(content);
-    }
-
-    private async Task<string> GetClientId(string accessToken)
-    {
-        string restApi = "http://localhost:8080/admin/realms/Menagn";
-        string clientId = _configuration.GetValue<string>("IdentityProvider:ClientId");
-        string url = string.Format("{0}/clients", restApi);
-        var response = await _tokenService.SendHttpRequestAsync(url, HttpMethod.Get, accessToken);
-
-        if (!response.IsSuccessStatusCode)
-            throw new Exception("Client could not be retreived.");
-
-        var content = await response.Content.ReadAsStringAsync();
-        List<JObject> clients = JsonConvert.DeserializeObject<List<JObject>>(content);
-        JObject sessionClient = clients.Where(m => ((string)m.SelectToken("clientId") == clientId)).ToList().FirstOrDefault();
-        return sessionClient.GetValue("id").ToString();
     }
 }
