@@ -6,18 +6,12 @@ using System.Net;
 
 namespace security.business.Services
 {
-    public class UserService : IUserService
+    public class UserService(IIdentityService identityService, IConfiguration configuration) : IUserService
     {
-        private readonly IIdentityService _identityService;
-        private readonly string? _RestApi;
+        private readonly IIdentityService _identityService = identityService;
+        private readonly string? _RestApi = configuration["Keycloak:AdminRest:RestApi"];
 
-        public UserService(IIdentityService identityService, IConfiguration configuration)
-        {
-           _identityService = identityService;
-            _RestApi = configuration["Keycloak:AdminRest:RestApi"];
-        }
-
-        public async Task<IEnumerable<GetUserDto>> GetUsers()
+        public async Task<IEnumerable<GetUserDto>?> GetUsers()
         {
             string accessToken = await _identityService.GetAccessTokenAsync();
             string url = $"{_RestApi}/users";
