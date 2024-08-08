@@ -3,6 +3,7 @@ using Keycloak.AuthServices.Authorization;
 using Keycloak.AuthServices.Sdk;
 using Microsoft.OpenApi.Models;
 using security.business.Contracts;
+using security.business.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,7 @@ builder.Services.AddKeycloakAdminHttpClient(builder.Configuration)
 builder.Services.AddControllers();
 builder.Services.AddKeycloakWebApiAuthentication(builder.Configuration);
 builder.Services.AddScoped<IIdentityService, IdentityService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddHttpClient<IdentityService>();
 
 /// <summary>

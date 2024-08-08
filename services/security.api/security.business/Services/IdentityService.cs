@@ -6,9 +6,9 @@ using System.Net.Http.Headers;
 public class IdentityService : IIdentityService
 {
     private readonly string _tokenEndpoint;
-    private readonly string _clientId;
-    private readonly string _username;
-    private readonly string _password;
+    private readonly string? _clientId;
+    private readonly string? _username;
+    private readonly string? _password;
 
     public IdentityService(IConfiguration configuration)
     {

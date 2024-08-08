@@ -9,8 +9,8 @@ using security.data.Roles;
 public class IdentityAdminController(IIdentityService identityService, IConfiguration configuration) : ControllerBase
 {
     private readonly IIdentityService _identityService = identityService;
-    private readonly string _restApi = configuration.GetValue<string>("Keycloak:AdminRest:RestApi");
-    private readonly string _clientId = configuration.GetValue<string>("Keycloak:resource");
+    private readonly string? _restApi = configuration.GetValue<string>("Keycloak:AdminRest:RestApi");
+    private readonly string? _clientId = configuration.GetValue<string>("Keycloak:resource");
 
     [HttpGet("Roles")]
     public async Task<ActionResult<IEnumerable<Role>>> GetRoles()
