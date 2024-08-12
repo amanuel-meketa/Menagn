@@ -14,7 +14,7 @@ namespace security.api.Controllers
         private readonly IUserService _userService = userService;
 
         [HttpPost]
-        public async Task<ActionResult<string>> CreatUser(CreateUserDto User)
+        public async Task<ActionResult<string>> CreateUser([FromBody] CreateUserDto User)
         {
             try
             {
@@ -40,7 +40,7 @@ namespace security.api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<GetUserDto>> GetUser(string id)
+        public async Task<ActionResult<GetUserDto>> GetUser([FromRoute] Guid id)
         {
             try
             {
@@ -51,5 +51,19 @@ namespace security.api.Controllers
                 return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
             }
         }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<string>> UpdateUser([FromRoute] Guid id, [FromBody] UpdateUserDto User)
+        {
+            try
+            {
+                return Ok(await _userService.UpdateUser(id, User));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
+            }
+        }
+
     }
 }

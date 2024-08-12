@@ -2,8 +2,7 @@
 
 namespace security.sharedUtils.Dtos.User.Incoming
 {
-    public class CreateUserDto : UserDto
+    public class UpdateUserDto : UserDto
     {
-        public string? Username { get; set; }
     }
 }

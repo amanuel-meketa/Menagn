@@ -7,6 +7,7 @@ namespace security.business.Contracts
     {
         public Task<GetUserDto> CreateUser(CreateUserDto user);
         public Task<IEnumerable<GetUserDto>> GetUsers();
-        public Task<GetUserDto> GetUser(string id);
+        public Task<GetUserDto> GetUser(Guid id);
+        public Task<GetUserDto> UpdateUser(Guid id, UpdateUserDto user);
     }
 }
