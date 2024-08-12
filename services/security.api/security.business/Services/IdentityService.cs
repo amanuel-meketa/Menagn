@@ -12,7 +12,7 @@ public class IdentityService : IIdentityService
 
     public IdentityService(IConfiguration configuration)
     {
-        var identityProviderSection = configuration.GetSection("Keycloak:AdminRest");
+        var identityProviderSection = configuration.GetSection("AuthConfig:AdminRest");
         _tokenEndpoint = $"{identityProviderSection.GetValue<string>("RestAuthority")}{identityProviderSection.GetValue<string>("RestTokenStub")}";
         _clientId = identityProviderSection.GetValue<string>("RestClientId");
         _username = identityProviderSection.GetValue<string>("RestUsername");

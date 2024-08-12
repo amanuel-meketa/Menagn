@@ -5,9 +5,11 @@ VisualStudioVersion = 17.8.34322.80
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "security.api", "security.api\security.api.csproj", "{6F64E273-03AB-4190-89D3-811E3BD69839}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "security.data", "security.data\security.data.csproj", "{77F3E70E-7649-4410-B031-81ADB69F3B27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "security.data", "security.data\security.data.csproj", "{77F3E70E-7649-4410-B031-81ADB69F3B27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "security.business", "security.business\security.business.csproj", "{5FA13ABA-75EC-4E41-BCB1-E71351065E1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "security.business", "security.business\security.business.csproj", "{5FA13ABA-75EC-4E41-BCB1-E71351065E1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "security.sharedUtils", "security.SharedUtils\security.sharedUtils.csproj", "{CE1C1E9C-F25A-4ACD-B26C-3DD51B8E7AF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{5FA13ABA-75EC-4E41-BCB1-E71351065E1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FA13ABA-75EC-4E41-BCB1-E71351065E1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FA13ABA-75EC-4E41-BCB1-E71351065E1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE1C1E9C-F25A-4ACD-B26C-3DD51B8E7AF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE1C1E9C-F25A-4ACD-B26C-3DD51B8E7AF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE1C1E9C-F25A-4ACD-B26C-3DD51B8E7AF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE1C1E9C-F25A-4ACD-B26C-3DD51B8E7AF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

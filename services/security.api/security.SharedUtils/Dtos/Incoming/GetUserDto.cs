@@ -1,6 +1,6 @@
-﻿namespace security.data.Users
+﻿namespace security.business.Dtos.Incoming
 {
-    public class User
+    public class GetUserDto
     {
         public Guid Id { get; set; }
         public string? Username { get; set; }

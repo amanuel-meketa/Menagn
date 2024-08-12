@@ -2,15 +2,15 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using security.business.Contracts;
-using security.data.Roles;
+using security.data.Entities.Roles;
 
 [ApiController]
 [Route("[controller]")]
 public class IdentityAdminController(IIdentityService identityService, IConfiguration configuration) : ControllerBase
 {
     private readonly IIdentityService _identityService = identityService;
-    private readonly string? _restApi = configuration.GetValue<string>("Keycloak:AdminRest:RestApi");
-    private readonly string? _clientId = configuration.GetValue<string>("Keycloak:resource");
+    private readonly string? _restApi = configuration.GetValue<string>("AuthConfig:AdminRest:RestApi");
+    private readonly string? _clientId = configuration.GetValue<string>("AuthConfig:resource");
 
     [HttpGet("Roles")]
     public async Task<ActionResult<IEnumerable<Role>>> GetRoles()

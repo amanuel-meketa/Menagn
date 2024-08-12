@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\security.business\security.business.csproj" />
     <ProjectReference Include="..\security.data\security.data.csproj" />
+    <ProjectReference Include="..\security.SharedUtils\security.sharedUtils.csproj" />
   </ItemGroup>
 
 </Project>

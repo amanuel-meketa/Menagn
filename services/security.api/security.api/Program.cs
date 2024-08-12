@@ -4,10 +4,10 @@ using Keycloak.AuthServices.Sdk;
 using Microsoft.OpenApi.Models;
 using security.business.Contracts;
 using security.business.Services;
+using security.sharedUtils;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 var keycloakOptions = new KeycloakAdminClientOptions
 {
     AuthServerUrl = builder.Configuration["Keycloak:AuthServerUrl"],
@@ -27,6 +27,7 @@ builder.Services.AddKeycloakWebApiAuthentication(builder.Configuration);
 builder.Services.AddScoped<IIdentityService, IdentityService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddHttpClient<IdentityService>();
+builder.Services.ConfigurApplicationServices();
 
 /// <summary>
 /// Keycloak roles can be automatically transformed to AspNetCore Roles. This feature is disabled by
@@ -50,7 +51,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Menagn Software Api v1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Security Service Api v1");
     });
 }
 
@@ -96,7 +97,7 @@ void AddSwaggerDoc(IServiceCollection services)
         c.SwaggerDoc("v1", new OpenApiInfo
         {
             Version = "v1",
-            Title = "Imagine Task Api",
+            Title = "Security Service Api",
         });
     });
 }
