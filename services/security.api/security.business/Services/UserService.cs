@@ -9,9 +9,9 @@ namespace security.business.Services
     public class UserService(IIdentityService identityService, IConfiguration configuration) : IUserService
     {
         private readonly IIdentityService _identityService = identityService;
-        private readonly string? _RestApi = configuration["AuthConfig:AdminRest:RestApi"];
+        private readonly string? _RestApi = configuration["Keycloak:AdminRest:RestApi"];
 
-        public async Task<IEnumerable<GetUserDto>?> GetUsers()
+        public async Task<IEnumerable<GetUserDto>> GetUsers()
         {
             string accessToken = await _identityService.GetAccessTokenAsync();
             string url = $"{_RestApi}/users";

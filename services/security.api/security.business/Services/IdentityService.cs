@@ -12,7 +12,7 @@ public class IdentityService : IIdentityService
 
     public IdentityService(IConfiguration configuration)
     {
-        var identityProviderSection = configuration.GetSection("AuthConfig:AdminRest");
+        var identityProviderSection = configuration.GetSection("Keycloak:AdminRest");
         _tokenEndpoint = $"{identityProviderSection.GetValue<string>("RestAuthority")}{identityProviderSection.GetValue<string>("RestTokenStub")}";
         _clientId = identityProviderSection.GetValue<string>("RestClientId");
         _username = identityProviderSection.GetValue<string>("RestUsername");
@@ -42,7 +42,7 @@ public class IdentityService : IIdentityService
         return JObject.Parse(responseContent)["access_token"]?.ToString();
     }
 
-    public async Task<HttpResponseMessage> SendHttpRequestAsync(string url, HttpMethod method, string accessToken, HttpContent content = null)
+    public async Task<HttpResponseMessage> SendHttpRequestAsync(string url, HttpMethod method, string? accessToken, HttpContent? content = null)
     {
         try
         {

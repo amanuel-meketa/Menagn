@@ -6,7 +6,7 @@ namespace security.sharedUtils
     {
         public static IServiceCollection ConfigurApplicationServices(this IServiceCollection service)
         {
-            return service.AddAutoMapper(typeof(SharedServicesRegistration).Assembly); ;
+            return service.AddAutoMapper(typeof(SharedServicesRegistration).Assembly);
         }
     }
 }

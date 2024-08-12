@@ -1,26 +1,11 @@
 using Keycloak.AuthServices.Authentication;
 using Keycloak.AuthServices.Authorization;
-using Keycloak.AuthServices.Sdk;
 using Microsoft.OpenApi.Models;
 using security.business.Contracts;
 using security.business.Services;
 using security.sharedUtils;
 
 var builder = WebApplication.CreateBuilder(args);
-
-var keycloakOptions = new KeycloakAdminClientOptions
-{
-    AuthServerUrl = builder.Configuration["Keycloak:AuthServerUrl"],
-    Realm = builder.Configuration["Keycloak:Realm"],
-    Resource = builder.Configuration["Keycloak:Resource"]
-};
-
-// Add Keycloak Admin HTTP client
-builder.Services.AddKeycloakAdminHttpClient(builder.Configuration)
-    .ConfigureHttpClient(client =>
-    {
-        client.BaseAddress = new Uri(keycloakOptions.AuthServerUrl);
-    });
 
 builder.Services.AddControllers();
 builder.Services.AddKeycloakWebApiAuthentication(builder.Configuration);

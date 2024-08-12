@@ -1,19 +1,16 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using security.business.Contracts;
 using security.business.Dtos.Incoming;
 
 namespace security.api.Controllers
 {
+    //[Authorize(Roles = "Developer")]
     [ApiController]
     [Route("api/users")]
-    public class UserController : ControllerBase
+    public class UserController(IUserService userService) : ControllerBase
     {
-        private readonly IUserService _userService;
-
-        public UserController(IUserService userService)
-        {
-            _userService = userService;
-        }
+        private readonly IUserService _userService = userService;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetUserDto>>> GetUsers()

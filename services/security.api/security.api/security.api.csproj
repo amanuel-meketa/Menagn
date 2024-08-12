@@ -10,10 +10,6 @@
   <ItemGroup>
     <PackageReference Include="Keycloak.AuthServices.Authentication" Version="2.5.2" />
     <PackageReference Include="Keycloak.AuthServices.Authorization" Version="2.5.2" />
-    <PackageReference Include="Keycloak.AuthServices.Common" Version="2.5.2" />
-    <PackageReference Include="Keycloak.AuthServices.OpenTelemetry" Version="1.0.0" />
-    <PackageReference Include="Keycloak.AuthServices.Sdk" Version="2.5.2" />
-    <PackageReference Include="Keycloak.AuthServices.Sdk.Kiota" Version="25.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
