@@ -18,7 +18,7 @@ namespace security.api.Controllers
         {
             try
             {
-                return Ok(await _userService.CreateUser(User));
+                return Ok(await _userService.Create(User));
             }
             catch (Exception ex)
             { 
@@ -31,7 +31,7 @@ namespace security.api.Controllers
         {
             try
             {
-                return Ok(await _userService.GetUsers());
+                return Ok(await _userService.GetAll());
             }
             catch (Exception ex)
             { 
@@ -44,7 +44,7 @@ namespace security.api.Controllers
         {
             try
             {
-                return Ok(await _userService.GetUser(id));
+                return Ok(await _userService.Get(id));
             }
             catch (Exception ex)
             {
@@ -53,11 +53,25 @@ namespace security.api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<string>> UpdateUser([FromRoute] Guid id, [FromBody] UpdateUserDto User)
+        public async Task<ActionResult<GetUserDto>> UpdateUser([FromRoute] Guid id, [FromBody] UpdateUserDto User)
         {
             try
             {
-                return Ok(await _userService.UpdateUser(id, User));
+                return Ok(await _userService.Update(id, User));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete([FromRoute] Guid id)
+        {
+            try
+            {
+                await _userService.Delete(id);
+                return NoContent();
             }
             catch (Exception ex)
             {

@@ -22,7 +22,7 @@ namespace security.business.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<GetUserDto> CreateUser(CreateUserDto user)
+        public async Task<GetUserDto> Create(CreateUserDto user)
         {
             string accessToken = await _identityService.GetAccessTokenAsync();
             string url = $"{_restApi}/users";
@@ -49,7 +49,19 @@ namespace security.business.Services
             return await GetUserFromLocationAsync(location);
         }
 
-        public async Task<IEnumerable<GetUserDto>> GetUsers()
+        public async Task Delete(Guid id)
+        {
+            var accessToken = await _identityService.GetAccessTokenAsync();
+            var url = $"{_restApi}/users/{id}";
+            var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Delete, accessToken);
+
+            if (response.StatusCode == HttpStatusCode.NotFound)
+                throw new Exception("User could not be retrieved.");
+
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task<IEnumerable<GetUserDto>> GetAll()
         {
             string accessToken = await _identityService.GetAccessTokenAsync();
             string url = $"{_restApi}/users";
@@ -64,7 +76,7 @@ namespace security.business.Services
             return JsonConvert.DeserializeObject<IEnumerable<GetUserDto>>(content);
         }
 
-        public async Task<GetUserDto?> GetUser(Guid id)
+        public async Task<GetUserDto?> Get(Guid id)
         {
             string accessToken = await _identityService.GetAccessTokenAsync();
             string url = $"{_restApi}/users/{id}";
@@ -80,7 +92,12 @@ namespace security.business.Services
             return JsonConvert.DeserializeObject<GetUserDto>(content);
         }
 
-        public async Task<GetUserDto?> UpdateUser(Guid id, UpdateUserDto user)
+        public Task<IEnumerable<GetUserDto>> GetUsers()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<GetUserDto?> Update(Guid id, UpdateUserDto user)
         {
             string accessToken = await _identityService.GetAccessTokenAsync();
             string url = $"{_restApi}/users/{id}";
@@ -100,7 +117,7 @@ namespace security.business.Services
 
             response.EnsureSuccessStatusCode();
 
-            return await GetUser(id);
+            return await Get(id);
         }
 
         private HttpContent CreateHttpContent(Dictionary<string, object> payload)
