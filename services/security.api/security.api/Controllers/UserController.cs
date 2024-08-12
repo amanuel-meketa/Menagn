@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using security.business.Contracts;
-using security.business.Dtos.Incoming;
+using security.sharedUtils.Dtos.User.Incoming;
+using security.sharedUtils.Dtos.User.Outgoing;
 
 namespace security.api.Controllers
 {
@@ -12,13 +13,25 @@ namespace security.api.Controllers
     {
         private readonly IUserService _userService = userService;
 
+        [HttpPost]
+        public async Task<ActionResult<string>> CreatUser(CreateUserDto User)
+        {
+            try
+            {
+                return Ok(await _userService.CreateUser(User));
+            }
+            catch (Exception ex)
+            { 
+                return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
+            }
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetUserDto>>> GetUsers()
         {
             try
             {
-                var users = await _userService.GetUsers();
-                return Ok(users);
+                return Ok(await _userService.GetUsers());
             }
             catch (Exception ex)
             { 
@@ -31,8 +44,7 @@ namespace security.api.Controllers
         {
             try
             {
-                var users = await _userService.GetUser(id);
-                return Ok(users);
+                return Ok(await _userService.GetUser(id));
             }
             catch (Exception ex)
             {

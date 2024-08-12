@@ -1,8 +1,7 @@
-﻿namespace security.business.Dtos.Incoming
+﻿namespace security.sharedUtils.Dtos.User.Incoming
 {
-    public class GetUserDto
+    public class CreateUserDto
     {
-        public Guid Id { get; set; }
         public string? Username { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }

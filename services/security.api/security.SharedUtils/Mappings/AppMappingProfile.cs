@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using security.business.Dtos.Incoming;
 using security.data.Entities.Users;
+using security.sharedUtils.Dtos.User.Outgoing;
 
 namespace security.SharedUtils.Mappings
 {
