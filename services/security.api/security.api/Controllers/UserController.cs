@@ -120,5 +120,18 @@ namespace security.api.Controllers
             }
         }
 
+        [HttpGet("{id}/roles/assigned")]
+        public async Task<ActionResult<IEnumerable<GetUserRoleDto>>> AssignedRoles([FromRoute] string id)
+        {
+            try
+            {
+                return Ok(await _userService.AssignedRoles(id));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
+            }
+        }
+
     }
 }
