@@ -13,12 +13,14 @@ namespace security.business.Services
     {
         private readonly IIdentityService _identityService;
         private readonly string _restApi;
+        private readonly string _ClientId;
         private readonly IMapper _mapper;
 
         public UserService(IIdentityService identityService, IConfiguration configuration, IMapper mapper)
         {
             _identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             _restApi = configuration["Keycloak:AdminRest:RestApi"] ?? throw new ArgumentNullException(nameof(configuration));
+            _ClientId = configuration["Keycloak:resource"] ?? throw new ArgumentNullException(nameof(configuration));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -177,6 +179,22 @@ namespace security.business.Services
             var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Put, accessToken, content);
 
             response.EnsureSuccessStatusCode();
+        }
+
+        public async Task<IEnumerable<GetUserRoleDto>> AssignedRoles(string id)
+        {
+            string accessToken = await _identityService.GetAccessTokenAsync();
+            string clientId = await _identityService.GetClientId(accessToken);
+            string url = $"{_restApi}/users/{id}/role-mappings/clients/{clientId}";
+            var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Get, accessToken);
+
+            if (response.StatusCode == HttpStatusCode.NoContent)
+                return Enumerable.Empty<GetUserRoleDto>();
+
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<IEnumerable<GetUserRoleDto>>(content);
         }
 
         private HttpContent CreateHttpContent(Dictionary<string, object> payload)

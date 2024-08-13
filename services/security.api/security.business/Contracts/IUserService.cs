@@ -13,5 +13,6 @@ namespace security.business.Contracts
         public Task<IEnumerable<UserSessionDto>> AllSessions(string id);
         public Task RemoveAllSessions(string id);
         public Task ResetPassword(string id, string newPassword);
+        public Task<IEnumerable<GetUserRoleDto>> AssignedRoles(string id);
     }
 }

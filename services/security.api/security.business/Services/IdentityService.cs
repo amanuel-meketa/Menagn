@@ -1,10 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using security.business.Contracts;
 using System.Net.Http.Headers;
 
 public class IdentityService : IIdentityService
 {
+    private readonly string _restApi;
+    private readonly string _resource;
     private readonly string _tokenEndpoint;
     private readonly string? _clientId;
     private readonly string? _username;
@@ -17,6 +20,8 @@ public class IdentityService : IIdentityService
         _clientId = identityProviderSection.GetValue<string>("RestClientId");
         _username = identityProviderSection.GetValue<string>("RestUsername");
         _password = identityProviderSection.GetValue<string>("RestPassword");
+        _restApi = identityProviderSection.GetValue<string>("RestApi");
+        _resource = configuration["Keycloak:resource"];
     }
 
     public async Task<string> GetAccessTokenAsync()
@@ -69,5 +74,19 @@ public class IdentityService : IIdentityService
         {
             throw new Exception($"An error occurred while sending the HTTP request: {ex.Message}", ex);
         }
+    }
+
+    public async Task<string> GetClientId(string accessToken)
+    {
+        string url = $"{_restApi}/clients";
+        var response = await SendHttpRequestAsync(url, HttpMethod.Get, accessToken);
+
+        if (!response.IsSuccessStatusCode)
+            throw new Exception("Client could not be retreived.");
+
+        var content = await response.Content.ReadAsStringAsync();
+        List<JObject> clients = JsonConvert.DeserializeObject<List<JObject>>(content);
+        JObject sessionClient = clients.Where(m => ((string)m.SelectToken("clientId") == _resource)).ToList().FirstOrDefault();
+        return sessionClient.GetValue("id").ToString();
     }
 }
