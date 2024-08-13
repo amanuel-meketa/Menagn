@@ -8,7 +8,7 @@ namespace security.SharedUtils.Mappings
     {
         public AppMappingProfile()
         {
-            CreateMap<GetUserDto, User>().ReverseMap();
+           //Map the model
         }
     }
 }
