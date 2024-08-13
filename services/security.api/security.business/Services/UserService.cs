@@ -49,16 +49,16 @@ namespace security.business.Services
             return await GetUserFromLocationAsync(location);
         }
 
-        public async Task Delete(Guid id)
+        private async Task<GetUserDto?> GetUserFromLocationAsync(string location)
         {
-            var accessToken = await _identityService.GetAccessTokenAsync();
-            var url = $"{_restApi}/users/{id}";
-            var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Delete, accessToken);
+            string accessToken = await _identityService.GetAccessTokenAsync();
+            var response = await _identityService.SendHttpRequestAsync(location, HttpMethod.Get, accessToken);
 
-            if (response.StatusCode == HttpStatusCode.NotFound)
-                throw new Exception("User could not be retrieved.");
+            if (!response.IsSuccessStatusCode)
+                return null;
 
-            response.EnsureSuccessStatusCode();
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<GetUserDto>(content);
         }
 
         public async Task<IEnumerable<GetUserDto>> GetAll()
@@ -76,7 +76,7 @@ namespace security.business.Services
             return JsonConvert.DeserializeObject<IEnumerable<GetUserDto>>(content);
         }
 
-        public async Task<GetUserDto?> Get(Guid id)
+        public async Task<GetUserDto?> Get(string id)
         {
             string accessToken = await _identityService.GetAccessTokenAsync();
             string url = $"{_restApi}/users/{id}";
@@ -97,7 +97,7 @@ namespace security.business.Services
             throw new NotImplementedException();
         }
 
-        public async Task<GetUserDto?> Update(Guid id, UpdateUserDto user)
+        public async Task<GetUserDto?> Update(string id, UpdateUserDto user)
         {
             string accessToken = await _identityService.GetAccessTokenAsync();
             string url = $"{_restApi}/users/{id}";
@@ -126,16 +126,36 @@ namespace security.business.Services
             return new StringContent(body, Encoding.UTF8, "application/json");
         }
 
-        private async Task<GetUserDto?> GetUserFromLocationAsync(string location)
+        public async Task Delete(string id)
+        {
+            var accessToken = await _identityService.GetAccessTokenAsync();
+            var url = $"{_restApi}/users/{id}";
+            var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Delete, accessToken);
+
+            if (response.StatusCode == HttpStatusCode.NotFound)
+                throw new Exception("User could not be retrieved.");
+
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task<IEnumerable<UserSessionDto>> AllSessions(string id)
         {
             string accessToken = await _identityService.GetAccessTokenAsync();
-            var response = await _identityService.SendHttpRequestAsync(location, HttpMethod.Get, accessToken);
+            string url = $"{_restApi}/users/{id}/sessions";
+            var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Get, accessToken);
 
-            if (!response.IsSuccessStatusCode)
-                return null;
+            response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<GetUserDto>(content);
+            var sessions = JsonConvert.DeserializeObject<IEnumerable<dynamic>>(content);
+
+            // Convert each session's timestamps to formatted strings
+            return sessions.Select(session => new UserSessionDto
+            {
+                IpAddress = session.ipAddress,
+                Start = DateTimeOffset.FromUnixTimeMilliseconds((long)session.start).ToString("M/d/yyyy, h:mm:ss tt"),
+                LastAccess = DateTimeOffset.FromUnixTimeMilliseconds((long)session.lastAccess).ToString("M/d/yyyy, h:mm:ss tt")
+            });
         }
     }
 }

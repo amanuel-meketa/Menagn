@@ -8,7 +8,7 @@ namespace security.api.Controllers
 {
     //[Authorize(Roles = "Developer")]
     [ApiController]
-    [Route("api/users")]
+    [Route("api/user")]
     public class UserController(IUserService userService) : ControllerBase
     {
         private readonly IUserService _userService = userService;
@@ -40,7 +40,7 @@ namespace security.api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<GetUserDto>> GetUser([FromRoute] Guid id)
+        public async Task<ActionResult<GetUserDto>> GetUser([FromRoute] string id)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace security.api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<GetUserDto>> UpdateUser([FromRoute] Guid id, [FromBody] UpdateUserDto User)
+        public async Task<ActionResult<GetUserDto>> UpdateUser([FromRoute] string id, [FromBody] UpdateUserDto User)
         {
             try
             {
@@ -66,12 +66,25 @@ namespace security.api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete([FromRoute] Guid id)
+        public async Task<ActionResult> Delete([FromRoute] string id)
         {
             try
             {
                 await _userService.Delete(id);
                 return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
+            }
+        }
+
+        [HttpGet("{id}/sessions")]
+        public async Task<ActionResult<IEnumerable<UserSessionDto>>> Sessions([FromRoute] string id)
+        {
+            try
+            {
+                return Ok(await _userService.AllSessions(id));
             }
             catch (Exception ex)
             {
