@@ -11,5 +11,7 @@ namespace security.business.Contracts
         public Task<GetUserDto> Update(string id, UpdateUserDto user);
         public Task Delete(string id);
         public Task<IEnumerable<UserSessionDto>> AllSessions(string id);
+        public Task RemoveAllSessions(string id);
+        public Task ResetPassword(string id, string newPassword);
     }
 }

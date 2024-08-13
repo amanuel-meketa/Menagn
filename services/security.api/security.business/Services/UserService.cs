@@ -120,12 +120,6 @@ namespace security.business.Services
             return await Get(id);
         }
 
-        private HttpContent CreateHttpContent(Dictionary<string, object> payload)
-        {
-            string body = JsonConvert.SerializeObject(payload);
-            return new StringContent(body, Encoding.UTF8, "application/json");
-        }
-
         public async Task Delete(string id)
         {
             var accessToken = await _identityService.GetAccessTokenAsync();
@@ -156,6 +150,39 @@ namespace security.business.Services
                 Start = DateTimeOffset.FromUnixTimeMilliseconds((long)session.start).ToString("M/d/yyyy, h:mm:ss tt"),
                 LastAccess = DateTimeOffset.FromUnixTimeMilliseconds((long)session.lastAccess).ToString("M/d/yyyy, h:mm:ss tt")
             });
+        }
+
+        public async Task RemoveAllSessions(string id)
+        {
+            string accessToken = await _identityService.GetAccessTokenAsync();
+            string url = $"{_restApi}/users/{id}/logout";
+            var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Post, accessToken);
+
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task ResetPassword(string id, string newPassword)
+        {
+            string accessToken = await _identityService.GetAccessTokenAsync();
+            string url = $"{_restApi}/users/{id}/reset-password";
+
+            var passwordPayload = new Dictionary<string, object>
+            {
+                { "type", "password" },
+                { "value", newPassword },
+                { "temporary", false }
+            };
+
+            using var content = CreateHttpContent(passwordPayload);
+            var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Put, accessToken, content);
+
+            response.EnsureSuccessStatusCode();
+        }
+
+        private HttpContent CreateHttpContent(Dictionary<string, object> payload)
+        {
+            string body = JsonConvert.SerializeObject(payload);
+            return new StringContent(body, Encoding.UTF8, "application/json");
         }
     }
 }

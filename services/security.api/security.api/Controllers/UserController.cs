@@ -92,5 +92,33 @@ namespace security.api.Controllers
             }
         }
 
+        [HttpPost("{id}/remove-sessions")]
+        public async Task<ActionResult> RemoveAllSessions([FromRoute] string id)
+        {
+            try
+            {
+                await _userService.RemoveAllSessions(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
+            }
+        }
+
+        [HttpPut("{id}/reset-password")]
+        public async Task<ActionResult> ResetPassword([FromRoute] string id, [FromBody] string newPassword)
+        {
+            try
+            {
+                await _userService.ResetPassword(id, newPassword);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
+            }
+        }
+
     }
 }
