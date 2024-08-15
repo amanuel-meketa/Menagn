@@ -1,6 +1,6 @@
-﻿namespace security.sharedUtils.Dtos.User.Outgoing
+﻿namespace security.sharedUtils.Dtos.Role.Outgoing
 {
-    public class GetUserRoleDto
+    public class GetRoleDto
     {
         public string? Id { get; set; }
         public string? Name { get; set; }

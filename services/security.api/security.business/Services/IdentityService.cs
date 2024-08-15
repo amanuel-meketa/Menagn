@@ -76,7 +76,7 @@ public class IdentityService : IIdentityService
         }
     }
 
-    public async Task<string> GetClientId(string accessToken)
+    public async Task<string> GetClientIdAsync(string accessToken)
     {
         string url = $"{_restApi}/clients";
         var response = await SendHttpRequestAsync(url, HttpMethod.Get, accessToken);

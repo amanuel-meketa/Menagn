@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using security.business.Contracts;
+using security.sharedUtils.Dtos.Role.Incoming;
+using security.sharedUtils.Dtos.Role.Outgoing;
 using security.sharedUtils.Dtos.User.Incoming;
 using security.sharedUtils.Dtos.User.Outgoing;
 
@@ -21,7 +23,7 @@ namespace security.api.Controllers
                 return Ok(await _userService.Create(User));
             }
             catch (Exception ex)
-            { 
+            {
                 return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
             }
         }
@@ -34,7 +36,7 @@ namespace security.api.Controllers
                 return Ok(await _userService.GetAll());
             }
             catch (Exception ex)
-            { 
+            {
                 return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
             }
         }
@@ -121,7 +123,7 @@ namespace security.api.Controllers
         }
 
         [HttpGet("{id}/roles/assigned")]
-        public async Task<ActionResult<IEnumerable<GetUserRoleDto>>> AssignedRoles([FromRoute] string id)
+        public async Task<ActionResult<IEnumerable<GetRoleDto>>> AssignedRoles([FromRoute] string id)
         {
             try
             {
@@ -133,5 +135,32 @@ namespace security.api.Controllers
             }
         }
 
+        [HttpGet("{id}/roles/unassigned")]
+        public async Task<ActionResult<IEnumerable<GetRoleDto>>> UnAssignedRoles([FromRoute] string id)
+        {
+            try
+            {
+                return Ok(await _userService.UnAssignedRoles(id));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
+            }
+        }
+
+        [HttpPost("{id}/roles")]
+        public async Task<ActionResult> AssignRole([FromRoute] string id, [FromBody] AssignRoleDto[] roleId)
+        {
+            try
+            {
+                await _userService.AssignRole(id, roleId);
+                return NoContent(); 
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"An error occurred while assigning the role. {ex.Message}");
+            }
+        }
     }
-}
+    }

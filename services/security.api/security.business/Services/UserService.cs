@@ -2,8 +2,11 @@
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using security.business.Contracts;
+using security.sharedUtils.Dtos.Role.Incoming;
+using security.sharedUtils.Dtos.Role.Outgoing;
 using security.sharedUtils.Dtos.User.Incoming;
 using security.sharedUtils.Dtos.User.Outgoing;
+using System.Data;
 using System.Net;
 using System.Text;
 
@@ -94,11 +97,6 @@ namespace security.business.Services
             return JsonConvert.DeserializeObject<GetUserDto>(content);
         }
 
-        public Task<IEnumerable<GetUserDto>> GetUsers()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<GetUserDto?> Update(string id, UpdateUserDto user)
         {
             string accessToken = await _identityService.GetAccessTokenAsync();
@@ -181,23 +179,69 @@ namespace security.business.Services
             response.EnsureSuccessStatusCode();
         }
 
-        public async Task<IEnumerable<GetUserRoleDto>> AssignedRoles(string id)
+        public async Task<IEnumerable<GetRoleDto>> AssignedRoles(string id)
         {
             string accessToken = await _identityService.GetAccessTokenAsync();
-            string clientId = await _identityService.GetClientId(accessToken);
+            string clientId = await _identityService.GetClientIdAsync(accessToken);
             string url = $"{_restApi}/users/{id}/role-mappings/clients/{clientId}";
             var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Get, accessToken);
 
             if (response.StatusCode == HttpStatusCode.NoContent)
-                return Enumerable.Empty<GetUserRoleDto>();
+                return Enumerable.Empty<GetRoleDto>();
 
             response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<IEnumerable<GetUserRoleDto>>(content);
+            return JsonConvert.DeserializeObject<IEnumerable<GetRoleDto>>(content);
         }
 
-        private HttpContent CreateHttpContent(Dictionary<string, object> payload)
+        public async Task<IEnumerable<GetRoleDto>> UnAssignedRoles(string id)
+        {
+            string accessToken = await _identityService.GetAccessTokenAsync();
+            string clientId = await _identityService.GetClientIdAsync(accessToken);
+            string url = $"{_restApi}/users/{id}/role-mappings/clients/{clientId}/available";
+            var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Get, accessToken);
+
+            if (response.StatusCode == HttpStatusCode.NoContent)
+                return Enumerable.Empty<GetRoleDto>();
+
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<IEnumerable<GetRoleDto>>(content);
+        }
+
+        public async Task AssignRoles(string userId, AssignRoleDto[] roles)
+        {
+            string accessToken = await _identityService.GetAccessTokenAsync();
+            string clientId = await _identityService.GetClientIdAsync(accessToken);
+
+            var roleAssignments = roles.Select(role => new Dictionary<string, object>
+            {
+                { "clientRole", true },
+                { "id", role.Id },
+                { "name", role.Name }
+            }).ToList();
+
+            HttpContent content = CreateHttpContent(roleAssignments);
+
+            string requestUrl = $"{_restApi}/users/{userId}/role-mappings/clients/{clientId}";
+
+            var response = await _identityService.SendHttpRequestAsync(requestUrl, HttpMethod.Post, accessToken, content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                string errorMessage = response.StatusCode switch
+                {
+                    HttpStatusCode.NotFound => "User could not be found.",
+                    _ => "Role could not be assigned."
+                };
+
+                throw new Exception(errorMessage);
+            }
+        }
+
+        private HttpContent CreateHttpContent(object payload)
         {
             string body = JsonConvert.SerializeObject(payload);
             return new StringContent(body, Encoding.UTF8, "application/json");
