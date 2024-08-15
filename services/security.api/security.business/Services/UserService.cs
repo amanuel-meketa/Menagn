@@ -240,6 +240,36 @@ namespace security.business.Services
                 throw new Exception(errorMessage);
             }
         }
+        
+        public async Task RemoveRoles(string userId, AssignRoleDto[] roles)
+        {
+            string accessToken = await _identityService.GetAccessTokenAsync();
+            string clientId = await _identityService.GetClientIdAsync(accessToken);
+
+            var roleAssignments = roles.Select(role => new Dictionary<string, object>
+            {
+                { "clientRole", true },
+                { "id", role.Id },
+                { "name", role.Name }
+            }).ToList();
+
+            HttpContent content = CreateHttpContent(roleAssignments);
+
+            string requestUrl = $"{_restApi}/users/{userId}/role-mappings/clients/{clientId}";
+
+            var response = await _identityService.SendHttpRequestAsync(requestUrl, HttpMethod.Delete, accessToken, content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                string errorMessage = response.StatusCode switch
+                {
+                    HttpStatusCode.NotFound => "User could not be found.",
+                    _ => "Role could not be removed."
+                };
+
+                throw new Exception(errorMessage);
+            }
+        }
 
         private HttpContent CreateHttpContent(object payload)
         {

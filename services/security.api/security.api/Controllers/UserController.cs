@@ -20,7 +20,7 @@ namespace security.api.Controllers
         {
             try
             {
-                return Ok(await _userService.Create(User));
+                return Created("api/user", await _userService.Create(User));
             }
             catch (Exception ex)
             {
@@ -149,11 +149,11 @@ namespace security.api.Controllers
         }
 
         [HttpPost("{id}/roles")]
-        public async Task<ActionResult> AssignRole([FromRoute] string id, [FromBody] AssignRoleDto[] roleId)
+        public async Task<ActionResult> AssignRole([FromRoute] string id, [FromBody] AssignRoleDto[] role)
         {
             try
             {
-                await _userService.AssignRole(id, roleId);
+                await _userService.AssignRoles(id, role);
                 return NoContent(); 
             }
             catch (Exception ex)
@@ -161,6 +161,21 @@ namespace security.api.Controllers
 
                 return StatusCode(500, $"An error occurred while assigning the role. {ex.Message}");
             }
+        } 
+        
+        [HttpDelete("{id}/roles")]
+        public async Task<ActionResult> RemoveRoles([FromRoute] string id, [FromBody] AssignRoleDto[] roles)
+        {
+            try
+            {
+                await _userService.RemoveRoles(id, roles);
+                return NoContent(); 
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"An error occurred while removing the role. {ex.Message}");
+            }
         }
     }
-    }
+}

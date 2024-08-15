@@ -18,6 +18,7 @@ namespace security.business.Contracts
         public Task ResetPassword(string id, string newPassword);
         public Task<IEnumerable<GetRoleDto>> AssignedRoles(string id);
         public Task<IEnumerable<GetRoleDto>> UnAssignedRoles(string id);
-        public Task AssignRoles(string id, AssignRoleDto[] roleId);
+        public Task AssignRoles(string id, RoleDto[] roles);
+        public Task RemoveRoles(string id, RoleDto[] roles);
     }
 }
