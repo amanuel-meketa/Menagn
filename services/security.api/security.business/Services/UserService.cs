@@ -16,14 +16,12 @@ namespace security.business.Services
     {
         private readonly IIdentityService _identityService;
         private readonly string _restApi;
-        private readonly string _ClientId;
         private readonly IMapper _mapper;
 
         public UserService(IIdentityService identityService, IConfiguration configuration, IMapper mapper)
         {
             _identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             _restApi = configuration["Keycloak:AdminRest:RestApi"] ?? throw new ArgumentNullException(nameof(configuration));
-            _ClientId = configuration["Keycloak:resource"] ?? throw new ArgumentNullException(nameof(configuration));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -211,7 +209,7 @@ namespace security.business.Services
             return JsonConvert.DeserializeObject<IEnumerable<GetRoleDto>>(content);
         }
 
-        public async Task AssignRoles(string userId, AssignRoleDto[] roles)
+        public async Task AssignRoles(string userId, RoleDto[] roles)
         {
             string accessToken = await _identityService.GetAccessTokenAsync();
             string clientId = await _identityService.GetClientIdAsync(accessToken);
@@ -241,7 +239,7 @@ namespace security.business.Services
             }
         }
         
-        public async Task RemoveRoles(string userId, AssignRoleDto[] roles)
+        public async Task RemoveRoles(string userId, RoleDto[] roles)
         {
             string accessToken = await _identityService.GetAccessTokenAsync();
             string clientId = await _identityService.GetClientIdAsync(accessToken);

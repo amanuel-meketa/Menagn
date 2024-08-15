@@ -149,7 +149,7 @@ namespace security.api.Controllers
         }
 
         [HttpPost("{id}/roles")]
-        public async Task<ActionResult> AssignRole([FromRoute] string id, [FromBody] AssignRoleDto[] role)
+        public async Task<ActionResult> AssignRole([FromRoute] string id, [FromBody] RoleDto[] role)
         {
             try
             {
@@ -164,7 +164,7 @@ namespace security.api.Controllers
         } 
         
         [HttpDelete("{id}/roles")]
-        public async Task<ActionResult> RemoveRoles([FromRoute] string id, [FromBody] AssignRoleDto[] roles)
+        public async Task<ActionResult> RemoveRoles([FromRoute] string id, [FromBody] RoleDto[] roles)
         {
             try
             {

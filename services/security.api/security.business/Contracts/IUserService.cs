@@ -2,7 +2,6 @@
 using security.sharedUtils.Dtos.Role.Outgoing;
 using security.sharedUtils.Dtos.User.Incoming;
 using security.sharedUtils.Dtos.User.Outgoing;
-using System.Data;
 
 namespace security.business.Contracts
 {
