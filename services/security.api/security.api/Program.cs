@@ -11,6 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddKeycloakWebApiAuthentication(builder.Configuration);
 builder.Services.AddScoped<IIdentityService, IdentityService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddHttpClient<IdentityService>();
 builder.Services.ConfigurApplicationServices();
 
@@ -27,7 +28,16 @@ builder.Services.AddAuthorization()
     .AddAuthorizationBuilder();
 
 AddSwaggerDoc(builder.Services);
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
