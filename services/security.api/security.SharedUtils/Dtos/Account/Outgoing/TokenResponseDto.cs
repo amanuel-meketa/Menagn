@@ -1,4 +1,4 @@
-﻿namespace security.sharedUtils.Dtos.Account
+﻿namespace security.sharedUtils.Dtos.Account.Outgoing
 {
     public class TokenResponseDto
     {

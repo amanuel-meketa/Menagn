@@ -1,12 +1,9 @@
-using IdentityModel.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using security.business.Contracts;
-using security.sharedUtils.Dtos.Account;
-using security.sharedUtils.Dtos.Role.Incoming;
-using security.sharedUtils.Dtos.Role.Outgoing;
-using security.sharedUtils.Dtos.User.Incoming;
-using security.sharedUtils.Dtos.User.Outgoing;
+using security.sharedUtils.Dtos.Account.Incoming;
+using security.sharedUtils.Dtos.Account.Outgoing;
+using System.Security.Claims;
 
 namespace security.api.Controllers
 {
@@ -44,5 +41,43 @@ namespace security.api.Controllers
             }
         }
 
+        [HttpGet("userinfo")]
+        public ActionResult<UserInfoDto> GetUserInfo()
+        {
+            var claims = User.Claims;
+
+            // Create the model and populate it with important claims
+            var importantClaims = new UserInfoDto
+            {
+                Exp = GetClaimValue(claims, ClaimTypes.Expiration),
+                Iat = GetClaimValue(claims, "iat"),
+                Jti = GetClaimValue(claims, "jti"),
+                Iss = GetClaimValue(claims, "iss"),
+                Aud = GetClaimValue(claims, "aud"),
+                NameIdentifier = GetClaimValue(claims, ClaimTypes.NameIdentifier),
+                Typ = GetClaimValue(claims, "typ"),
+                Azp = GetClaimValue(claims, "azp"),
+                SessionState = GetClaimValue(claims, "session_state"),
+                AuthnClassReference = GetClaimValue(claims, "http://schemas.microsoft.com/claims/authnclassreference"),
+                AllowedOrigins = GetClaimValue(claims, "allowed-origins"),
+                RealmAccess = GetClaimValue(claims, "realm_access"),
+                ResourceAccess = GetClaimValue(claims, "resource_access"),
+                Scope = GetClaimValue(claims, "scope"),
+                Sid = GetClaimValue(claims, "sid"),
+                EmailVerified = GetClaimValue(claims, "email_verified"),
+                Name = GetClaimValue(claims, "name"),
+                PreferredUsername = GetClaimValue(claims, "preferred_username"),
+                GivenName = GetClaimValue(claims, "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"),
+                Surname = GetClaimValue(claims, "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"),
+                EmailAddress = GetClaimValue(claims, "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")
+            };
+
+            return Ok(importantClaims);
+        }
+
+        private string GetClaimValue(IEnumerable<Claim> claims, string type)
+        {
+            return claims.FirstOrDefault(c => c.Type == type)?.Value;
+        }
     }
 }
