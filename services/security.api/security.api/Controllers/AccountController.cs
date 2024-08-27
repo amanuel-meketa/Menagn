@@ -12,12 +12,12 @@ namespace security.api.Controllers
 {
     [AllowAnonymous]
     [ApiController]
-    [Route("api/account")]
+    [Route("api")]
     public class AccountController(IAccountService accountService) : ControllerBase
     {
         private readonly IAccountService _accountService = accountService;
 
-        [HttpPost]
+        [HttpPost("log-in")]
         public async Task<ActionResult<TokenResponseDto>> Login([FromBody] LoginCredentialsDto credential)
         {
             try
@@ -26,7 +26,21 @@ namespace security.api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
+                return StatusCode(500, $"An error occurred while loging users. {ex.Message}");
+            }
+        }
+
+        [HttpPost("Log-out")]
+        public async Task<ActionResult> LogOut([FromBody] string refreshToken)
+        {
+            try
+            {
+                await _accountService.LogOut(refreshToken);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while loging out the user. {ex.Message}");
             }
         }
 

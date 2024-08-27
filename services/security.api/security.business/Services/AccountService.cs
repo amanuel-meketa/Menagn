@@ -11,12 +11,14 @@ namespace security.business.Services
         private readonly string? _tokenEndpoint;
         private readonly string? _clientId;
         private readonly string? _clientSecret;
+        private readonly string? _logoutEndpoint;
 
         public AccountService(IConfiguration configuration, HttpClient httpClient)
         {
             _clientId = configuration["Keycloak:resource"];
             _clientSecret = configuration["Keycloak:credentials:secret"];
             _tokenEndpoint = configuration["Keycloak:auth-rest-api"];
+            _logoutEndpoint = configuration["Keycloak:logout-rest-api"];
             _httpClient = httpClient;
         }
         public async Task<TokenResponseDto?> LogIn(LoginCredentialsDto credential)
@@ -42,6 +44,25 @@ namespace security.business.Services
             var tokenResponse = await response.Content.ReadAsStringAsync();
             var tokenData = JsonConvert.DeserializeObject<TokenResponseDto>(tokenResponse);
             return tokenData;
+        }
+
+        public async Task LogOut(string refreshToken)
+        {
+            var logoutPayload = new Dictionary<string, string>
+            {
+                { "client_id", _clientId },
+                { "client_secret", _clientSecret },
+                { "refresh_token", refreshToken }
+            };
+
+            using var content = new FormUrlEncodedContent(logoutPayload);
+
+            var response = await _httpClient.PostAsync(_logoutEndpoint, content);
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResponse = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Logout request failed. Status Code: {response.StatusCode}, Error: {errorResponse}");
+            }
         }
     }
 }
