@@ -7,13 +7,13 @@ using System.Security.Claims;
 
 namespace security.api.Controllers
 {
-    [AllowAnonymous]
     [ApiController]
     [Route("api")]
     public class AccountController(IAccountService accountService) : ControllerBase
     {
         private readonly IAccountService _accountService = accountService;
 
+        [AllowAnonymous]
         [HttpPost("log-in")]
         public async Task<ActionResult<TokenResponseDto>> Login([FromBody] LoginCredentialsDto credential)
         {
@@ -46,7 +46,7 @@ namespace security.api.Controllers
         {
             var claims = User.Claims;
 
-            // Create the model and populate it with important claims
+            // Populate it with important claims
             var importantClaims = new UserInfoDto
             {
                 Exp = GetClaimValue(claims, ClaimTypes.Expiration),

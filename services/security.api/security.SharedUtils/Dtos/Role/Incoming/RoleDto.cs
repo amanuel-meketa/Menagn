@@ -1,8 +1,7 @@
 ﻿namespace security.sharedUtils.Dtos.Role.Incoming
 {
-    public class RoleDto
+    public class RoleDto : CreateRoleDto
     {
         public string? Id { get; set; }
-        public string? Name { get; set; }
     }
 }

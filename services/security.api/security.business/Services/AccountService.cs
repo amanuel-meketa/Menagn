@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using security.business.Contracts;
 using security.sharedUtils.Dtos.Account.Incoming;
 using security.sharedUtils.Dtos.Account.Outgoing;
-using System.Security.Claims;
 
 namespace security.business.Services
 {
