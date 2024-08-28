@@ -11,7 +11,7 @@ namespace security.api.Controllers
         private readonly IRoleService _rserService = roleService;
 
         [HttpPost]
-        public async Task<ActionResult<RoleDto>> CreateRole([FromBody] CreateRoleDto role)
+        public async Task<ActionResult<RoleDto>> Create([FromBody] CreateRoleDto role)
         {
             if (role == null)
                 throw new ArgumentNullException(nameof(role), "Role object cannot be null.");
@@ -22,6 +22,19 @@ namespace security.api.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"An error occurred while creating role. {ex.Message}");
+            }
+        }
+        
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<RoleDto>>> GetAll()
+        {
+            try
+            {
+                return Ok(await _rserService.GetAll());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while getting roles. {ex.Message}");
             }
         }
     }

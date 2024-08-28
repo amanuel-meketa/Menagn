@@ -4,6 +4,8 @@ using Newtonsoft.Json;
 using security.business.Contracts;
 using security.sharedUtils.Dtos.Role.Incoming;
 using SharedLibrary.Utilities;
+using System.Data;
+using System;
 using System.Net;
 
 namespace security.business.Services
@@ -46,6 +48,22 @@ namespace security.business.Services
                 ?? throw new InvalidOperationException("Location header missing in response.");
 
             return await GetRoleFromLocationAsync(location);
+        }
+
+        public async Task<IEnumerable<RoleDto>> GetAll()
+        {
+            var accessToken = await _identityService.GetAccessTokenAsync();
+            var clientId = await _identityService.GetClientIdAsync(accessToken);
+
+            var url = $"{_restApi}/clients/{clientId}/roles";
+
+            var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Get, accessToken);
+
+            if (!response.IsSuccessStatusCode)
+                throw new Exception("Roles could not be retreived.");
+
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<List<RoleDto>>(content);
         }
 
         private async Task<RoleDto?> GetRoleFromLocationAsync(string location)
