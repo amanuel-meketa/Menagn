@@ -27,16 +27,15 @@ namespace security.business.Services
         {
             var accessToken = await _identityService.GetAccessTokenAsync();
             var clientId = await _identityService.GetClientIdAsync(accessToken);
-
             var url = $"{_restApi}/clients/{clientId}/roles";
+
             var rolePayload = new
             {
                 name = role.Name,
                 description = role.Description
             };
 
-           var content = HttpContentHelper.CreateHttpContent(rolePayload);
-
+            var content = HttpContentHelper.CreateHttpContent(rolePayload);
             var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Post, accessToken, content);
 
             if (response.StatusCode == HttpStatusCode.Conflict)
@@ -50,11 +49,10 @@ namespace security.business.Services
             return await GetRoleFromLocationAsync(location);
         }
 
-        public async Task<IEnumerable<RoleDto>> GetAll()
+        public async Task<IEnumerable<RoleDto>> GetRoles()
         {
             var accessToken = await _identityService.GetAccessTokenAsync();
             var clientId = await _identityService.GetClientIdAsync(accessToken);
-
             var url = $"{_restApi}/clients/{clientId}/roles";
 
             var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Get, accessToken);
@@ -64,6 +62,24 @@ namespace security.business.Services
 
             var content = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<List<RoleDto>>(content);
+        }
+
+        public async Task<RoleDto> GetRole(string id)
+        {
+            var accessToken = await _identityService.GetAccessTokenAsync();
+            var url = $"{_restApi}/roles-by-id/{id}";
+            var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Get, accessToken);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                    throw new Exception("Role could not be found.");
+
+                throw new Exception("Role could not be retreived.");
+            }
+
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<RoleDto>(content);
         }
 
         private async Task<RoleDto?> GetRoleFromLocationAsync(string location)
