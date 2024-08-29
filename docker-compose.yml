@@ -3,7 +3,7 @@ version: '3.9'
 services:
   security.api:
     container_name: platform.security
-    image: ${DOCKER_REGISTRY-}securityapi
+    image: menagn/security
     build:
       context: ./services/security.api
       dockerfile: security.api/Dockerfile
