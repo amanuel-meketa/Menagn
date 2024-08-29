@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using security.business.Contracts;
 using security.sharedUtils.Dtos.Account.Incoming;
 using security.sharedUtils.Dtos.Account.Outgoing;
+using SharedLibrary.Utilities;
 
 namespace security.business.Services
 {
@@ -37,7 +38,7 @@ namespace security.business.Services
                 { "password", credential.Password }
             };
 
-            using var content = new FormUrlEncodedContent(userPayload);
+            var content = HttpContentHelper.CreateHttpContent(userPayload);
 
             var response = await _httpClient.PostAsync(_tokenEndpoint, content);
             if (!response.IsSuccessStatusCode)
@@ -60,7 +61,7 @@ namespace security.business.Services
                 { "refresh_token", refreshToken }
             };
 
-            using var content = new FormUrlEncodedContent(logoutPayload);
+            var content = HttpContentHelper.CreateHttpContent(logoutPayload);
 
             var response = await _httpClient.PostAsync(_logoutEndpoint, content);
             if (!response.IsSuccessStatusCode)

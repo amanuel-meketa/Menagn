@@ -6,6 +6,7 @@ using security.sharedUtils.Dtos.Role.Incoming;
 using security.sharedUtils.Dtos.Role.Outgoing;
 using security.sharedUtils.Dtos.User.Incoming;
 using security.sharedUtils.Dtos.User.Outgoing;
+using SharedLibrary.Utilities;
 using System.Data;
 using System.Net;
 using System.Text;
@@ -38,7 +39,7 @@ namespace security.business.Services
                 { "email", user.Email }
             };
 
-            using var content = CreateHttpContent(userPayload);
+            var content = HttpContentHelper.CreateHttpContent(userPayload);
             var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Post, accessToken, content);
 
             if (response.StatusCode == HttpStatusCode.Conflict)
@@ -107,7 +108,7 @@ namespace security.business.Services
                 { "email", user.Email }
             };
 
-            using var content = CreateHttpContent(userPayload);
+            var content = HttpContentHelper.CreateHttpContent(userPayload);
             var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Put, accessToken, content);
 
             if (response.StatusCode == HttpStatusCode.NotFound)
@@ -171,7 +172,7 @@ namespace security.business.Services
                 { "temporary", false }
             };
 
-            using var content = CreateHttpContent(passwordPayload);
+            var content = HttpContentHelper.CreateHttpContent(passwordPayload);
             var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Put, accessToken, content);
 
             response.EnsureSuccessStatusCode();
@@ -221,7 +222,7 @@ namespace security.business.Services
                 { "name", role.Name }
             }).ToList();
 
-            HttpContent content = CreateHttpContent(roleAssignments);
+            var content = HttpContentHelper.CreateHttpContent(roleAssignments);
 
             string requestUrl = $"{_restApi}/users/{userId}/role-mappings/clients/{clientId}";
 
@@ -244,14 +245,14 @@ namespace security.business.Services
             string accessToken = await _identityService.GetAccessTokenAsync();
             string clientId = await _identityService.GetClientIdAsync(accessToken);
 
-            var roleAssignments = roles.Select(role => new Dictionary<string, object>
+            var removeroles = roles.Select(role => new Dictionary<string, object>
             {
                 { "clientRole", true },
                 { "id", role.Id },
                 { "name", role.Name }
             }).ToList();
 
-            HttpContent content = CreateHttpContent(roleAssignments);
+            var content = HttpContentHelper.CreateHttpContent(removeroles);
 
             string requestUrl = $"{_restApi}/users/{userId}/role-mappings/clients/{clientId}";
 
@@ -267,12 +268,6 @@ namespace security.business.Services
 
                 throw new Exception(errorMessage);
             }
-        }
-
-        private HttpContent CreateHttpContent(object payload)
-        {
-            string body = JsonConvert.SerializeObject(payload);
-            return new StringContent(body, Encoding.UTF8, "application/json");
         }
     }
 }
