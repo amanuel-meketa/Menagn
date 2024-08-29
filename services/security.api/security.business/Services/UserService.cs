@@ -9,7 +9,6 @@ using security.sharedUtils.Dtos.User.Outgoing;
 using SharedLibrary.Utilities;
 using System.Data;
 using System.Net;
-using System.Text;
 
 namespace security.business.Services
 {

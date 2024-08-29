@@ -38,7 +38,7 @@ namespace security.business.Services
                 { "password", credential.Password }
             };
 
-            var content = HttpContentHelper.CreateHttpContent(userPayload);
+             using var content = new FormUrlEncodedContent(userPayload);
 
             var response = await _httpClient.PostAsync(_tokenEndpoint, content);
             if (!response.IsSuccessStatusCode)
@@ -61,7 +61,7 @@ namespace security.business.Services
                 { "refresh_token", refreshToken }
             };
 
-            var content = HttpContentHelper.CreateHttpContent(logoutPayload);
+            using var content = new FormUrlEncodedContent(logoutPayload);
 
             var response = await _httpClient.PostAsync(_logoutEndpoint, content);
             if (!response.IsSuccessStatusCode)
