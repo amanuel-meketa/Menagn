@@ -63,5 +63,19 @@ namespace security.api.Controllers
                 return StatusCode(500, $"An error occurred while updating role. {ex.Message}");
             }
         }
+        
+        [HttpDelete("id")]
+        public async Task<ActionResult> DeleteRole(string id)
+        {
+            try
+            {
+                await _rserService.DeleteRole(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while deleting role. {ex.Message}");
+            }
+        }
     }
 }

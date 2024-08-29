@@ -117,5 +117,21 @@ namespace security.business.Services
             var content = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<RoleDto>(content);
         }
+
+        public async Task DeleteRole(string id)
+        {
+            string accessToken = await _identityService.GetAccessTokenAsync();
+
+            var url = $"{_restApi}/roles-by-id/{id}";
+            var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Delete, accessToken);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                    throw new Exception("Role could not be found.");
+
+                throw new Exception("Role could not be deleted.");
+            }
+        }
     }
 }
