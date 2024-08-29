@@ -4,8 +4,6 @@ using Newtonsoft.Json;
 using security.business.Contracts;
 using security.sharedUtils.Dtos.Role.Incoming;
 using SharedLibrary.Utilities;
-using System.Data;
-using System;
 using System.Net;
 
 namespace security.business.Services
@@ -23,19 +21,17 @@ namespace security.business.Services
             _restApi = configuration["Keycloak:AdminRest:RestApi"] ?? throw new ArgumentNullException(nameof(configuration), "Rest API URL not configured.");
         }
 
-        public async Task<RoleDto> Create(CreateRoleDto role)
+        public async Task<RoleDto> CreateRole(CreateRoleDto role)
         {
             var accessToken = await _identityService.GetAccessTokenAsync();
             var clientId = await _identityService.GetClientIdAsync(accessToken);
             var url = $"{_restApi}/clients/{clientId}/roles";
 
-            var rolePayload = new
-            {
-                name = role.Name,
-                description = role.Description
-            };
+            var roleUpdatePayload = new Dictionary<string, string>();
+            roleUpdatePayload.Add("name", role.Name);
+            roleUpdatePayload.Add("description", role.Description);
 
-            var content = HttpContentHelper.CreateHttpContent(rolePayload);
+            var content = HttpContentHelper.CreateHttpContent(roleUpdatePayload);
             var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Post, accessToken, content);
 
             if (response.StatusCode == HttpStatusCode.Conflict)
@@ -82,6 +78,34 @@ namespace security.business.Services
             return JsonConvert.DeserializeObject<RoleDto>(content);
         }
 
+        public async Task<RoleDto> UpdateRole(string id, UpdateRoleDto role)
+        {
+            var accessToken = await _identityService.GetAccessTokenAsync();
+            var url = $"{_restApi}/roles-by-id/{id}";
+
+            var roleUpdatePayload = new Dictionary<string, string>();
+            roleUpdatePayload.Add("name", role.Name);
+            roleUpdatePayload.Add("description", role.Description);
+
+            var content = HttpContentHelper.CreateHttpContent(roleUpdatePayload);
+            var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Put, accessToken, content);
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                    throw new Exception("Role could not be found.");
+
+                throw new Exception("Role could not be updated.");
+            }
+
+            var updatedRole = new RoleDto
+            { 
+                 Id = id,   
+                 Name = role.Name,
+                 Description = role.Description
+            };
+
+            return updatedRole;
+        }
         private async Task<RoleDto?> GetRoleFromLocationAsync(string location)
         {
             var accessToken = await _identityService.GetAccessTokenAsync();

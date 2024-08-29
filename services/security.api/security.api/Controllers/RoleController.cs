@@ -11,13 +11,13 @@ namespace security.api.Controllers
         private readonly IRoleService _rserService = roleService;
 
         [HttpPost]
-        public async Task<ActionResult<RoleDto>> Create([FromBody] CreateRoleDto role)
+        public async Task<ActionResult<RoleDto>> CreateRole([FromBody] CreateRoleDto role)
         {
             if (role == null)
                 throw new ArgumentNullException(nameof(role), "Role object cannot be null.");
             try
             {
-                return Created("api/role", await _rserService.Create(role));
+                return Created("api/role", await _rserService.CreateRole(role));
             }
             catch (Exception ex)
             {
@@ -26,7 +26,7 @@ namespace security.api.Controllers
         }
         
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RoleDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<RoleDto>>> GetRoles()
         {
             try
             {
@@ -39,7 +39,7 @@ namespace security.api.Controllers
         }
 
         [HttpGet("id")]
-        public async Task<ActionResult<RoleDto>> Get(string id)
+        public async Task<ActionResult<RoleDto>> GetRole(string id)
         {
             try
             {
@@ -48,6 +48,19 @@ namespace security.api.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"An error occurred while getting role. {ex.Message}");
+            }
+        }
+        
+        [HttpPut("id")]
+        public async Task<ActionResult<RoleDto>> UpdateRole(string id, UpdateRoleDto updateRoleDto)
+        {
+            try
+            {
+                return Ok(await _rserService.UpdateRole(id, updateRoleDto));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while updating role. {ex.Message}");
             }
         }
     }

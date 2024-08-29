@@ -8,7 +8,7 @@ using System.Security.Claims;
 namespace security.api.Controllers
 {
     [ApiController]
-    [Route("api")]
+    [Route("api/Account")]
     public class AccountController(IAccountService accountService) : ControllerBase
     {
         private readonly IAccountService _accountService = accountService;
