@@ -1,7 +1,22 @@
 version: '3.9'
 
 services:
+  security.api:
+    container_name: platform.security
+    image: ${DOCKER_REGISTRY-}securityapi
+    build:
+      context: ./services/security.api
+      dockerfile: security.api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=9090
+    ports:
+      - 9090:9090
+    networks:
+      - menagn-network
+
   postgres:
+    container_name: platform.database
     image: postgres:16.2
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -27,6 +42,7 @@ services:
       - pgadmin-data:/var/lib/pgadmin
 
   keycloak:
+    container_name: platform.keycloak
     image: quay.io/keycloak/keycloak:23.0.6
     command: start
     environment:

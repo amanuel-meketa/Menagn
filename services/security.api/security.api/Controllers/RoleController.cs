@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using security.business.Contracts;
 using security.sharedUtils.Dtos.Role.Incoming;
 using security.sharedUtils.Dtos.User.Outgoing;
-using System.Xml.Linq;
 namespace security.api.Controllers
 {
     //[Authorize(Roles = "Developer")]
