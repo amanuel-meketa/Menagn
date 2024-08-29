@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using security.business.Contracts;
 using security.sharedUtils.Dtos.Role.Incoming;
+using security.sharedUtils.Dtos.User.Outgoing;
 using SharedLibrary.Utilities;
 using System.Net;
 
@@ -106,6 +107,7 @@ namespace security.business.Services
 
             return updatedRole;
         }
+
         private async Task<RoleDto?> GetRoleFromLocationAsync(string location)
         {
             var accessToken = await _identityService.GetAccessTokenAsync();
@@ -132,6 +134,26 @@ namespace security.business.Services
 
                 throw new Exception("Role could not be deleted.");
             }
+        }
+
+        public async Task<IEnumerable<GetUserDto>> GetRoleUsers(string roleName)
+        {
+            var accessToken = await _identityService.GetAccessTokenAsync();
+            var clientId = await _identityService.GetClientIdAsync(accessToken);
+            var url = $"{_restApi}/clients/{clientId}/roles/{roleName}/users";
+
+            var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Get, accessToken);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                    throw new Exception("Role could not be found.");
+
+                throw new Exception("User could not be retreived.");
+            }
+
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<IEnumerable<GetUserDto>>(content);
         }
     }
 }

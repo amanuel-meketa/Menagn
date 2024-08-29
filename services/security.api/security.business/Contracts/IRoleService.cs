@@ -1,4 +1,5 @@
 ﻿using security.sharedUtils.Dtos.Role.Incoming;
+using security.sharedUtils.Dtos.User.Outgoing;
 
 namespace security.business.Contracts
 {
@@ -9,5 +10,6 @@ namespace security.business.Contracts
         public Task<RoleDto> GetRole(string id);
         public Task<RoleDto> UpdateRole(string id, UpdateRoleDto role);
         public Task DeleteRole(string id);
+        Task<IEnumerable<GetUserDto>> GetRoleUsers(string roleName);
     }
 }

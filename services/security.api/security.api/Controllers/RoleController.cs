@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using security.business.Contracts;
 using security.sharedUtils.Dtos.Role.Incoming;
+using security.sharedUtils.Dtos.User.Outgoing;
+using System.Xml.Linq;
 namespace security.api.Controllers
 {
     //[Authorize(Roles = "Developer")]
@@ -50,7 +52,7 @@ namespace security.api.Controllers
                 return StatusCode(500, $"An error occurred while getting role. {ex.Message}");
             }
         }
-        
+
         [HttpPut("id")]
         public async Task<ActionResult<RoleDto>> UpdateRole(string id, UpdateRoleDto updateRoleDto)
         {
@@ -75,6 +77,19 @@ namespace security.api.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"An error occurred while deleting role. {ex.Message}");
+            }
+        }
+
+        [HttpGet("{name}/users")]
+        public async Task<ActionResult<GetUserDto>> GetRoleUsers(string name)
+        {
+            try
+            {
+                return Ok(await _rserService.GetRoleUsers(name));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while getting users. {ex.Message}");
             }
         }
     }
