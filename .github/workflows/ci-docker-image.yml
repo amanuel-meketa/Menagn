@@ -33,7 +33,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ../services/security.api
+          context: ./services/security.api
           file: ./services/security.api/Dockerfile
           push: true
           tags: |
