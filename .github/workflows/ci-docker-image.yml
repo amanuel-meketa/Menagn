@@ -37,8 +37,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
-          context: ../services/security.api 
-          dockerfile: services/security.api/Dockerfile
+          context: services/security.api
+          file: services/security.api/Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/identitypro:latest
