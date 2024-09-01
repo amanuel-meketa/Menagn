@@ -16,7 +16,7 @@ public class EventLogService : IEventLogService
         _httpClient = httpClient;
     }
 
-    public async Task<IEnumerable<EventLogDto>?> GetEventsAsync()
+    public async Task<IEnumerable<EventLogDto>?> GetUserEvents()
     {
         string accessToken = await _identityService.GetAccessTokenAsync();
         string url = $"{_restApi}/events";
@@ -29,7 +29,7 @@ public class EventLogService : IEventLogService
         return JsonConvert.DeserializeObject<IEnumerable<EventLogDto>>(content);
     }
 
-    public async Task<IEnumerable<AdminEventLogDto>?> GetAdminEventsAsync()
+    public async Task<IEnumerable<AdminEventLogDto>?> GetAdminEvents()
     {
         string accessToken = await _identityService.GetAccessTokenAsync();
         string url = $"{_restApi}/admin-events";
@@ -42,7 +42,7 @@ public class EventLogService : IEventLogService
         return JsonConvert.DeserializeObject<IEnumerable<AdminEventLogDto>>(content);
     }
 
-    public async Task DeleteAdminEventsAsync()
+    public async Task DeleteAdminEvents()
     {
         string accessToken = await _identityService.GetAccessTokenAsync();
         string url = $"{_restApi}/admin-events";
@@ -50,5 +50,15 @@ public class EventLogService : IEventLogService
 
         if (!response.IsSuccessStatusCode)
             throw new InvalidOperationException("Admin log could not be deleted.");
+    }
+
+    public async Task DeleteUserEvents()
+    {
+        string accessToken = await _identityService.GetAccessTokenAsync();
+        string url = $"{_restApi}/events";
+        var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Delete, accessToken);
+
+        if (!response.IsSuccessStatusCode)
+            throw new InvalidOperationException("USer log could not be deleted.");
     }
 }
