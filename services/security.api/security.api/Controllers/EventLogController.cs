@@ -25,4 +25,11 @@ public class EventLogController : ControllerBase
         var adminEvents = await _eventService.GetAdminEventsAsync();
         return Ok(adminEvents);
     }
+    
+    [HttpDelete()]
+    public async Task<ActionResult> DeleteAdminEventsAsync()
+    {
+        await _eventService.DeleteAdminEventsAsync();
+        return NoContent();
+    }
 }

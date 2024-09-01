@@ -22,7 +22,8 @@ public class EventLogService : IEventLogService
         string url = $"{_restApi}/events";
         var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Get, accessToken);
 
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+            throw new Exception("User log could not be retrieved.");
 
         var content = await response.Content.ReadAsStringAsync();
         return JsonConvert.DeserializeObject<IEnumerable<EventLogDto>>(content);
@@ -34,9 +35,20 @@ public class EventLogService : IEventLogService
         string url = $"{_restApi}/admin-events";
         var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Get, accessToken);
 
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+            throw new InvalidOperationException("Admin log could not be retrieved.");
 
         var content = await response.Content.ReadAsStringAsync();
         return JsonConvert.DeserializeObject<IEnumerable<AdminEventLogDto>>(content);
+    }
+
+    public async Task DeleteAdminEventsAsync()
+    {
+        string accessToken = await _identityService.GetAccessTokenAsync();
+        string url = $"{_restApi}/admin-events";
+        var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Delete, accessToken);
+
+        if (!response.IsSuccessStatusCode)
+            throw new InvalidOperationException("Admin log could not be deleted.");
     }
 }

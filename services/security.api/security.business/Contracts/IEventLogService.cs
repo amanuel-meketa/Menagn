@@ -5,6 +5,7 @@ namespace security.business.Contracts
     {
         Task<IEnumerable<EventLogDto>> GetEventsAsync();
         Task<IEnumerable<AdminEventLogDto>> GetAdminEventsAsync();
+        Task DeleteAdminEventsAsync();
     }
 
 }
