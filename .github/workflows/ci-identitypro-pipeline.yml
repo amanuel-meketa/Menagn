@@ -42,4 +42,4 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/identitypro:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/dockerfordotnetapi:${{ github.run_number }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/identitypro:${{ github.run_number }}
