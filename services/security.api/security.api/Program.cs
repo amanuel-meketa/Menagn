@@ -13,6 +13,7 @@ builder.Services.AddScoped<IIdentityService, IdentityService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IEventLogService, EventLogService>();
 builder.Services.AddHttpClient<IdentityService>();
 builder.Services.ConfigurApplicationServices();
 
