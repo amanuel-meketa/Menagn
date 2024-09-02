@@ -16,6 +16,7 @@ public class EventLogService : IEventLogService
         _httpClient = httpClient;
     }
 
+
     public async Task<IEnumerable<EventLogDto>?> GetUserEvents()
     {
         string accessToken = await _identityService.GetAccessTokenAsync();
