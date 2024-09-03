@@ -1,0 +1,36 @@
+name: menagn.ui pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - README.md
+      - .gitignore
+      - .dockerignore
+      - ./services/platform.api
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Node.js
+    - uses: actions/setup-node@v2
+      with:
+         node-version: '18.x'
+         cache: 'npm'
+
+    - name: Build and Push the Created Docker Image to your Docker Repo
+      uses: mr-smithers-excellent/docker-build-push@v6
+      with:
+        image: amanuelmeketa/platform.ui
+        tags: latest
+        registry: docker.io
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        dockerfile: services/security.ui/Dockerfile
