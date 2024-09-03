@@ -14,9 +14,20 @@ services:
       - 9090:9090
     networks:
       - menagn-network
-
+      
+  platform.ui:
+    container_name: platform.ui
+    image: menagn/ui
+    build:
+      context: ./services/platform.ui
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+    networks:
+      - menagn-network 
+      
   postgres:
-    container_name: platform.database
+    container_name: platform-database
     image: postgres:16.2
     volumes:
       - postgres_data:/var/lib/postgresql/data
