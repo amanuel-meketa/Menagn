@@ -21,7 +21,7 @@
     <!-- Disable button unless form is valid -->
     <button nz-button class="login-button" [nzType]="'primary'" [disabled]="validateForm.invalid">Log in</button>
     <div class="register-link">
-      Or <a (click)="redirectToRegister()">register now!</a>
     </div>
+    <span>Or  </span><a routerLink="/register">Register now!</a>
   </form>
 </div>

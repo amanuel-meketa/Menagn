@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'; // Import FormBuilder correctly
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -9,7 +9,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, NzLayoutModule, NzButtonModule, NzFormModule, NzInputModule],
+  imports: [RouterLink, ReactiveFormsModule, NzLayoutModule, NzButtonModule, NzFormModule, NzInputModule],
   templateUrl: './login.component.html', 
   styleUrls: ['./login.component.css'] 
 })
@@ -31,9 +31,5 @@ export class LoginComponent {
     } else {
       console.log('Form is invalid!');
     }
-  }
-
-  redirectToRegister(): void {
-    this.router.navigate(['/register']);
   }
 }
