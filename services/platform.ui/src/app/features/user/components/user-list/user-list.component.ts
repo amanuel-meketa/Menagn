@@ -1,12 +1,57 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
+import { UserListData } from '../../models/UserListData';
+import { UserService } from '../../services/user.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [],
+  imports: [FormsModule, NzButtonModule, NzDropDownModule, NzIconModule, NzInputModule, NzTableModule, NzPageHeaderModule, CommonModule],
   templateUrl: './user-list.component.html',
-  styleUrl: './user-list.component.css'
+  styleUrls: ['./user-list.component.css'] 
 })
-export class UserListComponent {
+export class UserListComponent implements OnInit {
+  searchValue = '';
+  visible = false;
+  listOfDisplayData: UserListData[] = [];
 
+  constructor(private userService: UserService) {}
+
+  ngOnInit(): void {
+    this.fetchUserList();
+  }
+
+  fetchUserList(): void {
+    this.userService.userList().subscribe(
+      (data) => {
+        this.listOfDisplayData = data;
+        console.log('User fetched successfully:', data.values);
+      },
+      (error) => {
+        console.error('Error fetching user list:', error);
+      }
+    );
+  }
+
+  // Reset the search value and refresh the user list
+  reset(): void {
+    this.searchValue = '';
+    this.fetchUserList();
+  }
+
+  // Filter the user list based on the search value
+  search(): void {
+    this.visible = false;
+    const searchValueLower = this.searchValue.trim().toLowerCase();
+    this.listOfDisplayData = this.listOfDisplayData.filter((item) =>
+      item.username.toLowerCase().includes(searchValueLower)
+    );
+  }
 }

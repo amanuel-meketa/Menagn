@@ -9,11 +9,12 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { AuthService } from '../../../../services/auth.service';
 import { RegisterPostData } from '../../models/RegisterPostData';
+import { CommonModule } from '@angular/common'; 
 
 @Component({
   selector: 'app-user-register',
   standalone: true,
-  imports: [ReactiveFormsModule,NzLayoutModule,NzButtonModule,NzFormModule,NzInputModule,NzCardModule,],
+  imports: [ReactiveFormsModule,NzLayoutModule,NzButtonModule,NzFormModule,NzInputModule,NzCardModule,CommonModule],
   templateUrl: './user-register.component.html',
   styleUrl: './user-register.component.css'
 })
@@ -25,7 +26,7 @@ private authService = inject(AuthService);
     this.validateForm = this.fb.group({
       firstname: ['', [Validators.required, Validators.maxLength(50)]],
       lastname: ['', [Validators.required, Validators.maxLength(50)]],
-      username: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
+      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
       email: ['', [Validators.required, Validators.email]],
     });
   }
