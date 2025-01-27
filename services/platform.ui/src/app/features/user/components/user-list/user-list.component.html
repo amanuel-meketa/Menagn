@@ -1,6 +1,10 @@
 <nz-page-header nzTitle="User List">
   <div nz-page-header-extra>
-    <button nz-button nzType="primary" (click)="addUser()">Add User</button>
+    <nz-page-header nzTitle="User List">
+      <div nz-page-header-extra>
+        <button nz-button nzType="primary" (click)="router.navigate(['/register'])">Add User</button>
+      </div>
+    </nz-page-header>    
   </div>
 </nz-page-header>
 
@@ -25,9 +29,9 @@
       <td>{{ data.email }}</td>
       <td>
         <nz-space [nzSize]="[8, 8]">
-          <button nz-button nzSize="small" (click)="viewDetails(data)">Details</button>
-          <button nz-button nzSize="small" nzType="primary" (click)="editUser(data)">Edit</button>
-          <button nz-button nzSize="small" nzDanger (click)="deleteUser(data)">Delete</button>
+          <button nz-button nzSize="small">Details</button>
+          <button nz-button nzSize="small" nzType="primary">Edit</button>
+          <button nz-button nzSize="small" nzDanger>Delete</button>
         </nz-space>
       </td>
     </tr>
