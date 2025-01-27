@@ -1,23 +1,24 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzCardModule } from 'ng-zorro-antd/card';
-import { AuthService } from '../../../services/auth.service';
-import { RegisterPostData } from '../../../interfaces/users/register-post-data';
+import { AuthService } from '../../../../services/auth.service';
+import { RegisterPostData } from '../../models/RegisterPostData';
 
 @Component({
-  selector: 'app-register',
+  selector: 'app-user-register',
   standalone: true,
-  imports: [ ReactiveFormsModule,NzLayoutModule,NzButtonModule,NzFormModule,NzInputModule,NzCardModule, ],
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css'],
+  imports: [ReactiveFormsModule,NzLayoutModule,NzButtonModule,NzFormModule,NzInputModule,NzCardModule,],
+  templateUrl: './user-register.component.html',
+  styleUrl: './user-register.component.css'
 })
-export class RegisterComponent {
-  private authService = inject(AuthService); 
+export class UserRegisterComponent {
+private authService = inject(AuthService); 
   validateForm: FormGroup;
 
   constructor(private fb: FormBuilder, private router: Router) {
@@ -69,3 +70,4 @@ export class RegisterComponent {
     });
   }
 }
+
