@@ -36,10 +36,8 @@ export class UserRegisterComponent {
     if (this.validateForm.valid) {
       const formData: RegisterPostData = this.mapFormValuesToModel();
 
-      // Show loading message
       const loadingMessage = this.message.loading('Registering user...', { nzDuration: 0 });
-
-      // Call AuthService to register the user
+      
       this.authService.registerUser(formData).subscribe({
         next: (response) => {
           console.log('User registered successfully:', response);

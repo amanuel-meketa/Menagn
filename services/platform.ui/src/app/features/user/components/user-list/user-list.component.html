@@ -1,8 +1,8 @@
 <nz-page-header nzTitle="User List">
   <div nz-page-header-extra>
-    <nz-page-header nzTitle="User List">
+    <nz-page-header nzTitle="">
       <div nz-page-header-extra>
-        <button nz-button nzType="primary" (click)="router.navigate(['/register'])">Add User</button>
+        <button nz-button nzType="primary" (click)="addUser()">Add User</button>
       </div>
     </nz-page-header>    
   </div>
@@ -38,12 +38,10 @@
   </tbody>
 </nz-table>
 
-<nz-dropdown-menu #menu="nzDropdownMenu">
-  <div class="ant-table-filter-dropdown">
-    <div class="search-box">
-      <input type="text" nz-input placeholder="Search username" [(ngModel)]="searchValue" />
-      <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">Search</button>
-      <button nz-button nzSize="small" (click)="reset()">Reset</button>
-    </div>
-  </div>
-</nz-dropdown-menu>
+<nz-space nzSize="small">
+  <button nz-button nzSize="small">Details</button>
+  <button nz-button nzSize="small" nzType="primary">Edit</button>
+  <button nz-button nzSize="small" nzDanger>Delete</button>
+</nz-space>
+
+
