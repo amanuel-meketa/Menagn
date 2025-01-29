@@ -1,16 +1,11 @@
-<nz-layout class="app-layout">
-  <nz-sider class="menu-sidebar"
+<nz-layout>
+  <nz-sider
     nzCollapsible
-    nzWidth="256px"
-    nzBreakpoint="md"
     [(nzCollapsed)]="isCollapsed"
-    [nzTrigger]="null">
-    <div class="sidebar-logo">
-      <a href="https://ng.ant.design/" target="_blank">
-        <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
-        <h1>Menagn</h1>
-      </a>
-    </div>
+    [nzTrigger]="null"
+    nzTheme="light"
+  >
+    <div class="logo">Menagn</div>
     <ul nz-menu nzTheme="light" nzMode="inline">
       <li nz-menu-item nzMatchRouter>
         <a routerLink="/home">
@@ -18,7 +13,7 @@
           <span>Dashboard</span>
         </a>
       </li>
-      <li nz-submenu nzTitle="User Management" nzIcon="user">
+      <li nz-submenu nzTitle="User Management" nzIcon="team">
         <ul>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/list">Users</a>
@@ -41,23 +36,30 @@
           </li>
         </ul>
       </li>
-    </ul>    
+      <li nz-menu-item>
+        <nz-icon nzType="file"></nz-icon>
+        <span>File</span>
+      </li>
+    </ul>
   </nz-sider>
   <nz-layout>
     <nz-header>
-      <div class="app-header">
-        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
-          <span class="trigger"
-            nz-icon
-            [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'">
-          </span>
-        </span>
-      </div>
+      <span
+        class="trigger"
+        nz-icon
+        [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+        (click)="isCollapsed = !isCollapsed"
+      ></span>
     </nz-header>
     <nz-content>
+      <!-- <nz-breadcrumb>
+        <nz-breadcrumb-item>User</nz-breadcrumb-item>
+        <nz-breadcrumb-item>Bill</nz-breadcrumb-item>
+      </nz-breadcrumb> -->
       <div class="inner-content">
         <router-outlet></router-outlet>
       </div>
     </nz-content>
+    <nz-footer> <p>Copyright © Menagn Software {{ currentYear }}. All rights reserved.</p> </nz-footer>
   </nz-layout>
 </nz-layout>
