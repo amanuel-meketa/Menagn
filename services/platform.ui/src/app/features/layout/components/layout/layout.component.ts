@@ -7,14 +7,13 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-layout',
   standalone: true,
   imports: [RouterOutlet, RouterLink, CommonModule, NzBreadCrumbModule, NzIconModule, NzLayoutModule, NzMenuModule],
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  templateUrl: './layout.component.html',
+  styleUrl: './layout.component.css'
 })
-export class AppComponent {
-  isCollapsed = false;
+export class LayoutComponent {
+isCollapsed = false;
   currentYear: number = new Date().getFullYear();
 }
-

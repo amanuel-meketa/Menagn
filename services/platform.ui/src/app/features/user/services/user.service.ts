@@ -1,16 +1,23 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RegisterPostData } from '../models/RegisterPostData';
-import { UserListData } from '../models/UserListData';
+import { RegisterPostData } from '../../../models/RegisterPostData';
+import { UserListData } from '../../../models/UserListData';
+import { LoginPostData } from '../../../models/LoginPostData';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
     private readonly baseUrl = 'http://localhost:5087/api';
-    constructor(private http: HttpClient) {}
-  
+    http = inject(HttpClient)
+
+    loginPostData(postData: LoginPostData): Observable<any>
+    {
+      const url = `${this.baseUrl}/account/log-in`;
+      return this.http.post(url, postData);
+    }
+    
     registerUser(postData: RegisterPostData): Observable<any>
     {
       const url = `${this.baseUrl}/user`;

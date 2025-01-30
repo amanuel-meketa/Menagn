@@ -1,0 +1,55 @@
+<nz-layout style="height: 100vh;">
+  <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null" nzTheme="dark">
+    <div class="logo" style="color: white;">Menagn</div>
+    <ul nz-menu nzTheme="dark" nzMode="inline">
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/home">
+          <span nz-icon nzType="dashboard"></span>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li nz-submenu nzTitle="User Management" nzIcon="team">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/list">Users</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="#">Roles</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="#">Groups</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Application List" nzIcon="appstore">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="#">App List</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="#">Process List</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-menu-item>
+        <nz-icon nzType="file"></nz-icon>
+        <span>File</span>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <span
+        class="trigger"
+        nz-icon
+        [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+        (click)="isCollapsed = !isCollapsed"
+      ></span>
+    </nz-header>
+    <nz-content style="display: flex; flex-direction: column;">
+      <div class="inner-content" style="flex: 1; overflow: auto;">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

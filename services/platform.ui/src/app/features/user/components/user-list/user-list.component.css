@@ -1,4 +1,3 @@
-
 .search-box {
   padding: 8px;
 }
@@ -9,26 +8,10 @@
   display: block;
 }
 
-.search-icon {
-  color: lightgray;
-}
-
 .search-box button {
   width: 90px;
 }
 
 .search-button {
   margin-right: 8px;
-}
-
-/* Example styles */
-.nz-page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.nz-page-header-extra {
-  display: flex;
-  align-items: center;
 }

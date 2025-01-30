@@ -7,9 +7,9 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzCardModule } from 'ng-zorro-antd/card';
-import { AuthService } from '../../../../services/auth.service';
-import { RegisterPostData } from '../../models/RegisterPostData';
+import { RegisterPostData } from '../../../../models/RegisterPostData';
 import { CommonModule } from '@angular/common';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-user-register',
@@ -19,7 +19,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./user-register.component.css']
 })
 export class UserRegisterComponent {
-  private authService = inject(AuthService);
+  private _userSerivce = inject(UserService);
   private message = inject(NzMessageService);
   validateForm: FormGroup;
 
@@ -38,10 +38,8 @@ export class UserRegisterComponent {
 
       const loadingMessage = this.message.loading('Registering user...', { nzDuration: 0 });
       
-      this.authService.registerUser(formData).subscribe({
-        next: (response) => {
-          console.log('User registered successfully:', response);
-          this.message.remove();
+      this._userSerivce.registerUser(formData).subscribe({ next: (response) => {
+           this.message.remove();
           this.message.success('Registration successful!');
           this.router.navigate(['/list']);
         },
