@@ -9,6 +9,7 @@
       </th>
       <th>full Name</th>
       <th>email</th>
+      <th>action</th>
     </tr>
   </thead>
   <tbody>
@@ -20,7 +21,7 @@
         <nz-space [nzSize]="[8, 8]">
           <button nz-button nzSize="small">Details</button>
           <button nz-button nzSize="small" nzType="primary">Edit</button>
-          <button nz-button nzSize="small" nzDanger>Delete</button>
+          <button nz-button nzSize="small" (click)="deleteUser(data.id)" nzDanger> Delete </button>
         </nz-space>
       </td>
     </tr>

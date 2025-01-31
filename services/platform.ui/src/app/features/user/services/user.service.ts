@@ -28,4 +28,9 @@ export class UserService {
       const url = `${this.baseUrl}/user`;
       return this.http.get<UserListData[]>(url);
     }
+
+    deleteUser(userId: string): Observable<any> {
+      const url = `${this.baseUrl}/user/${userId}`;
+      return this.http.delete(url);
+    }    
 } 
