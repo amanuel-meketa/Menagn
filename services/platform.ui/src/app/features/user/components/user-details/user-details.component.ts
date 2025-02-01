@@ -1,18 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { UserService } from '../../services/user.service';
 import { UserDetailsGetData } from '../../../../models/UserDetailsGetData';
 import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 
 @Component({
   selector: 'app-user-details',
   standalone: true,
-  imports: [ CommonModule, NzTabsModule, NzButtonModule, NzIconModule,NzCardModule ,NzDescriptionsModule],
+  imports: [ CommonModule, NzTabsModule,NzCardModule ,],
   templateUrl: './user-details.component.html',
   styleUrls: ['./user-details.component.css'],
 })
@@ -26,7 +23,6 @@ export class UserDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.userId = params['id'];
-      console.log('User ID from route:', this.userId);
       this.loadUserDetails();  
     });
   }
@@ -34,7 +30,6 @@ export class UserDetailsComponent implements OnInit {
   loadUserDetails(): void {
     this._userSerivce.UserDetails(this.userId).subscribe(
       (data: UserDetailsGetData) => {
-        console.log('Fetched user details:', data);
         this.userDetails = data;
         this.cdr.detectChanges();  
       },

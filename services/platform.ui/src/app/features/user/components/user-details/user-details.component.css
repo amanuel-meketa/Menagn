@@ -9,7 +9,7 @@
   margin: 0;
 }
 .card-container ::ng-deep > .ant-tabs-card .ant-tabs-content {
-  height: 460px;
+  height: 530px;
   margin-top: -16px;
 }
 .card-container ::ng-deep > .ant-tabs-card .ant-tabs-content > .ant-tabs-tabpane {
@@ -26,17 +26,4 @@
 .card-container ::ng-deep > .ant-tabs-card .ant-tabs-tab-active {
   border-color: #fff;
   background: #fff;
-}
-
-.bold-text {
-  font-weight: bold;
-  font-size: 16px; /* Adjust the font size as needed */
-}
-
-.field-cell {
-  font-size: 16px; /* Adjust the font size as needed */
-}
-
-.value-cell {
-  font-size: 16px; /* Adjust the font size as needed */
 }

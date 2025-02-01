@@ -2,20 +2,20 @@
   <thead>
     <tr>
       <th nzCustomFilter>
-        username
+        Username
         <nz-filter-trigger [(nzVisible)]="visible" [nzActive]="searchValue.length > 0" [nzDropdownMenu]="menu">
           <span nz-icon nzType="search"></span>
         </nz-filter-trigger>
       </th>
-      <th>full Name</th>
-      <th>email</th>
-      <th>action</th>
+      <th>Full Name</th>
+      <th>Email</th>
+      <th>Action</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let data of listOfDisplayData">
       <td>
-        <a [routerLink]="['/user-details', data.id]">{{ data.username }}</a>
+        <a [routerLink]="['/user-details/', data.id]">{{ data.username }}</a>
       </td>
       <td>{{ data.firstName }} {{ data.lastName }}</td>
       <td>{{ data.email }}</td>
@@ -23,7 +23,7 @@
         <nz-space [nzSize]="[8, 8]">
           <button nz-button nzSize="small">Details</button>
           <button nz-button nzSize="small" nzType="primary">Edit</button>
-          <button nz-button nzSize="small" (click)="deleteUser(data.id)" nzDanger> Delete </button>
+          <button nz-button nzSize="small" (click)="deleteUser(data.id)" nzDanger>Delete</button>
         </nz-space>
       </td>
     </tr>
