@@ -1,0 +1,50 @@
+<div class="card-container">
+    <nz-tabset nzType="card">
+        <nz-tab [nzTitle]="'User Details'">
+          <div *ngIf="userDetails">
+            <nz-card nzTitle="User Details" style="max-width: 1000px; margin-left: 20px;">
+                <nz-table #basicTable [nzData]="userDetailsList" [nzBordered]="true" [nzSize]="'middle'">
+                  <tbody>
+                    <tr>
+                        <td style="padding-right: 100px; font-weight: bold;">Id</td>
+                        <td style="font-size: 20px;">{{ userDetails.id }}</td>
+                      </tr>
+                    <tr>
+                      <td style="padding-right: 100px; font-weight: bold;">User Name</td>
+                      <td style="font-size: 20px;">{{ userDetails.username }}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding-right: 100px; font-weight: bold;">First Name</td>
+                      <td style="font-size: 20px;">{{ userDetails.firstName }}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding-right: 200px; font-weight: bold;">Last Name</td>
+                      <td style="font-size: 20px;">{{ userDetails.lastName }}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding-right: 200px; font-weight: bold;">Email</td>
+                      <td style="font-size: 20px;">{{ userDetails.email }}</td>
+                    </tr>
+                  </tbody>
+                </nz-table>
+              </nz-card>
+                                                      
+          </div>
+        </nz-tab>
+        <nz-tab [nzTitle]="'Reset Password '">
+            <p>Reset of Tab Pane {{ tab }}</p>
+            <p>Content of Tab Pane {{ tab }}</p>
+            <p>Content of Tab Pane {{ tab }}</p>
+          </nz-tab>
+          <nz-tab [nzTitle]="'Role '">
+            <p>Rolee of Tab Pane {{ tab }}</p>
+            <p>Content of Tab Pane {{ tab }}</p>
+            <p>Content of Tab Pane {{ tab }}</p>
+          </nz-tab>
+          <nz-tab [nzTitle]="'Session '">
+            <p>Session of Tab Pane {{ tab }}</p>
+            <p>Content of Tab Pane {{ tab }}</p>
+            <p>Content of Tab Pane {{ tab }}</p>
+          </nz-tab>
+    </nz-tabset>
+  </div>

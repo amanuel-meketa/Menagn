@@ -4,6 +4,7 @@ import { UserRegisterComponent } from './features/user/components/user-register/
 import { UserListComponent } from './features/user/components/user-list/user-list.component';
 import { DashboardComponent } from './features/layout/components/dashboard/dashboard.component';
 import { LayoutComponent } from './features/layout/components/layout/layout.component';
+import { UserDetailsComponent } from './features/user/components/user-details/user-details.component';
 
 export const routes: Routes = 
 [
@@ -14,6 +15,7 @@ export const routes: Routes =
       { path: 'dashboard', component: DashboardComponent },
       { path: 'register', component: UserRegisterComponent },
       { path: 'list', component: UserListComponent },
+      { path: 'user-details/:id', component: UserDetailsComponent },
     ]
    },
 ];
