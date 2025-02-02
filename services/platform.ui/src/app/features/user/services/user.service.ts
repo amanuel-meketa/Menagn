@@ -9,6 +9,9 @@ import { LoginPostData } from '../../../models/LoginPostData';
   providedIn: 'root'
 })
 export class UserService {
+    register(registerData: RegisterPostData) {
+      throw new Error('Method not implemented.');
+    }
     private readonly baseUrl = 'http://localhost:5087/api';
     http = inject(HttpClient)
 
@@ -23,7 +26,7 @@ export class UserService {
       const url = `${this.baseUrl}/user`;
       return this.http.post(url, postData);
     }
-
+    
     userList(): Observable<UserListData[]> {
       const url = `${this.baseUrl}/user`;
       return this.http.get<UserListData[]>(url);

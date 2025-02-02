@@ -1,6 +1,13 @@
-import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  AbstractControl,
+  ValidationErrors,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -10,66 +17,116 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { RegisterPostData } from '../../../../models/RegisterPostData';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user.service';
+import { Observable, Observer, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-register',
   standalone: true,
-  imports: [ReactiveFormsModule, NzLayoutModule, NzButtonModule, NzFormModule, NzInputModule, NzCardModule, CommonModule],
+  imports: [
+    ReactiveFormsModule,
+    NzButtonModule,
+    NzFormModule,
+    NzInputModule,
+    NzLayoutModule,
+    NzCardModule,
+    CommonModule,
+    RouterLink
+  ],
   templateUrl: './user-register.component.html',
   styleUrls: ['./user-register.component.css']
 })
-export class UserRegisterComponent {
-  private _userSerivce = inject(UserService);
-  private message = inject(NzMessageService);
-  validateForm: FormGroup;
+export class UserRegisterComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+  validateForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private _userService: UserService,
+    private message: NzMessageService,
+    private router: Router  // Inject Router here.
+  ) {}
+
+  ngOnInit(): void {
+    // Update the form with additional fields required by the backend model.
     this.validateForm = this.fb.group({
-      firstname: ['', [Validators.required, Validators.maxLength(50)]],
-      lastname: ['', [Validators.required, Validators.maxLength(50)]],
-      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
-      email: ['', [Validators.required, Validators.email]],
+      userName: ['', [Validators.required], [this.userNameAsyncValidator]],
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
+      email: ['', [Validators.email, Validators.required]],
     });
+
+    // Update confirmation validity when the password changes.
+    this.validateForm.controls['password'].valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.validateForm.controls['confirm'].updateValueAndValidity();
+      });
   }
 
-  registerUser(): void {
-    if (this.validateForm.valid) {
-      const formData: RegisterPostData = this.mapFormValuesToModel();
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
-      const loadingMessage = this.message.loading('Registering user...', { nzDuration: 0 });
-      
-      this._userSerivce.registerUser(formData).subscribe({ next: (response) => {
-           this.message.remove();
+  submitForm(): void {
+    if (this.validateForm.valid) {
+      // Map the form values to the RegisterPostData interface.
+      const registerData: RegisterPostData = {
+        username: this.validateForm.value.userName,
+        firstName: this.validateForm.value.firstName,
+        lastName: this.validateForm.value.lastName,
+        email: this.validateForm.value.email
+      };
+
+      // Call the registration service.
+      this._userService.registerUser(registerData).subscribe({
+        next: (response) => {
+          this.message.remove();
           this.message.success('Registration successful!');
+          // Navigate to the list page upon successful registration.
           this.router.navigate(['/list']);
         },
         error: (error) => {
           console.error('Registration failed:', error);
           this.message.remove();
           this.message.error(`Registration failed: ${error.message || 'Unknown error'}`);
-        },
+        }
       });
     } else {
-      console.log('Form is invalid!');
-      this.markFormControlsAsDirty();
+      // Mark all controls as dirty to trigger validation messages.
+      Object.values(this.validateForm.controls).forEach(control => {
+        control.markAsDirty();
+        control.updateValueAndValidity({ onlySelf: true });
+      });
     }
   }
 
-  private mapFormValuesToModel(): RegisterPostData {
-    return {
-      firstName: this.validateForm.value.firstname?.trim() || '',
-      lastName: this.validateForm.value.lastname?.trim() || '',
-      username: this.validateForm.value.username?.trim() || '',
-      email: this.validateForm.value.email?.trim() || '',
-    };
+  resetForm(e: MouseEvent): void {
+    e.preventDefault();
+    this.validateForm.reset();
   }
 
-  private markFormControlsAsDirty(): void {
-    Object.values(this.validateForm.controls).forEach((control) => {
-      if (control.invalid) {
-        control.markAsDirty();
-        control.updateValueAndValidity();
-      }
+  userNameAsyncValidator(control: AbstractControl): Observable<ValidationErrors | null> {
+    return new Observable((observer: Observer<ValidationErrors | null>) => {
+      setTimeout(() => {
+        // Example async validation: disallow the username 'JasonWood'
+        if (control.value === 'JasonWood') {
+          observer.next({ error: true, duplicated: true });
+        } else {
+          observer.next(null);
+        }
+        observer.complete();
+      }, 1000);
     });
   }
+
+  confirmValidator = (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value) {
+      return { error: true, required: true };
+    } else if (control.value !== this.validateForm?.value.password) {
+      return { confirm: true, error: true };
+    }
+    return null;
+  };
 }

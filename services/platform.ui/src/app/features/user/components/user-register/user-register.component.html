@@ -1,43 +1,106 @@
-<form nz-form [formGroup]="validateForm" class="register-form" (ngSubmit)="registerUser()">
-      <div class="text">
-        <h1>Register User</h1>
-      </div>
-  
-      <nz-form-item>
-        <nz-form-control>
-          <nz-input-group nzPrefixIcon="user">
-            <input type="text" nz-input formControlName="firstname" placeholder="First Name (Optional)" />
-          </nz-input-group>
-        </nz-form-control>
-      </nz-form-item>
-  
-      <nz-form-item>
-        <nz-form-control>
-          <nz-input-group nzPrefixIcon="user">
-            <input type="text" nz-input formControlName="lastname" placeholder="Last Name (Optional)" />
-          </nz-input-group>
-        </nz-form-control>
-      </nz-form-item>
-  
-      <nz-form-item>
-        <nz-form-control nzErrorTip="Please input your username!">
-          <nz-input-group nzPrefixIcon="user">
-            <input type="text" nz-input formControlName="username" placeholder="Username" />
-          </nz-input-group>
-        </nz-form-control>
-      </nz-form-item>
-  
-      <nz-form-item>
-        <nz-form-control nzErrorTip="Please input a valid email!">
-          <nz-input-group nzPrefixIcon="mail">
-            <input type="email" nz-input formControlName="email" placeholder="Email" />
-          </nz-input-group>
-        </nz-form-control>
-      </nz-form-item>
-  
-      <button nz-button class="register-button" nzType="primary" [disabled]="validateForm.invalid">
-        Register
+<form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+  <!-- Username -->
+  <nz-form-item>
+    <nz-form-label [nzSpan]="7" nzRequired>Username</nz-form-label>
+    <nz-form-control
+      [nzSpan]="12"
+      nzHasFeedback
+      nzValidatingTip="Validating..."
+      [nzErrorTip]="userErrorTpl"
+    >
+      <input
+        nz-input
+        formControlName="userName"
+        placeholder="Enter your username"
+      />
+      <ng-template #userErrorTpl let-control>
+        <span *ngIf="control.errors?.['required']">
+          Please input your username!
+        </span>
+        <span *ngIf="control.errors?.['duplicated']">
+          The username is redundant!
+        </span>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+
+  <!-- First Name -->
+  <nz-form-item>
+    <nz-form-label [nzSpan]="7" nzRequired>First Name</nz-form-label>
+    <nz-form-control
+      [nzSpan]="12"
+      nzHasFeedback
+      [nzErrorTip]="firstNameErrorTpl"
+    >
+      <input
+        nz-input
+        formControlName="firstName"
+        placeholder="Enter your first name"
+      />
+      <ng-template #firstNameErrorTpl let-control>
+        <span *ngIf="control.errors?.['required']">
+          Please input your first name!
+        </span>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+
+  <!-- Last Name -->
+  <nz-form-item>
+    <nz-form-label [nzSpan]="7" nzRequired>Last Name</nz-form-label>
+    <nz-form-control
+      [nzSpan]="12"
+      nzHasFeedback
+      [nzErrorTip]="lastNameErrorTpl"
+    >
+      <input
+        nz-input
+        formControlName="lastName"
+        placeholder="Enter your last name"
+      />
+      <ng-template #lastNameErrorTpl let-control>
+        <span *ngIf="control.errors?.['required']">
+          Please input your last name!
+        </span>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+
+  <!-- E-mail -->
+  <nz-form-item>
+    <nz-form-label [nzSpan]="7" nzRequired>E-mail</nz-form-label>
+    <nz-form-control
+      [nzSpan]="12"
+      nzHasFeedback
+      [nzErrorTip]="emailErrorTpl"
+    >
+      <input
+        nz-input
+        formControlName="email"
+        placeholder="Enter your email"
+        type="email"
+      />
+      <ng-template #emailErrorTpl let-control>
+        <span *ngIf="control.errors?.['email']">
+          The input is not a valid E-mail!
+        </span>
+        <span *ngIf="control.errors?.['required']">
+          Please input your E-mail!
+        </span>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+
+  <!-- Submit & Reset Buttons -->
+  <nz-form-item>
+    <nz-form-control [nzOffset]="7" [nzSpan]="12">
+      <!-- Updated disabled condition -->
+      <button nz-button nzType="primary" [disabled]="validateForm.invalid || validateForm.pending">
+        Submit
       </button>
-      <br />
+      <button nz-button (click)="resetForm($event)">
+        Reset
+      </button>
+    </nz-form-control>
+  </nz-form-item>
 </form>
-  
