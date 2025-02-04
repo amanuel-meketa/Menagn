@@ -1,13 +1,24 @@
+<div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+  <button nz-button nzType="primary" nzShape="round" routerLink="/register">
+    Add User
+  </button>
+</div>
+
 <nz-table #nzTable [nzData]="filteredUserList" nzTableLayout="fixed">
   <thead>
     <tr>
       <th nzCustomFilter>
         Username
         <nz-filter-trigger [nzVisible]="isSearchVisible" [nzActive]="searchValue.length > 0" [nzDropdownMenu]="menu">
-          <span nz-icon nzType="search" (click)="toggleSearchVisibility()"></span>
+          <!-- Search Icon Button to Toggle Search Box -->
+          <button nz-button nzType="default" nzShape="circle" (click)="toggleSearchVisibility()">
+            <span nz-icon nzType="search" nzTheme="outline" style="color: #4CAF50;"></span>
+          </button>
         </nz-filter-trigger>
+        
+        <!-- Input box that becomes visible when the search icon is clicked -->
         <nz-dropdown-menu #menu="nzDropdownMenu">
-          <div style="padding: 8px;">
+          <div *ngIf="isSearchVisible" style="padding: 8px;">
             <input nz-input [(ngModel)]="searchValue" (ngModelChange)="filterUserList()" placeholder="Search by username" />
           </div>
         </nz-dropdown-menu>
@@ -26,7 +37,6 @@
       <td>{{ user.email }}</td>
       <td>
         <nz-space [nzSize]="8">
-          <button nz-button nzSize="small">Details</button>
           <button nz-button nzSize="small" nzType="primary">Edit</button>
           <button nz-button nzSize="small" (click)="deleteUser(user.id)" nzDanger>Delete</button>
         </nz-space>        
