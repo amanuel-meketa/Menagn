@@ -1,7 +1,8 @@
 <nz-layout style="height: 100vh;">
-  <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null" nzTheme="dark">
-    <div class="logo" style="color: white;">Menagn</div>
-    <ul nz-menu nzTheme="dark" nzMode="inline">
+  <!-- Sidebar Section -->
+  <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null" nzTheme="light" [nzWidth]="250">
+    <div class="logo" style="color: rgb(19, 13, 13);"><h1> Menagn </h1></div>
+    <ul nz-menu nzTheme="light" nzMode="inline">
       <li nz-menu-item nzMatchRouter>
         <a routerLink="/dashboard">
           <span nz-icon nzType="dashboard"></span>
@@ -31,18 +32,56 @@
           </li>
         </ul>
       </li>
+      <li nz-submenu nzTitle="Configuration Settings" nzIcon="appstore">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="#">App List</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="#">Process List</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Report" nzIcon="appstore">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="#">App List</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="#">Process List</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Setup" nzIcon="appstore">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="#">App List</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="#">Process List</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Setting" nzIcon="appstore">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="#">App List</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="#">Process List</a>
+          </li>
+        </ul>
+      </li>
     </ul>
   </nz-sider>
+
+  <!-- Main Content Section -->
   <nz-layout>
     <nz-header>
-      <span
-        class="trigger"
-        nz-icon
-        [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-        (click)="isCollapsed = !isCollapsed"
-      ></span>
+      <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" (click)="isCollapsed = !isCollapsed"></span>
     </nz-header>
-    <nz-content style="display: flex; flex-direction: column;">
+    
+    <nz-content style="display: flex; flex-direction: column; height: 100%; padding: 16px;">
       <div class="inner-content" style="flex: 1; overflow: auto;">
         <router-outlet></router-outlet>
       </div>

@@ -1,29 +1,121 @@
 :host {
   background: #f5f5f5;
-  overflow: hidden;
+  overflow: hidden; /* Prevent scrolling */
   padding: 24px;
   display: block;
+  height: 100%; /* Ensure the host element takes full height of the viewport */
+  box-sizing: border-box;
 }
 
 .card-container ::ng-deep p {
   margin: 0;
 }
+
 .card-container ::ng-deep > .ant-tabs-card .ant-tabs-content {
-  height: 530px;
+  height: 100%; /* Prevent height from overflowing */
   margin-top: -16px;
 }
+
 .card-container ::ng-deep > .ant-tabs-card .ant-tabs-content > .ant-tabs-tabpane {
   background: #fff;
   padding: 16px;
 }
+
 .card-container ::ng-deep > .ant-tabs-card > .ant-tabs-nav::before {
   display: none;
 }
+
 .card-container ::ng-deep > .ant-tabs-card .ant-tabs-tab {
   border-color: transparent;
   background: transparent;
 }
+
 .card-container ::ng-deep > .ant-tabs-card .ant-tabs-tab-active {
   border-color: #fff;
   background: #fff;
+}
+
+/* Prevent overflow and scrolling for mobile/tablet */
+@media (max-width: 768px) {
+  nz-sider {
+    display: none !important; /* Hide sidebar on smaller screens */
+  }
+
+  nz-content {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .trigger {
+    display: block;
+  }
+}
+
+/* Disable content overflow and scrolling */
+.inner-content {
+  overflow: hidden; /* Disable scroll */
+  flex-grow: 1;
+}
+
+/* Prevent content from overflowing the container */
+.user-details-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.user-details-card,
+.additional-info-card {
+  flex-grow: 1;
+  min-width: 280px;
+  max-width: 48%;
+  box-sizing: border-box;
+  overflow: hidden; /* Prevent content overflow */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+/* When the screen is small (e.g., mobile), stack the cards */
+@media (max-width: 768px) {
+  .user-details-container {
+    flex-direction: column;
+  }
+
+  .user-details-card,
+  .additional-info-card {
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .additional-info-card {
+    padding: 10px;
+  }
+}
+
+/* Prevent scrolling on the page */
+html, body {
+  height: 100%; /* Make sure the entire page fits within the screen */
+  overflow: hidden; /* Disable scrolling */
+  margin: 0;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensure content fits without scrolling */
+}
+
+nz-tabset {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensure tabs stay within the container */
+}
+
+nz-tab {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
