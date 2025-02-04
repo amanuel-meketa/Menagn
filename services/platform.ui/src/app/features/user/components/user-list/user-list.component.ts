@@ -1,8 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzDropdownMenuComponent, NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
@@ -29,7 +29,8 @@ export class UserListComponent implements OnInit {
   private _userService = inject(UserService);
   private message = inject(NzMessageService);
   private modal = inject(NzModalService);
-  searchValue = '';
+  searchValue = ''; 
+  @ViewChild('menu', { static: true }) menu!: NzDropdownMenuComponent;
   visible = false;
   listOfDisplayData: UserListData[] = [];
 
@@ -82,3 +83,4 @@ export class UserListComponent implements OnInit {
     this.listOfDisplayData = this.listOfDisplayData.filter((item: UserListData) => item.username.indexOf(this.searchValue) !== -1);
   }
 }
+

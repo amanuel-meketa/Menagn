@@ -20,11 +20,11 @@
       <td>{{ data.firstName }} {{ data.lastName }}</td>
       <td>{{ data.email }}</td>
       <td>
-        <nz-space [nzSize]="[8, 8]">
+        <nz-space [nzSize]="8">
           <button nz-button nzSize="small">Details</button>
           <button nz-button nzSize="small" nzType="primary">Edit</button>
           <button nz-button nzSize="small" (click)="deleteUser(data.id)" nzDanger>Delete</button>
-        </nz-space>
+        </nz-space>        
       </td>
     </tr>
   </tbody>
