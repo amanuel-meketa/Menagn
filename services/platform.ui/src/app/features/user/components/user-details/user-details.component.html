@@ -1,4 +1,11 @@
-<div class="card-container">
+<nz-breadcrumb style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+    <nz-breadcrumb-item>
+      <a routerLink="/list" style="text-decoration: underline;">User List</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>User Details</nz-breadcrumb-item>
+  </nz-breadcrumb>  
+      
+  <div class="card-container">
     <nz-tabset nzType="card">
       <!-- User Details Tab -->
       <nz-tab [nzTitle]="'User Details'">
