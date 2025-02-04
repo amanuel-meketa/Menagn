@@ -1,42 +1,78 @@
 <div class="card-container">
-  <nz-tabset nzType="card">
+    <nz-tabset nzType="card">
+      <!-- User Details Tab -->
       <nz-tab [nzTitle]="'User Details'">
-          <div *ngIf="userDetails">
-              <nz-card nzTitle="User Details" style="max-width: 1000px; margin-left: 20px;">
-                  <nz-table #basicTable [nzData]="userDetailsList" [nzBordered]="true" [nzSize]="'middle'">
-                      <tbody>
-                          <tr>
-                              <td style="padding-right: 100px; font-weight: bold;">Username</td>
-                              <td style="font-size: 20px;">{{ userDetails.username }}</td>
-                          </tr>
-                          <tr>
-                              <td style="padding-right: 100px; font-weight: bold;">First Name</td>
-                              <td style="font-size: 20px;">{{ userDetails.firstName }}</td>
-                          </tr>
-                          <tr>
-                              <td style="padding-right: 100px; font-weight: bold;">Last Name</td>
-                              <td style="font-size: 20px;">{{ userDetails.lastName }}</td>
-                          </tr>
-                          <tr>
-                              <td style="padding-right: 100px; font-weight: bold;">Email</td>
-                              <td style="font-size: 20px;">{{ userDetails.email }}</td>
-                          </tr>
-                      </tbody>
-                  </nz-table>
-              </nz-card>
+        <div *ngIf="userDetails">
+          <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+            <!-- User Details Card -->
+            <nz-card [nzTitle]="'User - ID: ' + userDetails.id" style="flex: 1; min-width: 480px; max-width: 600px;">
+              <nz-table #basicTable [nzBordered]="true" [nzSize]="'middle'">
+                <tbody>
+                  <tr>
+                    <td style="font-weight: bold; color: #555; padding: 12px;">Username</td>
+                    <td style="font-size: 18px; color: #333; padding: 12px;">{{ userDetails.username }}</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: bold; color: #555; padding: 12px;">First Name</td>
+                    <td style="font-size: 18px; color: #333; padding: 12px;">{{ userDetails.firstName }}</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: bold; color: #555; padding: 12px;">Last Name</td>
+                    <td style="font-size: 18px; color: #333; padding: 12px;">{{ userDetails.lastName }}</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: bold; color: #555; padding: 12px;">Email</td>
+                    <td style="font-size: 18px; color: #333; padding: 12px;">{{ userDetails.email }}</td>
+                  </tr>
+                </tbody>
+              </nz-table>
+            </nz-card>
+  
+            <!-- Additional Information Card -->
+            <nz-card nzTitle="Additional Information" style="flex: 1; min-width: 480px; max-width: 600px;">
+              <nz-table #additionalTable [nzBordered]="true" [nzSize]="'middle'">
+                <tbody>
+                  <tr>
+                    <td style="font-weight: bold; color: #555; padding: 12px;">Phone Number</td>
+                    <td style="font-size: 18px; color: #333; padding: 12px;">{{ userDetails.phoneNumber || 'N/A' }}</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: bold; color: #555; padding: 12px;">Role</td>
+                    <td style="font-size: 18px; color: #333; padding: 12px;">{{ userDetails.role }}</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: bold; color: #555; padding: 12px;">Status</td>
+                    <td style="font-size: 18px; color: #333; padding: 12px;">
+                      <nz-tag [nzColor]="userDetails.status === 'Active' ? 'green' : 'red'">
+                        {{ userDetails.status }}
+                      </nz-tag>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: bold; color: #555; padding: 12px;">Created At</td>
+                    <td style="font-size: 18px; color: #333; padding: 12px;">{{ userDetails.createdAt | date:'medium' }}</td>
+                  </tr>
+                </tbody>
+              </nz-table>
+            </nz-card>
           </div>
+        </div>
       </nz-tab>
-
-      <nz-tab [nzTitle]="'Role '">
-          <p>Role of Tab Pane {{ tab }}</p>
-          <p>Content of Tab Pane {{ tab }}</p>
-          <p>Content of Tab Pane {{ tab }}</p>
+  
+      <!-- Reset Password Tab -->
+      <nz-tab [nzTitle]="'Reset Password'">
+        <p>Reset password content will go here...</p>
       </nz-tab>
-
-      <nz-tab [nzTitle]="'Session '">
-          <p>Session of Tab Pane {{ tab }}</p>
-          <p>Content of Tab Pane {{ tab }}</p>
-          <p>Content of Tab Pane {{ tab }}</p>
+  
+      <!-- Role Tab -->
+      <nz-tab [nzTitle]="'Role'">
+        <p>Role-related content will go here...</p>
       </nz-tab>
-  </nz-tabset>
-</div>
+  
+      <!-- Session Tab -->
+      <nz-tab [nzTitle]="'Session'">
+        <p>Session details will go here...</p>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+  

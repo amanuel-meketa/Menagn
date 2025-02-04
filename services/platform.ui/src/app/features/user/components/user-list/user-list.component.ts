@@ -17,9 +17,9 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports:
-  [ FormsModule, NzButtonModule, NzDropDownModule, NzIconModule, NzInputModule, NzTableModule, NzPageHeaderModule,
-    NzSpaceModule, CommonModule, NzModalModule, RouterLink,
+  imports: [
+    FormsModule, NzButtonModule, NzDropDownModule, NzIconModule, NzInputModule, 
+    NzTableModule, NzPageHeaderModule, NzSpaceModule, CommonModule, NzModalModule, RouterLink,
   ],
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css'],
@@ -29,20 +29,23 @@ export class UserListComponent implements OnInit {
   private _userService = inject(UserService);
   private message = inject(NzMessageService);
   private modal = inject(NzModalService);
-  searchValue = ''; 
+
+  searchValue = '';  // Stores the value entered in the search input
   @ViewChild('menu', { static: true }) menu!: NzDropdownMenuComponent;
-  visible = false;
-  listOfDisplayData: UserListData[] = [];
+  isSearchVisible = false;  // Controls visibility of the search dropdown
+  originalUserList: UserListData[] = [];  // Stores the original user data
+  filteredUserList: UserListData[] = [];  // Stores the filtered user list for display
 
   ngOnInit(): void {
-    this.fetchUserList();
+    this.loadUserList();
   }
 
-  fetchUserList(): void {
+  // Fetch the user list from the service
+  loadUserList(): void {
     this._userService.userList().subscribe(
       (data) => {
-        this.listOfDisplayData = data;
-        console.log('User fetched successfully:', data.values);
+        this.originalUserList = data;  // Store the original data
+        this.filteredUserList = [...data];  // Copy the data for display
       },
       (error) => {
         console.error('Error fetching user list:', error);
@@ -50,6 +53,7 @@ export class UserListComponent implements OnInit {
     );
   }
 
+  // Delete a user
   deleteUser(userId: string): void {
     this.modal.confirm({
       nzTitle: 'Are you sure you want to delete this user?',
@@ -60,7 +64,7 @@ export class UserListComponent implements OnInit {
         this._userService.deleteUser(userId).subscribe(
           () => {
             this.message.success('User deleted successfully!');
-            this.fetchUserList(); 
+            this.loadUserList();  // Reload the user list after deletion
           },
           (error) => {
             this.message.remove();
@@ -71,16 +75,23 @@ export class UserListComponent implements OnInit {
       nzCancelText: 'No',
       nzOnCancel: () => console.log('Cancel'),
     });
-  }  
-  
-  reset(): void {
-    this.searchValue = '';
-    this.search();
   }
 
-  search(): void {
-    this.visible = false;
-    this.listOfDisplayData = this.listOfDisplayData.filter((item: UserListData) => item.username.indexOf(this.searchValue) !== -1);
+  // Reset search input
+  resetSearch(): void {
+    this.searchValue = '';
+    this.filterUserList();  // Restore full user list
+  }
+
+  // Filter the user list based on search value
+  filterUserList(): void {
+    this.filteredUserList = this.originalUserList.filter(
+      (user: UserListData) => user.username.toLowerCase().includes(this.searchValue.toLowerCase())
+    );
+  }
+
+  // Toggle search visibility
+  toggleSearchVisibility(): void {
+    this.isSearchVisible = !this.isSearchVisible;
   }
 }
-
