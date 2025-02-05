@@ -8,11 +8,13 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
+import { NzTableModule } from 'ng-zorro-antd/table';
 
 @Component({
   selector: 'app-user-details',
   standalone: true,
-  imports: [ CommonModule, RouterLink, NzBreadCrumbModule, NzTabsModule, NzCardModule ,NzFormModule, NzButtonModule],
+  imports: [ CommonModule, RouterLink, NzBreadCrumbModule, NzTabsModule, NzCardModule ,NzFormModule,
+             NzButtonModule, NzTableModule ],
   templateUrl: './user-details.component.html',
   styleUrls: ['./user-details.component.css'],
 })
