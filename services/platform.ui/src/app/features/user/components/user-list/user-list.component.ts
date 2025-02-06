@@ -12,14 +12,14 @@ import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
   imports: [
-    FormsModule, NzButtonModule, NzDropDownModule, NzIconModule, NzInputModule, 
-    NzTableModule, NzPageHeaderModule, NzSpaceModule, CommonModule, NzModalModule, RouterLink,
+    FormsModule, NzButtonModule, NzDropDownModule, NzIconModule, NzInputModule, RouterLink,
+    NzTableModule, NzPageHeaderModule, NzSpaceModule, CommonModule, NzModalModule,
   ],
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css'],
@@ -29,6 +29,7 @@ export class UserListComponent implements OnInit {
   private _userService = inject(UserService);
   private message = inject(NzMessageService);
   private modal = inject(NzModalService);
+  private router = inject(Router);
 
   searchValue = '';  // Stores the value entered in the search input
   @ViewChild('menu', { static: true }) menu!: NzDropdownMenuComponent;
@@ -94,4 +95,10 @@ export class UserListComponent implements OnInit {
   toggleSearchVisibility(): void {
     this.isSearchVisible = !this.isSearchVisible;
   }
+
+  navigateToRegister(): void {
+    this.router.navigate(['/register']).then(() => {
+      window.location.reload(); // Forces reload after navigation
+    });
+  }  
 }

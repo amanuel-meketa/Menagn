@@ -1,3 +1,11 @@
+<nz-breadcrumb style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+  <nz-breadcrumb-item>
+    <a routerLink="/list" style="text-decoration: underline;">User List</a>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>User Registration</nz-breadcrumb-item>
+</nz-breadcrumb>
+
+
 <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
   <!-- Username -->
   <nz-form-item>
@@ -72,8 +80,7 @@
     <nz-form-control
       [nzSpan]="12"
       nzHasFeedback
-      [nzErrorTip]="emailErrorTpl"
-    >
+      [nzErrorTip]="emailErrorTpl">
       <input
         nz-input
         formControlName="email"

@@ -12,12 +12,13 @@ import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user.service';
 import { Observable, Observer, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 
 @Component({
   selector: 'app-user-register',
   standalone: true,
-  imports: [ ReactiveFormsModule,NzButtonModule,NzFormModule,NzInputModule,NzLayoutModule,NzCardModule,CommonModule,RouterLink
-  ],
+  imports: [ ReactiveFormsModule,NzBreadCrumbModule,NzButtonModule,NzFormModule,NzInputModule,NzLayoutModule,NzModalModule,NzCardModule,CommonModule,RouterLink],
   templateUrl: './user-register.component.html',
   styleUrls: ['./user-register.component.css']
 })
@@ -35,7 +36,7 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Update the form with additional fields required by the backend model.
     this.validateForm = this.fb.group({
-      userName: ['', [Validators.required], [this.userNameAsyncValidator]],
+      userName: ['', [Validators.required],],
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
       email: ['', [Validators.email, Validators.required]],
@@ -89,21 +90,7 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
     e.preventDefault();
     this.validateForm.reset();
   }
-
-  userNameAsyncValidator(control: AbstractControl): Observable<ValidationErrors | null> {
-    return new Observable((observer: Observer<ValidationErrors | null>) => {
-      setTimeout(() => {
-        // Example async validation: disallow the username 'JasonWood'
-        if (control.value === 'JasonWood') {
-          observer.next({ error: true, duplicated: true });
-        } else {
-          observer.next(null);
-        }
-        observer.complete();
-      }, 1000);
-    });
-  }
-
+  
   confirmValidator = (control: AbstractControl): ValidationErrors | null => {
     if (!control.value) {
       return { error: true, required: true };
