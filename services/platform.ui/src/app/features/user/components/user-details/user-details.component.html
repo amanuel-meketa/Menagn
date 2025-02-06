@@ -1,60 +1,55 @@
 <nz-breadcrumb style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
-    <nz-breadcrumb-item>
-      <a routerLink="/list" style="text-decoration: underline;">User List</a>
-    </nz-breadcrumb-item>
-    <nz-breadcrumb-item>User Details</nz-breadcrumb-item>
-  </nz-breadcrumb>
-  
-  <div class="card-container">
-    <nz-tabset nzType="card">
-      <!-- User Details Tab -->
-      <nz-tab [nzTitle]="'User Details'">
-        <div *ngIf="userDetails">
-          <!-- Flex container for User Details and Additional Info -->
-          <div class="user-details-container">
-            <!-- User Details Card -->
-            <div class="user-details-card">
-              <nz-card [nzTitle]="'User - ID: ' + userDetails.id">
-                <nz-table #basicTable [nzBordered]="true" [nzSize]="'middle'">
-                  <tbody>
-                    <tr>
-                      <td style="font-weight: bold; color: #555; padding: 12px;">Username</td>
-                      <td style="font-size: 18px; color: #333; padding: 12px;">{{ userDetails.username }}</td>
-                    </tr>
-                    <tr>
-                      <td style="font-weight: bold; color: #555; padding: 12px;">First Name</td>
-                      <td style="font-size: 18px; color: #333; padding: 12px;">{{ userDetails.firstName }}</td>
-                    </tr>
-                    <tr>
-                      <td style="font-weight: bold; color: #555; padding: 12px;">Last Name</td>
-                      <td style="font-size: 18px; color: #333; padding: 12px;">{{ userDetails.lastName }}</td>
-                    </tr>
-                    <tr>
-                      <td style="font-weight: bold; color: #555; padding: 12px;">Email</td>
-                      <td style="font-size: 18px; color: #333; padding: 12px;">{{ userDetails.email }}</td>
-                    </tr>
-                  </tbody>
-                </nz-table>
-              </nz-card>
-            </div>
-          </div>
-        </div>
-      </nz-tab>
-  
-      <!-- Reset Password Tab -->
-      <nz-tab [nzTitle]="'Reset Password'">
-        <p>Reset password content will go here...</p>
-      </nz-tab>
-  
-      <!-- Role Tab -->
-      <nz-tab [nzTitle]="'Role'">
-        <p>Role-related content will go here...</p>
-      </nz-tab>
-  
-      <!-- Session Tab -->
-      <nz-tab [nzTitle]="'Session'">
-        <p>Session details will go here...</p>
-      </nz-tab>
-    </nz-tabset>
-  </div>
-  
+  <nz-breadcrumb-item>
+    <a routerLink="/list" style="text-decoration: underline;">User List</a>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>User Details</nz-breadcrumb-item>
+</nz-breadcrumb>
+
+<div class="card-container">
+  <nz-tabset nzType="card">
+    <!-- User Details Tab -->
+    <nz-tab [nzTitle]="'User Details'">
+      <div *ngIf="userDetails">
+        <form nz-form>
+          <nz-table #editTable [nzData]="listOfData" [nzBordered]="true">
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Value</th>
+                <th>Edit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of editTable.data">
+                <td>{{ item.field }}</td>
+                <td *ngIf="!item.editable">{{ item.value }}</td>
+                <td *ngIf="item.editable">
+                  <input nz-input [(ngModel)]="item.value" [name]="item.field" />
+                </td>
+                <td>
+                  <a *ngIf="!item.editable && !item.isRestricted" (click)="startEdit(item)">Edit</a>
+                  <a *ngIf="item.editable" (click)="saveEdit(item)">Save</a>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </form>
+      </div>
+    </nz-tab>
+
+    <!-- Reset Password Tab -->
+    <nz-tab [nzTitle]="'Reset Password'">
+      <p>Reset password content will go here...</p>
+    </nz-tab>
+
+    <!-- Role Tab -->
+    <nz-tab [nzTitle]="'Role'">
+      <p>Role-related content will go here...</p>
+    </nz-tab>
+
+    <!-- Session Tab -->
+    <nz-tab [nzTitle]="'Session'">
+      <p>Session details will go here...</p>
+    </nz-tab>
+  </nz-tabset>
+</div>

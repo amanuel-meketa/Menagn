@@ -12,7 +12,7 @@ export class UserService {
     register(registerData: RegisterPostData) {
       throw new Error('Method not implemented.');
     }
-    private readonly baseUrl = 'http://localhost:5087/api';
+    private readonly baseUrl = 'http://localhost:9090/api';
     http = inject(HttpClient)
 
     loginPostData(postData: LoginPostData): Observable<any>

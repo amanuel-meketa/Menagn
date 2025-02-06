@@ -1,13 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  AbstractControl,
-  ValidationErrors,
-  ReactiveFormsModule
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule} from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -23,15 +16,7 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-user-register',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    NzButtonModule,
-    NzFormModule,
-    NzInputModule,
-    NzLayoutModule,
-    NzCardModule,
-    CommonModule,
-    RouterLink
+  imports: [ ReactiveFormsModule,NzButtonModule,NzFormModule,NzInputModule,NzLayoutModule,NzCardModule,CommonModule,RouterLink
   ],
   templateUrl: './user-register.component.html',
   styleUrls: ['./user-register.component.css']
@@ -44,7 +29,7 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private _userService: UserService,
     private message: NzMessageService,
-    private router: Router  // Inject Router here.
+    private router: Router 
   ) {}
 
   ngOnInit(): void {
@@ -84,7 +69,6 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
         next: (response) => {
           this.message.remove();
           this.message.success('Registration successful!');
-          // Navigate to the list page upon successful registration.
           this.router.navigate(['/list']);
         },
         error: (error) => {
@@ -94,7 +78,6 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      // Mark all controls as dirty to trigger validation messages.
       Object.values(this.validateForm.controls).forEach(control => {
         control.markAsDirty();
         control.updateValueAndValidity({ onlySelf: true });
