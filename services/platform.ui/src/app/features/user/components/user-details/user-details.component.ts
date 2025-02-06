@@ -10,19 +10,21 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { FormsModule } from '@angular/forms';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 interface EditableField {
   field: string;
   value: string;
   editable: boolean;
-  isRestricted: boolean; // Indicates if the field is restricted from editing
+  isRestricted: boolean; 
+  originalValue: string; 
 }
 
 @Component({
   selector: 'app-user-details',
   standalone: true,
-  imports: [CommonModule,RouterLink,NzBreadCrumbModule,NzTabsModule,NzCardModule,NzFormModule,NzButtonModule,NzTableModule,
-            FormsModule],
+  imports: [ CommonModule, RouterLink, NzBreadCrumbModule, NzTabsModule, NzCardModule,NzFormModule, NzButtonModule, NzTableModule,
+              FormsModule, NzSpinModule],
   templateUrl: './user-details.component.html',
   styleUrls: ['./user-details.component.css'],
 })
@@ -32,6 +34,7 @@ export class UserDetailsComponent implements OnInit {
   tab: string = '1';
   userDetails: UserDetailsGetData | null = null;
   listOfData: EditableField[] = [];
+  isModified: boolean = false;
 
   constructor(private route: ActivatedRoute, private cdr: ChangeDetectorRef) {}
 
@@ -58,11 +61,11 @@ export class UserDetailsComponent implements OnInit {
   prepareEditableData(): void {
     if (this.userDetails) {
       this.listOfData = [
-        { field: 'ID', value: this.userDetails.id, editable: false, isRestricted: true },
-        { field: 'Username', value: this.userDetails.username, editable: false, isRestricted: true },
-        { field: 'First Name', value: this.userDetails.firstName, editable: false, isRestricted: false },
-        { field: 'Last Name', value: this.userDetails.lastName, editable: false, isRestricted: false },
-        { field: 'Email', value: this.userDetails.email, editable: false, isRestricted: false },
+        { field: 'ID', value: this.userDetails.id, editable: false, isRestricted: true, originalValue: this.userDetails.id },
+        { field: 'Username', value: this.userDetails.username, editable: false, isRestricted: true, originalValue: this.userDetails.username },
+        { field: 'First Name', value: this.userDetails.firstName, editable: true, isRestricted: false, originalValue: this.userDetails.firstName },
+        { field: 'Last Name', value: this.userDetails.lastName, editable: true, isRestricted: false, originalValue: this.userDetails.lastName },
+        { field: 'Email', value: this.userDetails.email, editable: true, isRestricted: false, originalValue: this.userDetails.email },
       ];
     }
   }
@@ -73,8 +76,39 @@ export class UserDetailsComponent implements OnInit {
     }
   }
 
-  saveEdit(item: EditableField): void {
-    item.editable = false;
-    // Optionally, send the updated data to the server here
-  }
+checkForChanges(): void {
+  this.isModified = this.listOfData.some(item => item.value !== item.originalValue);
+}
+
+
+  saveAllChanges(): void {
+    const updatedData = {
+      firstName: this.listOfData.find(item => item.field === 'First Name')?.value || '',
+      lastName: this.listOfData.find(item => item.field === 'Last Name')?.value || '',
+      email: this.listOfData.find(item => item.field === 'Email')?.value || ''
+    };
+  
+    console.log('Sending data:', JSON.stringify(updatedData, null, 2));
+  
+    this._userService.updateUser(this.userId, updatedData).subscribe(
+      (response) => {
+        console.log('User details updated successfully!', response);
+      },
+      (error) => {
+        console.error('Error updating user details', error);
+        if (error.error && error.error.errors) {
+          console.error('Validation Errors:', error.error.errors);
+        }
+      }
+    );
+  }  
+  
+  resetChanges(): void {
+    // Logic to reset changes, like reverting edited fields to original values
+    this.listOfData.forEach(item => {
+      item.value = item.originalValue;
+      item.editable = false;
+    });
+    this.isModified = false;
+  }  
 }

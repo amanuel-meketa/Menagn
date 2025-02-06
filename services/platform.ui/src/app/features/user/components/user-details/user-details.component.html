@@ -9,47 +9,47 @@
   <nz-tabset nzType="card">
     <!-- User Details Tab -->
     <nz-tab [nzTitle]="'User Details'">
+      <div *ngIf="!userDetails">
+        <nz-spin nzSize="large" nzTip="Loading user details..."></nz-spin>
+        <!-- Optionally add an error message for failed data fetch -->
+        <div *ngIf="!userDetails && !isModified">
+          <p>Error loading user details!</p>
+        </div>
+      </div>
+
       <div *ngIf="userDetails">
         <form nz-form>
           <nz-table #editTable [nzData]="listOfData" [nzBordered]="true" [nzFrontPagination]="false">
-            <thead>
-              <tr>
-                <th>Field</th>
-                <th>Value</th>
-                <th>Edit</th>
-              </tr>
-            </thead>
             <tbody>
-              <tr *ngFor="let item of editTable.data">
+              <tr *ngFor="let item of listOfData">
                 <td>{{ item.field }}</td>
-                <td *ngIf="!item.editable">{{ item.value }}</td>
-                <td *ngIf="item.editable">
-                  <input nz-input [(ngModel)]="item.value" [name]="item.field" [readonly]="item.isRestricted" />
-                </td>
                 <td>
-                  <a *ngIf="!item.editable && !item.isRestricted" (click)="startEdit(item)">Edit</a>
-                  <a *ngIf="item.editable" (click)="saveEdit(item)">Save</a>
+                  <input nz-input [(ngModel)]="item.value" [name]="item.field.replace(' ', '_')" [readonly]="item.isRestricted" (ngModelChange)="checkForChanges()" class="wide-input"/>
                 </td>
               </tr>
             </tbody>
           </nz-table>
+
+          <div class="button-container">
+            <button nz-button nzType="default" (click)="resetChanges()" [disabled]="!isModified">Reset</button>
+            <button nz-button nzType="primary" (click)="saveAllChanges()" [disabled]="!isModified"> Save Changes</button>
+          </div>
         </form>
       </div>
     </nz-tab>
 
-    <!-- Reset Password Tab -->
+    <!-- Other Tabs -->
     <nz-tab [nzTitle]="'Reset Password'">
       <p>Reset password content will go here...</p>
     </nz-tab>
 
-    <!-- Role Tab -->
     <nz-tab [nzTitle]="'Role'">
       <p>Role-related content will go here...</p>
     </nz-tab>
 
-    <!-- Session Tab -->
     <nz-tab [nzTitle]="'Session'">
       <p>Session details will go here...</p>
     </nz-tab>
+
   </nz-tabset>
 </div>

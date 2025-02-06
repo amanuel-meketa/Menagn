@@ -119,7 +119,18 @@ nz-tab {
   display: flex;
   flex-direction: column;
 }
-/* Add this style to make the input field wider when it's in edit mode */
-.input-editable {
-  width: 300px; /* Adjust this value to your desired width */
+
+.wide-input {
+  width: 100%;
+  max-width: 400px; /* Adjust width as needed */
 }
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px; /* Adds space between buttons */
+  margin-top: 16px;
+}
+
+
+
