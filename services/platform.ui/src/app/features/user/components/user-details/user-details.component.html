@@ -11,7 +11,7 @@
     <nz-tab [nzTitle]="'User Details'">
       <div *ngIf="userDetails">
         <form nz-form>
-          <nz-table #editTable [nzData]="listOfData" [nzBordered]="true">
+          <nz-table #editTable [nzData]="listOfData" [nzBordered]="true" [nzFrontPagination]="false">
             <thead>
               <tr>
                 <th>Field</th>
@@ -24,7 +24,7 @@
                 <td>{{ item.field }}</td>
                 <td *ngIf="!item.editable">{{ item.value }}</td>
                 <td *ngIf="item.editable">
-                  <input nz-input [(ngModel)]="item.value" [name]="item.field" />
+                  <input nz-input [(ngModel)]="item.value" [name]="item.field" [readonly]="item.isRestricted" />
                 </td>
                 <td>
                   <a *ngIf="!item.editable && !item.isRestricted" (click)="startEdit(item)">Edit</a>
