@@ -119,3 +119,7 @@ nz-tab {
   display: flex;
   flex-direction: column;
 }
+/* Add this style to make the input field wider when it's in edit mode */
+.input-editable {
+  width: 300px; /* Adjust this value to your desired width */
+}
