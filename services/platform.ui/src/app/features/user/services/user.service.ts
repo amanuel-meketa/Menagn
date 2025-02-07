@@ -45,5 +45,10 @@ export class UserService {
     deleteUser(userId: string): Observable<any> {
       const url = `${this.baseUrl}/user/${userId}`;
       return this.http.delete(url);
+    }   
+    
+    resetPassword(userId: string, newPassword: string): Observable<any> {
+      const url = `${this.baseUrl}/user/reset-password${userId}`;
+      return this.http.post<any>(url, newPassword);
     }    
 } 

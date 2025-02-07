@@ -6,6 +6,7 @@ import { DashboardComponent } from './features/layout/components/dashboard/dashb
 import { LayoutComponent } from './features/layout/components/layout/layout.component';
 import { UserDetailsComponent } from './features/user/components/user-details/user-details.component';
 import { UserEditComponent } from './features/user/components/user-edit/user-edit.component';
+import { ResetPasswordComponent } from './features/user/components/reset-password/reset-password.component';
 
 export const routes: Routes = 
 [
@@ -18,6 +19,7 @@ export const routes: Routes =
       { path: 'list', component: UserListComponent },
       { path: 'user-details/:id', component: UserDetailsComponent },
       { path: 'user-edit/:id', component: UserEditComponent },
+      { path: 'reset-password', component: ResetPasswordComponent}
     ]
    },
 ];
