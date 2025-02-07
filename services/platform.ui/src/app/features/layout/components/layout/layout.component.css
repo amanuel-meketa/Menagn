@@ -119,3 +119,31 @@ nz-menu-item {
     padding: 12px;
   }
 }
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.header-icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trigger {
+  margin-right: 16px;
+}
+
+nz-button-group {
+  margin: 0 8px 8px 0;
+}
+
+nz-footer {
+  text-align: center;
+  height: 64px; /* Set the desired height */
+  line-height: 64px; /* Align text vertically */
+}
+

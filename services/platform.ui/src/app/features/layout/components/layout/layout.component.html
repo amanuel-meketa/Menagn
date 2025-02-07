@@ -1,5 +1,4 @@
 <nz-layout style="height: 100vh;">
-  <!-- Sidebar Section -->
   <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null" nzTheme="light" [nzWidth]="250">
     <div class="logo" style="color: rgb(19, 13, 13);"><h1> Menagn </h1></div>
     <ul nz-menu nzTheme="light" nzMode="inline">
@@ -117,13 +116,43 @@
   <!-- Main Content Section -->
   <nz-layout>
     <nz-header>
-      <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" (click)="isCollapsed = !isCollapsed"></span>
+      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" (click)="isCollapsed = !isCollapsed"></span>
+<br/><br/>
+        <!-- Dropdown button group on the right side -->
+        <nz-button-group style="margin-left: auto;">
+          <button nz-button>Amanuel Meketa</button>
+          <button nz-button nz-dropdown [nzDropdownMenu]="menu2" nzPlacement="bottomRight">
+            <span nz-icon nzType="user"></span>
+          </button>
+        </nz-button-group>
+      </div>
+      <nz-dropdown-menu #menu2="nzDropdownMenu">
+        <ul nz-menu>
+          <li nz-menu-item (click)="onPasswordReset()">
+            <i nz-icon nzType="lock" nzTheme="outline"></i>
+            <span>Password Reset</span>
+          </li>
+          <li nz-menu-item (click)="onUserProfile()">
+            <i nz-icon nzType="profile" nzTheme="outline"></i>
+            <span>User Profile</span>
+          </li>
+          <li nz-menu-item (click)="onLogout()">
+            <i nz-icon nzType="logout" nzTheme="outline"></i>
+            <span>Logout</span>
+          </li>
+        </ul>
+      </nz-dropdown-menu>
     </nz-header>
+
     
     <nz-content style="display: flex; flex-direction: column; height: 100%; padding: 16px;">
       <div class="inner-content" style="flex: 1; overflow: auto;">
         <router-outlet></router-outlet>
       </div>
+    
     </nz-content>
   </nz-layout>
 </nz-layout>
+
+<nz-footer> <p>Copyright © Menagn Software {{ currentYear }}. All rights reserved.</p> </nz-footer>
