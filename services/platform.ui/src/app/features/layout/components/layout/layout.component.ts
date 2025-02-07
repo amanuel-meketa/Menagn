@@ -18,7 +18,7 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
   styleUrl: './layout.component.css'
 })
 export class LayoutComponent {
-isCollapsed = false;
+  isCollapsed = false;
   currentYear: number = new Date().getFullYear();
 
   onPasswordReset(): void {

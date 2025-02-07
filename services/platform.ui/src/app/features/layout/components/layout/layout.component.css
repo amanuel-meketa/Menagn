@@ -1,149 +1,41 @@
+      .trigger {
+        font-size: 18px;
+        line-height: 64px;
+        padding: 0 24px;
+        cursor: pointer;
+        transition: color 0.3s;
+      }
 
-.logo h1 {
-  font-size: 40px; /* Adjust this value to make it bigger or smaller */
-  color: rgb(19, 13, 13); /* Keeps the color */
-}
+      .trigger:hover {
+        color: #1890ff;
+      }
 
-/* Light Gray background for the sidebar */
-nz-sider {
-  background-color: #F4F4F4 !important; /* Light Gray */
-}
+      .logo {
+        height: 32px;
+        background: rgba(255, 255, 255, 0.2);
+        margin: 16px;
+      }
 
-/* Light Gray background for the header */
-nz-header {
-  background-color: #F4F4F4 !important; /* Light Gray */
-}
+      nz-header {
+        background: #fff;
+        padding: 0;
+      }
 
-/* Logo style for better visibility on gray background */
-.logo {
-  color: #424242; /* Dark Gray text */
-}
+      nz-content {
+        margin: 0 16px;
+      }
 
-/* Ensure sidebar menu items are visible against the gray background */
-nz-menu {
-  background-color: #F4F4F4 !important; /* Light Gray */
-}
+      nz-breadcrumb {
+        margin: 16px 0;
+      }
 
-nz-menu-item, nz-submenu {
-  color: #424242 !important; /* Dark text for menu items */
-}
+      .inner-content {
+        padding: 24px;
+        background: #fff;
+        min-height: 590px;
+      }
 
-nz-menu-item:hover, nz-submenu:hover {
-  background-color: #B0BEC5; /* Darker Gray on hover */
-}
-
-/* Main layout styles */
-.nz-layout {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Header styling */
-.nz-header {
-  background: #F4F4F4;
-  padding: 0;
-}
-
-/* Sider styling */
-.nz-sider {
-  background: #F4F4F4;
-}
-
-/* Content area styling */
-.nz-content {
-  margin: 0 16px;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Breadcrumb styling */
-nz-breadcrumb {
-  margin: 16px 0;
-}
-
-/* Inner content styling */
-.inner-content {
-  padding: 24px;
-  background: #fff;
-  flex: 1;
-  overflow: auto;
-}
-
-/* Footer styling - Minimized with light gray color */
-nz-footer {
-  background-color: #B0BEC5; /* Light Gray footer background */
-  text-align: center;
-  padding: 1px 0; /* Minimized footer size */
-  font-size: 8px; /* Smaller font size */
-  color: #000; /* Dark text color */
-}
-
-/* Toggle button for menu */
-.trigger {
-  font-size: 18px;
-  line-height: 64px;
-  padding: 0 24px;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-/* Hover effect for trigger */
-.trigger:hover {
-  color: #1890ff;
-}
-
-/* Ensuring that the menu is fully visible on hover */
-nz-menu-item {
-  padding: 10px;
-}
-
-/* Collapse the sidebar when in tablet or mobile view */
-@media (max-width: 768px) {
-  nz-sider {
-    display: none !important;
-  }
-
-  nz-header {
-    padding-left: 16px;
-  }
-
-  .trigger {
-    display: inline-block;
-  }
-}
-
-/* Ensuring the content remains responsive */
-@media (max-width: 600px) {
-  .inner-content {
-    padding: 12px;
-  }
-}
-
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.header-icons {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.trigger {
-  margin-right: 16px;
-}
-
-nz-button-group {
-  margin: 0 8px 8px 0;
-}
-
-nz-footer {
-  text-align: center;
-  height: 64px; /* Set the desired height */
-  line-height: 64px; /* Align text vertically */
-}
-
+      nz-footer {
+        text-align: center;
+      }
+      

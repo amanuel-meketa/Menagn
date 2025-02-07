@@ -1,3 +1,5 @@
+
+
 <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
   <button nz-button nzType="primary" nzShape="round" (click)="navigateToRegister()">
     Add User
@@ -37,7 +39,7 @@
       <td>{{ user.email }}</td>
       <td>
         <nz-space [nzSize]="8">
-          <button nz-button nzSize="small" nzType="primary">Edit</button>
+          <button nz-button nzSize="small" nzType="primary">Active</button>
           <button nz-button nzSize="small" (click)="deleteUser(user.id)" nzDanger>Delete</button>
         </nz-space>        
       </td>

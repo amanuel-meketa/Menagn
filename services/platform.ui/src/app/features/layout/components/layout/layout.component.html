@@ -1,11 +1,20 @@
-<nz-layout style="height: 100vh;">
-  <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null" nzTheme="light" [nzWidth]="250">
-    <div class="logo" style="color: rgb(19, 13, 13);"><h1> Menagn </h1></div>
+<nz-layout>
+  <nz-sider
+    nzCollapsible
+    [(nzCollapsed)]="isCollapsed"
+    [nzTrigger]="null"
+    nzTheme="light"
+    [nzCollapsedWidth]="80" 
+    [nzWidth]="250"
+  >
+    <div class="logo" style="color: rgb(19, 13, 13);">
+      <h1>Menagn</h1>
+    </div>
     <ul nz-menu nzTheme="light" nzMode="inline">
       <li nz-menu-item nzMatchRouter>
         <a routerLink="/dashboard">
           <span nz-icon nzType="dashboard"></span>
-          <span>Dashboard</span>
+          <span class="menu-text">Dashboard</span>
         </a>
       </li>
       <li nz-submenu nzTitle="User Management" nzIcon="team">
@@ -13,19 +22,19 @@
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/list">
               <span nz-icon nzType="user"></span>
-              <span>Users</span>
+              <span class="menu-text">Users</span>
             </a>
           </li>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="#">
               <span nz-icon nzType="safety-certificate"></span>
-              <span>Roles</span>
+              <span class="menu-text">Roles</span>
             </a>
           </li>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="#">
               <span nz-icon nzType="group"></span>
-              <span>Groups</span>
+              <span class="menu-text">Groups</span>
             </a>
           </li>
         </ul>
@@ -112,17 +121,15 @@
       </li>
     </ul>
   </nz-sider>
-
-  <!-- Main Content Section -->
   <nz-layout>
     <nz-header>
-      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+      <div style="display: flex; width: 100%;">
         <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" (click)="isCollapsed = !isCollapsed"></span>
-<br/><br/>
+        <br/>
         <!-- Dropdown button group on the right side -->
         <nz-button-group style="margin-left: auto;">
           <button nz-button>Amanuel Meketa</button>
-          <button nz-button nz-dropdown [nzDropdownMenu]="menu2" nzPlacement="bottomRight">
+          <button nz-button nz-dropdown [nzDropdownMenu]="menu2"  nzPlacement="bottomRight">
             <span nz-icon nzType="user"></span>
           </button>
         </nz-button-group>
@@ -144,15 +151,16 @@
         </ul>
       </nz-dropdown-menu>
     </nz-header>
-
-    
-    <nz-content style="display: flex; flex-direction: column; height: 100%; padding: 16px;">
-      <div class="inner-content" style="flex: 1; overflow: auto;">
+    <nz-content>
+      <nz-breadcrumb>
+        <nz-breadcrumb-item> </nz-breadcrumb-item>
+      </nz-breadcrumb>
+      <div class="inner-content">
         <router-outlet></router-outlet>
       </div>
-    
     </nz-content>
+    <nz-footer>
+      <p>Copyright © Menagn Software {{ currentYear }}. All rights reserved.</p> 
+    </nz-footer>
   </nz-layout>
 </nz-layout>
-
-<nz-footer> <p>Copyright © Menagn Software {{ currentYear }}. All rights reserved.</p> </nz-footer>

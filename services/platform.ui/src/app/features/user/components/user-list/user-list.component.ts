@@ -13,12 +13,13 @@ import { CommonModule } from '@angular/common';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router, RouterLink } from '@angular/router';
+import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
   imports: [
-    FormsModule, NzButtonModule, NzDropDownModule, NzIconModule, NzInputModule, RouterLink,
+    FormsModule, NzBreadCrumbModule, NzButtonModule, NzDropDownModule, NzIconModule, NzInputModule, RouterLink,
     NzTableModule, NzPageHeaderModule, NzSpaceModule, CommonModule, NzModalModule,
   ],
   templateUrl: './user-list.component.html',
