@@ -35,11 +35,9 @@ export class LoginComponent {
       const loadingMessage = this.message.loading('User logging...', { nzDuration: 0 });
       this._userSerivce.login(this.validateForm.value).subscribe({
         next: (response) => {
-          debugger;
-          console.log('User logged in successfully:', response);
           this.message.remove();
           this.message.success('logged in successfully!');
-          localStorage.setItem('menagn', JSON.stringify(response));
+          localStorage.setItem('menagnToken', JSON.stringify(response));
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {

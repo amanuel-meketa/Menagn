@@ -8,6 +8,7 @@ import { NzFormModule, NzFormTooltipIcon } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { UserService } from '../../services/user.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-reset-password',
@@ -18,10 +19,10 @@ import { UserService } from '../../services/user.service';
 })
 export class ResetPasswordComponent implements OnInit, OnDestroy {
   private _userService = inject(UserService);
+  private message = inject(NzMessageService);
+  private fb = inject(NonNullableFormBuilder);
   private destroy$ = new Subject<void>();
   validateForm!: FormGroup;
-  
-  constructor(private fb: NonNullableFormBuilder) {}
 
   ngOnInit(): void {
     // Initialize form in ngOnInit after fb is available
@@ -42,15 +43,18 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
 
   submitForm(): void {
     if (this.validateForm.valid) {
+      const loadingMessage = this.message.loading('Password reseting...', { nzDuration: 0 });
       const userId = '2f3f58e6-029e-4c62-bc62-d1c8b91bc6b4';
       const newPassword = this.validateForm.controls['password'].value;
   
       this._userService.resetPassword(userId, newPassword).subscribe({
         next: () => {
-          console.log('Password reset successful');
+          this.message.remove();
+          this.message.success('Password reset successful!');
         },
         error: err => {
-          console.error('Password reset failed', err);
+          this.message.remove();
+          this.message.error(`Password reset failed: ${err.message || 'Unknown error'}`);
         }
       });
     } else {
