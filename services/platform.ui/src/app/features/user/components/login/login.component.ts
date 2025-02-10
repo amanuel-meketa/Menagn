@@ -7,6 +7,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { UserService } from '../../services/user.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { AuthService } from '../../../../shared/services/auth-service.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 })
 
 export class LoginComponent {
-  private _userSerivce = inject(UserService);
+  private readonly _userSerivce = inject(UserService);
+  private readonly _authService = inject(AuthService);
   private message = inject(NzMessageService);
   private router = inject(Router);
   validateForm: FormGroup;
@@ -38,6 +40,7 @@ export class LoginComponent {
           this.message.remove();
           this.message.success('logged in successfully!');
           localStorage.setItem('Bearer', JSON.stringify(response));
+          this._authService.currentUserSig.set(response)
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {

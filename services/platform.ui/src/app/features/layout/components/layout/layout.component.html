@@ -119,19 +119,23 @@
       </li>
     </ul>
   </nz-sider>
-  <nz-layout>
-    <nz-header>
+  <nz-layout >
+     <nz-header>
       <div style="display: flex; width: 100%;">
         <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" (click)="isCollapsed = !isCollapsed"></span>
-        <br/>
-        <!-- Dropdown button group on the right side -->
-        <nz-button-group style="margin-left: auto;">
-          <button nz-button>Amanuel Meketa</button>
+    
+        <!-- Display login button when no user is logged in -->
+        <button *ngIf="currentUser() === null" nz-button routerLink="/login">Login</button>
+    
+        <!-- Display username, reset password, and logout when user is logged in -->
+        <nz-button-group *ngIf="currentUser()" style="margin-left: auto;">
+          <button nz-button>Amanuel Meketa {{ currentUser()?.username }}</button>
           <button nz-button nz-dropdown [nzDropdownMenu]="menu2" cen nzPlacement="bottomRight">
             <span nz-icon nzType="user"></span>
           </button>
         </nz-button-group>
       </div>
+    
       <nz-dropdown-menu #menu2="nzDropdownMenu">
         <ul nz-menu>
           <li nz-menu-item (click)="onPasswordReset()">
@@ -149,6 +153,7 @@
         </ul>
       </nz-dropdown-menu>
     </nz-header>
+    
     <nz-content>
       <nz-breadcrumb>
         <nz-breadcrumb-item> </nz-breadcrumb-item>
