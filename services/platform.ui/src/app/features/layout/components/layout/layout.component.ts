@@ -8,7 +8,6 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 
-
 @Component({
   selector: 'app-layout',
   standalone: true,

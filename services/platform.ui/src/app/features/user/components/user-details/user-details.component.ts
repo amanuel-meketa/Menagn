@@ -47,7 +47,7 @@ export class UserDetailsComponent implements OnInit {
   }
 
   loadUserDetails(): void {
-    this._userService.UserDetails(this.userId).subscribe(
+    this._userService.getUserDetails(this.userId).subscribe(
       (data: UserDetailsGetData) => {
         this.userDetails = data;
         this.prepareEditableData();

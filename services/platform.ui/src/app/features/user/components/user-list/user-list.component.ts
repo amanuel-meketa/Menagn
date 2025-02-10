@@ -44,7 +44,7 @@ export class UserListComponent implements OnInit {
 
   // Fetch the user list from the service
   loadUserList(): void {
-    this._userService.userList().subscribe(
+    this._userService.getUserList().subscribe(
       (data) => {
         this.originalUserList = data;  // Store the original data
         this.filteredUserList = [...data];  // Copy the data for display

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule} from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -18,36 +18,27 @@ import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 @Component({
   selector: 'app-user-register',
   standalone: true,
-  imports: [ ReactiveFormsModule,NzBreadCrumbModule,NzButtonModule,NzFormModule,NzInputModule,NzLayoutModule,NzModalModule,NzCardModule,CommonModule,RouterLink],
+  imports: [ ReactiveFormsModule,NzBreadCrumbModule,NzButtonModule,NzFormModule,NzInputModule,NzLayoutModule,NzModalModule,
+             NzCardModule,CommonModule,RouterLink],
   templateUrl: './user-register.component.html',
   styleUrls: ['./user-register.component.css']
 })
+
 export class UserRegisterComponent implements OnInit, OnDestroy {
+  private _userService = inject(UserService);
+  private message = inject(NzMessageService);
+  private router = inject(Router);
+  private fb = inject(FormBuilder);
   private destroy$ = new Subject<void>();
   validateForm!: FormGroup;
 
-  constructor(
-    private fb: FormBuilder,
-    private _userService: UserService,
-    private message: NzMessageService,
-    private router: Router 
-  ) {}
-
   ngOnInit(): void {
-    // Update the form with additional fields required by the backend model.
-    this.validateForm = this.fb.group({
+      this.validateForm = this.fb.group({
       userName: ['', [Validators.required],],
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
       email: ['', [Validators.email, Validators.required]],
     });
-
-    // Update confirmation validity when the password changes.
-    this.validateForm.controls['password'].valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.validateForm.controls['confirm'].updateValueAndValidity();
-      });
   }
 
   ngOnDestroy(): void {

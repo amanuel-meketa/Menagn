@@ -33,7 +33,7 @@ export class LoginComponent {
   login(): void {
     if (this.validateForm.valid) {
       const loadingMessage = this.message.loading('User logging...', { nzDuration: 0 });
-      this._userSerivce.loginPostData(this.validateForm.value).subscribe({
+      this._userSerivce.login(this.validateForm.value).subscribe({
         next: (response) => {
           debugger;
           console.log('User logged in successfully:', response);
