@@ -41,14 +41,4 @@ export class UserService { [x: string]: any;
     return this.http.put(`${this.baseUrl}/user/${userId}/reset-password`, JSON.stringify(newPassword), { headers: this.jsonHeaders }
     );
   }
-  
-
-
-  sresetPassword(userId: string, newPassword: string) {
-      const url = `http://localhost:9090/api/user/${userId}/reset-password`;
-      const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-      
-      return this.http.put(url, JSON.stringify(newPassword), { headers });
-
-    }
 }
