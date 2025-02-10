@@ -37,7 +37,7 @@ export class UserService { [x: string]: any;
     return this.http.delete(`${this.baseUrl}/user/${userId}`);
   }
 
-  resetPassword(userId: string, newPassword: string) {
+  resetPassword(userId: string, newPassword: string): Observable<any> {
     return this.http.put(`${this.baseUrl}/user/${userId}/reset-password`, JSON.stringify(newPassword), { headers: this.jsonHeaders }
     );
   }

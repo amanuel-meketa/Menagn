@@ -37,7 +37,7 @@ export class LoginComponent {
         next: (response) => {
           this.message.remove();
           this.message.success('logged in successfully!');
-          localStorage.setItem('menagnToken', JSON.stringify(response));
+          localStorage.setItem('Bearer', JSON.stringify(response));
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {
