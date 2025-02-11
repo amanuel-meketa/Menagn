@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using security.business.Contracts;
 using security.sharedUtils.Dtos.Event.Event;
-[ApiController]
-[Route("api/eventLog")]
-public class EventLogController : ControllerBase
-{
+
+    [Authorize]
+    [ApiController]
+    [Route("api/eventLog")]
+    public class EventLogController : ControllerBase
+    {
     private readonly IEventLogService _eventService;
 
     public EventLogController(IEventLogService eventService)
