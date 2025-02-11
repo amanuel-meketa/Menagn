@@ -46,7 +46,10 @@ namespace security.api.Controllers
         {
             var claims = User.Claims;
 
-            // Populate it with important claims
+            // Extract the access token from the Authorization header
+            var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            // Populate the UserInfoDto with important claims and tokens
             var importantClaims = new UserInfoDto
             {
                 Exp = GetClaimValue(claims, ClaimTypes.Expiration),
@@ -69,7 +72,8 @@ namespace security.api.Controllers
                 PreferredUsername = GetClaimValue(claims, "preferred_username"),
                 GivenName = GetClaimValue(claims, "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"),
                 Surname = GetClaimValue(claims, "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"),
-                EmailAddress = GetClaimValue(claims, "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")
+                EmailAddress = GetClaimValue(claims, "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"),
+                AccessToken = accessToken
             };
 
             return Ok(importantClaims);

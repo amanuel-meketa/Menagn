@@ -23,5 +23,6 @@
         public string GivenName { get; set; } // Given name
         public string Surname { get; set; } // Surname
         public string EmailAddress { get; set; } // Email address
+        public string? AccessToken { get; set; }
     }
 }
