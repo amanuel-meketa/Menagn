@@ -8,7 +8,7 @@ import { LoginPostData } from '../../../models/LoginPostData';
 @Injectable({  providedIn: 'root' })
 
 export class UserService { [x: string]: any;
-  private readonly baseUrl = 'http://localhost:9090/api';
+  private readonly baseUrl = 'http://platform.security:9090/api';
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
   constructor(private readonly http: HttpClient) {}

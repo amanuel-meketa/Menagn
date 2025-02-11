@@ -41,7 +41,7 @@ namespace security.api.Controllers
             }
         }
 
-        [Authorize]
+        [AllowAnonymous]
         [HttpGet("userinfo")]
         public ActionResult<UserInfoDto> GetUserInfo()
         {
