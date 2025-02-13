@@ -5,6 +5,6 @@ import { Auth } from '../model/auth';
   providedIn: 'root'
 })
 export class AuthService{
-currentUserSig = signal<Auth | undefined | null>(undefined);
+currentUserSig = signal<string | undefined | null>(undefined);
   constructor() { }
 }

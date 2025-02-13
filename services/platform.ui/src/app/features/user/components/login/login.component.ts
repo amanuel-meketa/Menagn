@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; // Import FormBuilder correctly
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -18,7 +18,7 @@ import { AuthService } from '../../../../shared/services/auth-service.service';
 })
 
 export class LoginComponent {
-  private readonly _userSerivce = inject(UserService);
+  private readonly _userService = inject(UserService);
   private readonly _authService = inject(AuthService);
   private message = inject(NzMessageService);
   private router = inject(Router);
@@ -35,22 +35,29 @@ export class LoginComponent {
   login(): void {
     if (this.validateForm.valid) {
       const loadingMessage = this.message.loading('User logging...', { nzDuration: 0 });
-      this._userSerivce.login(this.validateForm.value).subscribe({
+  
+      this._userService.login(this.validateForm.value).subscribe({
         next: (response) => {
           this.message.remove();
-          this.message.success('logged in successfully!');
-          localStorage.setItem('Bearer', JSON.stringify(response));
-          this._authService.currentUserSig.set(response)
-          this.router.navigate(['/dashboard']);
+          if (response?.access_token) {
+            this.message.success('Logged in successfully!');
+            localStorage.setItem('Bearer', response.access_token); // ✅ Store only access_token
+            this._authService.currentUserSig.set(response.access_token);
+            this.router.navigate(['/dashboard']);
+          } else {
+            this.message.error('Login failed: Access token missing.');
+          }
         },
         error: (error) => {
-          console.error('Login failed:', error);
           this.message.remove();
+          console.error('Login failed:', error);
           this.message.error(`Login failed: ${error.message || 'Unknown error'}`);
-        },
+        }
       });
     } else {
       console.error('Form is invalid');
+      this.message.error('Please fill in all required fields.');
     }
   }
+  
 }

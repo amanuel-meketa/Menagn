@@ -17,4 +17,3 @@ export class AppComponent {
   isCollapsed = false;
   currentYear: number = new Date().getFullYear();
 }
-

@@ -70,3 +70,6 @@
 .register-link a:hover {
   text-decoration: underline;
 }
+nz-footer {
+  text-align: center;
+}
