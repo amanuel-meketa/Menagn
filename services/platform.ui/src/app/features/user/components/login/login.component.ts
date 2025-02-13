@@ -43,7 +43,7 @@ export class LoginComponent {
             this.message.success('Logged in successfully!');
             localStorage.setItem('Bearer', response.access_token); // ✅ Store only access_token
             this._authService.currentUserSig.set(response.access_token);
-            this.router.navigate(['/dashboard']);
+            this.router.navigateByUrl('dashboard');
           } else {
             this.message.error('Login failed: Access token missing.');
           }

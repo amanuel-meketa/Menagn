@@ -120,17 +120,18 @@
     </ul>
   </nz-sider>
   <nz-layout >
-     <nz-header>
-      <div style="display: flex; width: 100%;">
+   
+    <nz-header>
+      <div style="display: flex; width: 100%; justify-content: space-between;">
         <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" (click)="isCollapsed = !isCollapsed"></span>
     
-        <!-- Display login button when no user is logged in -->
-        <button *ngIf="currentUser() === null" nz-button routerLink="/login">Login</button>
+        <!-- Conditionally display Login button on the right if token is null or empty -->
+        <button *ngIf="!token" nz-button routerLink="/login" style="margin-left: auto;">Login</button>
     
-        <!-- Display username, reset password, and logout when user is logged in -->
-        <nz-button-group *ngIf="currentUser()" style="margin-left: auto;">
+        <!-- Conditionally display user profile, password reset, and logout dropdown if token is present -->
+        <nz-button-group *ngIf="token" style="margin-left: auto;">
           <button nz-button>Amanuel Meketa</button>
-          <button nz-button nz-dropdown [nzDropdownMenu]="menu2" cen nzPlacement="bottomRight">
+          <button nz-button nz-dropdown [nzDropdownMenu]="menu2" nzPlacement="bottomRight">
             <span nz-icon nzType="user"></span>
           </button>
         </nz-button-group>

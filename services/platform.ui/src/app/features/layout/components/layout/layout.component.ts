@@ -24,9 +24,7 @@ export class LayoutComponent {
   private router = inject(Router);
   isCollapsed = false;
   currentYear: number = new Date().getFullYear();
-  
-  // Exposing signal value for use in the template
-  currentUser = this._authService.currentUserSig;
+  token = localStorage.getItem('Bearer'); 
 
   onPasswordReset(): void {
     console.log('Password Reset clicked');

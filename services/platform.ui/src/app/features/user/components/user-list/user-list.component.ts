@@ -98,7 +98,7 @@ export class UserListComponent implements OnInit {
   }
 
   navigateToRegister(): void {
-    this.router.navigate(['/register']).then(() => {
+    this.router.navigateByUrl('/register').then(() => {
       window.location.reload(); // Forces reload after navigation
     });
   }  

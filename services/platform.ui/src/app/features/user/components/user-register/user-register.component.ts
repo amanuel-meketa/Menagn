@@ -11,7 +11,6 @@ import { RegisterPostData } from '../../../../models/RegisterPostData';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user.service';
 import { Observable, Observer, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 
@@ -61,7 +60,7 @@ export class UserRegisterComponent implements OnInit, OnDestroy {
         next: (response) => {
           this.message.remove();
           this.message.success('Registration successful!');
-          this.router.navigate(['/list']);
+          this.router.navigateByUrl('/list');
         },
         error: (error) => {
           console.error('Registration failed:', error);

@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { RegisterPostData } from '../../../models/RegisterPostData';
 import { UserListData } from '../../../models/UserListData';
 import { LoginPostData } from '../../../models/LoginPostData';
-import { Auth } from '../../../shared/model/auth';
 
 @Injectable({  providedIn: 'root' })
 
@@ -14,14 +13,14 @@ export class UserService { [x: string]: any;
 
   constructor(private readonly http: HttpClient) {}
 
-  login(postData: LoginPostData): Observable<{ access_token: string; refresh_token: string; token_type: string }> {
+  login(postData: LoginPostData): Observable<{ access_token: string; refresh_token: string; token_type: string }> 
+  {
     return this.http.post<{ access_token: string; refresh_token: string; token_type: string }>(
-      `${this.baseUrl}/account/log-in`,postData, { headers: this.jsonHeaders }
-    );
+         `${this.baseUrl}/account/log-in`,postData);
   }
 
   registerUser(postData: RegisterPostData): Observable<any> {
-    return this.http.post(`${this.baseUrl}/user`, postData, { headers: this.jsonHeaders });
+    return this.http.post(`${this.baseUrl}/user`, postData);
   }
 
   getUserList(): Observable<UserListData[]> {
@@ -33,7 +32,7 @@ export class UserService { [x: string]: any;
   }
 
   updateUser(userId: string, updatedData: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/user/${userId}`, updatedData, { headers: this.jsonHeaders });
+    return this.http.put(`${this.baseUrl}/user/${userId}`, updatedData);
   }
 
   deleteUser(userId: string): Observable<any> {
