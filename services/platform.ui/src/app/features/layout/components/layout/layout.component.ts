@@ -20,12 +20,12 @@ import { AuthService } from '../../../../shared/services/auth-service.service';
   styleUrl: './layout.component.css'
 })
 export class LayoutComponent {
-  private readonly _authService = inject(AuthService); 
+  private _authService = inject(AuthService); 
   private router = inject(Router);
   isCollapsed = false;
   currentYear: number = new Date().getFullYear();
 
-  token = this._authService.getStoredToken()?.emailAddress;
+  token = this._authService.getStoredToken()?.emailAddress || null;
 
   onPasswordReset(): void {
     console.log('Password Reset clicked');

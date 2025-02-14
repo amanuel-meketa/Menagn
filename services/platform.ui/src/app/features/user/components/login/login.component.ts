@@ -41,7 +41,7 @@ export class LoginComponent {
 
           if (response?.access_token) {
             this.message.success('Logged in successfully!');
-
+            this.router.navigateByUrl('dashboard');
             // Call AuthService to handle authentication
             this._authService.authenticateUser(response).subscribe({
               next: () => {

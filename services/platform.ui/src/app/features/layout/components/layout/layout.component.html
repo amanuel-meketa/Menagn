@@ -125,28 +125,28 @@
       <div style="display: flex; width: 100%; justify-content: space-between;">
         <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" (click)="isCollapsed = !isCollapsed"></span>
     
-        <!-- Conditionally display Login button on the right if token is null or empty -->
+       <!-- Display Login button if token does not exist -->
         <button *ngIf="!token" nz-button routerLink="/login" style="margin-left: auto;">Login</button>
-    
-        <!-- Conditionally display user profile, password reset, and logout dropdown if token is present -->
+
+        <!-- Display user email and dropdown if token exists -->
         <nz-button-group *ngIf="token" style="margin-left: auto;">
-          <button nz-button>{{token}}</button>
+          <button nz-button>{{ token }}</button>
           <button nz-button nz-dropdown [nzDropdownMenu]="menu2" nzPlacement="bottomRight">
             <span nz-icon nzType="user"></span>
           </button>
-        </nz-button-group>
+        </nz-button-group>ß
       </div>
     
       <nz-dropdown-menu #menu2="nzDropdownMenu">
         <ul nz-menu>
           <li nz-menu-item (click)="onPasswordReset()">
-            <i nz-icon nzType="lock" nzTheme="outline"></i>
+            <i nz-icon nzType="lock" nzTheme="outline"></i>ß
             <span>Password Reset</span>
           </li>
           <li nz-menu-item (click)="onUserProfile()">
             <i nz-icon nzType="profile" nzTheme="outline"></i>
             <span>User Profile</span>
-          </li>
+          </li>ß
           <li nz-menu-item (click)="onLogout()">
             <i nz-icon nzType="logout" nzTheme="outline"></i>
             <span>Logout</span>

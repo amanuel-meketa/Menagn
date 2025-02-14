@@ -69,10 +69,7 @@ export class AuthService {
           authData.nameIdentifier = user.nameIdentifier;
           authData.emailAddress = user.emailAddress;
 
-          // Store updated token with user details
           this.setToken(authData);
-
-          // Update the BehaviorSubject with the current user
           this.setCurrentUser(user);
         }
       })
