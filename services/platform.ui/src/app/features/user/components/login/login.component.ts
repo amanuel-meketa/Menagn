@@ -16,7 +16,6 @@ import { AuthService } from '../../../../shared/services/auth-service.service';
   templateUrl: './login.component.html', 
   styleUrls: ['./login.component.css'] 
 })
-
 export class LoginComponent {
   private readonly _userService = inject(UserService);
   private readonly _authService = inject(AuthService);
@@ -25,8 +24,8 @@ export class LoginComponent {
   validateForm: FormGroup;
   isCollapsed = false;
 
-  constructor( private fb: FormBuilder,){
-      this.validateForm = this.fb.group({
+  constructor(private fb: FormBuilder) {
+    this.validateForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
       password: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
     });
@@ -34,22 +33,31 @@ export class LoginComponent {
 
   login(): void {
     if (this.validateForm.valid) {
-      const loadingMessage = this.message.loading('User logging...', { nzDuration: 0 });
-  
+      const loadingMessage = this.message.loading('User logging...', { nzDuration: 0 }).messageId;
+
       this._userService.login(this.validateForm.value).subscribe({
         next: (response) => {
-          this.message.remove();
+          this.message.remove(loadingMessage);
+
           if (response?.access_token) {
             this.message.success('Logged in successfully!');
-            localStorage.setItem('Bearer', response.access_token); // ✅ Store only access_token
-            this._authService.currentUserSig.set(response.access_token);
-            this.router.navigateByUrl('dashboard');
+
+            // Call AuthService to handle authentication
+            this._authService.authenticateUser(response).subscribe({
+              next: () => {
+                this.router.navigateByUrl('dashboard');
+              },
+              error: (err) => {
+                console.error('Failed to fetch user:', err);
+                this.message.error('Error retrieving user details.');
+              }
+            });
           } else {
             this.message.error('Login failed: Access token missing.');
           }
         },
         error: (error) => {
-          this.message.remove();
+          this.message.remove(loadingMessage);
           console.error('Login failed:', error);
           this.message.error(`Login failed: ${error.message || 'Unknown error'}`);
         }
@@ -59,5 +67,4 @@ export class LoginComponent {
       this.message.error('Please fill in all required fields.');
     }
   }
-  
 }

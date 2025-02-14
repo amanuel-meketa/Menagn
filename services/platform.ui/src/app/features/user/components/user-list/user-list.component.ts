@@ -102,4 +102,5 @@ export class UserListComponent implements OnInit {
       window.location.reload(); // Forces reload after navigation
     });
   }  
+
 }

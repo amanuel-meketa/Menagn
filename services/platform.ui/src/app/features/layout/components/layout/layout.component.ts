@@ -20,11 +20,12 @@ import { AuthService } from '../../../../shared/services/auth-service.service';
   styleUrl: './layout.component.css'
 })
 export class LayoutComponent {
-  private readonly _authService = inject(AuthService);
+  private readonly _authService = inject(AuthService); 
   private router = inject(Router);
   isCollapsed = false;
   currentYear: number = new Date().getFullYear();
-  token = localStorage.getItem('Bearer'); 
+
+  token = this._authService.getStoredToken()?.emailAddress;
 
   onPasswordReset(): void {
     console.log('Password Reset clicked');
@@ -35,8 +36,7 @@ export class LayoutComponent {
   }
 
   onLogout(): void {
-    localStorage.clear();
-    this._authService.currentUserSig.set(null); // Clear user signal
-    this.router.navigate(['/login']);
+    this._authService.logout()
+    this.router.navigateByUrl('/login');
   }
 }

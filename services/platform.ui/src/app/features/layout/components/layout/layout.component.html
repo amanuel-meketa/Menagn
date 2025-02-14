@@ -130,7 +130,7 @@
     
         <!-- Conditionally display user profile, password reset, and logout dropdown if token is present -->
         <nz-button-group *ngIf="token" style="margin-left: auto;">
-          <button nz-button>Amanuel Meketa</button>
+          <button nz-button>{{token}}</button>
           <button nz-button nz-dropdown [nzDropdownMenu]="menu2" nzPlacement="bottomRight">
             <span nz-icon nzType="user"></span>
           </button>

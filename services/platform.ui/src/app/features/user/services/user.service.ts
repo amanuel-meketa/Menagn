@@ -1,17 +1,17 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RegisterPostData } from '../../../models/RegisterPostData';
 import { UserListData } from '../../../models/UserListData';
 import { LoginPostData } from '../../../models/LoginPostData';
+import { GetCurrentUser } from '../../../models/User/GetCurrentUser';
 
 @Injectable({  providedIn: 'root' })
 
 export class UserService { [x: string]: any;
+  private readonly http = inject(HttpClient);
   private readonly baseUrl = 'http://platform.security:9090/api';
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
-
-  constructor(private readonly http: HttpClient) {}
 
   login(postData: LoginPostData): Observable<{ access_token: string; refresh_token: string; token_type: string }> 
   {
@@ -40,7 +40,11 @@ export class UserService { [x: string]: any;
   }
 
   resetPassword(userId: string, newPassword: string): Observable<any> {
-    return this.http.put(`${this.baseUrl}/user/${userId}/reset-password`, JSON.stringify(newPassword), { headers: this.jsonHeaders }
-    );
+    return this.http.put(`${this.baseUrl}/user/${userId}/reset-password`, 
+           JSON.stringify(newPassword), { headers: this.jsonHeaders }
+    );}
+
+    getCurrentUser(): Observable<GetCurrentUser> {
+    return this.http.get<GetCurrentUser>(`${this.baseUrl}/account/userinfo`);
   }
 }
