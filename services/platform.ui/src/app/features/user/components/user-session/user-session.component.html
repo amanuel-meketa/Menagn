@@ -1,0 +1,23 @@
+<nz-table *ngIf="listOfData.length > 0" #headerTable [nzScroll]="{ y: '380px' }">
+    <thead>
+      <tr>
+        <th>Ip Address</th>
+        <th>Start</th>
+        <th>Last Access</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of listOfData">
+        <td>{{ data.ipAddress }}</td>
+        <td>{{ data.start }}</td>
+        <td>{{ data.lastAccess }}</td>
+        <td nzRight nz-button nzType="danger" (click)="deleteSession(data)">
+          <a>Delete</a>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  
+  <p *ngIf="listOfData.length === 0">No sessions found for this user.</p>
+  

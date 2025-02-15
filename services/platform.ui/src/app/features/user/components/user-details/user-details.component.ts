@@ -12,6 +12,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { FormsModule } from '@angular/forms';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { ResetPasswordComponent } from '../reset-password/reset-password.component';
+import { UserSessionComponent } from '../user-session/user-session.component';
 
 interface EditableField {
   field: string;
@@ -25,7 +26,7 @@ interface EditableField {
   selector: 'app-user-details',
   standalone: true,
   imports: [ CommonModule, RouterLink, NzBreadCrumbModule, NzTabsModule, NzCardModule,NzFormModule, NzButtonModule, NzTableModule,
-              FormsModule, NzSpinModule, ResetPasswordComponent],
+              FormsModule, NzSpinModule, ResetPasswordComponent, UserSessionComponent],
   templateUrl: './user-details.component.html',
   styleUrls: ['./user-details.component.css'],
 })

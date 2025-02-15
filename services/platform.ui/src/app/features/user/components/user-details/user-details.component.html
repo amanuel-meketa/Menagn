@@ -6,11 +6,9 @@
 </nz-breadcrumb>
 
   <nz-tabset nzType="card">
-    <!-- User Details Tab -->
     <nz-tab [nzTitle]="'User Details'">
       <div *ngIf="!userDetails">
         <nz-spin nzSize="large" nzTip="Loading user details..."></nz-spin>
-        <!-- Optionally add an error message for failed data fetch -->
         <div *ngIf="!userDetails && !isModified">
           <p>Error loading user details!</p>
         </div>
@@ -37,7 +35,6 @@
       </div>
     </nz-tab>
 
-    <!-- Other Tabs -->
     <nz-tab [nzTitle]="'Reset Password'">
       <app-reset-password [userId]="userId"></app-reset-password>
     </nz-tab>
@@ -47,7 +44,7 @@
     </nz-tab>
 
     <nz-tab [nzTitle]="'Session'">
-      <p>Session details will go here...</p>
+     <app-user-session [userId]="userId"></app-user-session>
     </nz-tab>
 
   </nz-tabset>

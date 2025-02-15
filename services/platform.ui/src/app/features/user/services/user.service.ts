@@ -5,6 +5,7 @@ import { RegisterPostData } from '../../../models/RegisterPostData';
 import { UserListData } from '../../../models/UserListData';
 import { LoginPostData } from '../../../models/LoginPostData';
 import { GetCurrentUser } from '../../../models/User/GetCurrentUser';
+import { UserSession } from '../../../models/User/UserSession';
 
 @Injectable({  providedIn: 'root' })
 
@@ -44,7 +45,12 @@ export class UserService { [x: string]: any;
            JSON.stringify(newPassword), { headers: this.jsonHeaders }
     );}
 
-    getCurrentUser(): Observable<GetCurrentUser> {
+  getCurrentUser(): Observable<GetCurrentUser> {
     return this.http.get<GetCurrentUser>(`${this.baseUrl}/account/userinfo`);
   }
+  
+  getUserSeesion(userId: string): Observable<UserSession[]> {
+    return this.http.get<UserSession[]>(`${this.baseUrl}/user/${userId}/sessions`);
+  }
+  
 }

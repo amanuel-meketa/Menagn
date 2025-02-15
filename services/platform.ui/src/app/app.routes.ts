@@ -8,6 +8,7 @@ import { UserDetailsComponent } from './features/user/components/user-details/us
 import { UserEditComponent } from './features/user/components/user-edit/user-edit.component';
 import { ResetPasswordComponent } from './features/user/components/reset-password/reset-password.component';
 import { authGuard } from './guards/auth.guard';
+import { UserSessionComponent } from './features/user/components/user-session/user-session.component';
 
 export const routes: Routes = 
 [
@@ -19,7 +20,8 @@ export const routes: Routes =
       { path: 'list', component: UserListComponent, canActivate:[authGuard]},
       { path: 'user-details/:id', component: UserDetailsComponent, canActivate:[authGuard]},
       { path: 'user-edit/:id', component: UserEditComponent, canActivate:[authGuard] },
-      { path: 'reset-password', component: ResetPasswordComponent, canActivate:[authGuard]}
+      { path: 'reset-password', component: ResetPasswordComponent, canActivate:[authGuard]},
+      { path: 'user-session', component: UserSessionComponent, canActivate:[authGuard]}
     ]
   },
 ];
