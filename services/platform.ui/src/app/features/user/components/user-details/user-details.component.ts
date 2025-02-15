@@ -77,9 +77,9 @@ export class UserDetailsComponent implements OnInit {
     }
   }
 
-checkForChanges(): void {
-  this.isModified = this.listOfData.some(item => item.value !== item.originalValue);
-}
+  checkForChanges(): void {
+    this.isModified = this.listOfData.some(item => item.value !== item.originalValue);
+  }
 
 
   saveAllChanges(): void {

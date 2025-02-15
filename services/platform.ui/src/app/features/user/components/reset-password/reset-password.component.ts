@@ -1,21 +1,19 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, NonNullableFormBuilder, ValidationErrors, Validators, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, inject, OnDestroy, OnInit, Input } from '@angular/core';
+import { FormGroup, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule, NonNullableFormBuilder } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
-import { NzFormModule, NzFormTooltipIcon } from 'ng-zorro-antd/form';
+import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzSelectModule } from 'ng-zorro-antd/select';
 import { UserService } from '../../services/user.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [ReactiveFormsModule, NzButtonModule, NzCheckboxModule, NzFormModule, NzInputModule, NzSelectModule],
+  imports: [ReactiveFormsModule, NzButtonModule, NzFormModule, NzInputModule],
   templateUrl: './reset-password.component.html',
-  styleUrl: './reset-password.component.css'
+  styleUrls: ['./reset-password.component.css']
 })
 export class ResetPasswordComponent implements OnInit, OnDestroy {
   private _userService = inject(UserService);
@@ -24,13 +22,14 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   validateForm!: FormGroup;
 
+  @Input() userId!: string; 
+
   ngOnInit(): void {
-    // Initialize form in ngOnInit after fb is available
-    this.validateForm = this.fb.group({
+      this.validateForm = this.fb.group({
       password: this.fb.control('', [Validators.required]),
       checkPassword: this.fb.control('', [Validators.required, this.confirmationValidator]),
     });
-      // Subscribe to password changes
+
       this.validateForm.controls['password'].valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.validateForm.controls['checkPassword'].updateValueAndValidity();
     });
@@ -43,38 +42,35 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
 
   submitForm(): void {
     if (this.validateForm.valid) {
-      const loadingMessage = this.message.loading('Password reseting...', { nzDuration: 0 });
-      const userId = '2f3f58e6-029e-4c62-bc62-d1c8b91bc6b4';
       const newPassword = this.validateForm.controls['password'].value;
-  
-      this._userService.resetPassword(userId, newPassword).subscribe({
+
+      if (!this.userId) {
+        this.message.error('User ID is missing. Please try again.');
+        return;
+      }
+
+      this._userService.resetPassword(this.userId, newPassword).subscribe({
         next: () => {
-          this.message.remove();
           this.message.success('Password reset successful!');
         },
-        error: err => {
-          this.message.remove();
-          this.message.error(`Password reset failed: ${err.message || 'Unknown error'}`);
+        error: (err) => {
+          this.message.error(`Password reset failed: ${err?.message || 'Unknown error'}`);
         }
       });
     } else {
-      Object.values(this.validateForm.controls).forEach(control => {
-        if (control.invalid) {
-          control.markAsDirty();
-          control.updateValueAndValidity({ onlySelf: true });
-        }
-      });
+      this.validateForm.markAllAsTouched();
+      this.message.error('Please fill in all required fields correctly.');
     }
-  }  
+  }
 
   confirmationValidator = (control: AbstractControl): ValidationErrors | null => {
     if (!control.value) {
       return { required: true };
-    } else {
-      if (this.validateForm && control.value !== this.validateForm.controls['password'].value) {
-        return { confirm: true, error: true };
-      }
+    }
+    const password = this.validateForm?.controls['password']?.value;
+    if (control.value !== password) {
+      return { confirm: true, error: true };
     }
     return null;
-  };  
+  };
 }
