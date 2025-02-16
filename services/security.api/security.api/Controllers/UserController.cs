@@ -94,7 +94,7 @@ namespace security.api.Controllers
             }
         }
 
-        [HttpPost("{id}/remove-sessions")]
+        [HttpDelete("{id}/remove-sessions")]
         public async Task<ActionResult> RemoveAllSessions([FromRoute] string id)
         {
             try

@@ -1,10 +1,15 @@
-<nz-table *ngIf="listOfData.length > 0" #headerTable [nzScroll]="{ y: '380px' }">
+<!-- Delete All Button positioned on the right side with red color -->
+<div style="text-align: right; margin-bottom: 10px;">
+    <button nz-button nzType="dashed" (click)="showDeleteConfirm()">Delete all</button>
+  </div>
+  
+  <!-- Table displaying the user sessions -->
+  <nz-table *ngIf="listOfData.length > 0" #headerTable [nzScroll]="{ y: '380px' }">
     <thead>
       <tr>
         <th>Ip Address</th>
         <th>Start</th>
         <th>Last Access</th>
-        <th>Delete</th>
       </tr>
     </thead>
     <tbody>
@@ -12,12 +17,12 @@
         <td>{{ data.ipAddress }}</td>
         <td>{{ data.start }}</td>
         <td>{{ data.lastAccess }}</td>
-        <td nzRight nz-button nzType="danger" (click)="deleteSession(data)">
-          <a>Delete</a>
-        </td>
       </tr>
     </tbody>
   </nz-table>
   
-  <p *ngIf="listOfData.length === 0">No sessions found for this user.</p>
+  <!-- Show message when no sessions are found -->
+  <p *ngIf="listOfData.length === 0" style="text-align: center; font-size: 16px; color: #888;">
+    No sessions found for this user.
+  </p>
   

@@ -53,4 +53,8 @@ export class UserService { [x: string]: any;
     return this.http.get<UserSession[]>(`${this.baseUrl}/user/${userId}/sessions`);
   }
   
+  deleteUserSession(userId: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/user/${userId}/remove-sessions`);
+  }
+
 }
