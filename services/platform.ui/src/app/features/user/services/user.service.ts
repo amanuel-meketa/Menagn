@@ -6,6 +6,7 @@ import { UserListData } from '../../../models/UserListData';
 import { LoginPostData } from '../../../models/LoginPostData';
 import { GetCurrentUser } from '../../../models/User/GetCurrentUser';
 import { UserSession } from '../../../models/User/UserSession';
+import { GetRole } from '../../../models/User/GetRole';
 
 @Injectable({  providedIn: 'root' })
 
@@ -56,5 +57,12 @@ export class UserService { [x: string]: any;
   deleteUserSession(userId: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/user/${userId}/remove-sessions`);
   }
+  
+  assignedUserRole(userId: string): Observable<GetRole[]> {
+    return this.http.get<GetRole[]>(`${this.baseUrl}/user/${userId}/roles/assigned`);
+  }
 
+  unAssignedUserRole(userId: string): Observable<GetRole[]> {
+    return this.http.get<GetRole[]>(`${this.baseUrl}/user/${userId}/roles/unassigned`);
+  }
 }
