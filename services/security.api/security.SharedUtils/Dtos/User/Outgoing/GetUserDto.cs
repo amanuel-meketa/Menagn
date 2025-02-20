@@ -1,10 +1,14 @@
-﻿using security.sharedUtils.Dtos.User.Common;
+﻿using Newtonsoft.Json;
+using security.sharedUtils.Dtos.User.Common;
 
-namespace security.sharedUtils.Dtos.User.Outgoing
+public class GetUserDto : UserDto
 {
-    public class GetUserDto : UserDto
-    {
-        public Guid Id { get; set; }
-        public string? Username { get; set; }
-    }
+    public Guid Id { get; set; }
+    public string? Username { get; set; }
+    public bool? EmailVerified { get; set; }
+    public bool? Enabled { get; set; }
+
+    [JsonProperty("createdTimestamp")]
+    public long CreatedTimestampRaw { get; set; }
+    public DateTime? CreatedTimestamp => CreatedTimestampRaw > 0? DateTimeOffset.FromUnixTimeMilliseconds(CreatedTimestampRaw).UtcDateTime : null;
 }
