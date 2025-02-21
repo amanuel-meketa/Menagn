@@ -51,32 +51,24 @@ services:
       - "5050:80"
     volumes:
       - pgadmin-data:/var/lib/pgadmin
-
   keycloak:
     container_name: platform.keycloak
     image: quay.io/keycloak/keycloak:26.1.0
-    command: start
+    command: ["start", "--http-enabled=true", "--hostname-strict=false"]
     environment:
-      KC_HOSTNAME: localhost
-      KC_HOSTNAME_PORT: 8080
-      KC_HOSTNAME_STRICT_BACKCHANNEL: false
-      KC_HTTP_ENABLED: true
-      KC_HOSTNAME_STRICT_HTTPS: false
-      KC_HEALTH_ENABLED: true
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://postgres/Keycloak
+      KC_DB_URL: jdbc:postgresql://platform-database:5432/Keycloak
       KC_DB_USERNAME: postgres
       KC_DB_PASSWORD: postgres
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
     ports:
-      - 8080:8080
+      - "8180:8080"
     restart: always
     depends_on:
       - postgres
     networks:
       - menagn-network
-
 volumes:
   postgres_data:
   pgadmin-data:
