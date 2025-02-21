@@ -5,47 +5,61 @@
   <nz-breadcrumb-item>User Details</nz-breadcrumb-item>
 </nz-breadcrumb>
 
-  <nz-tabset nzType="card">
-    <nz-tab [nzTitle]="'User Details'">
-      <div *ngIf="!userDetails">
-        <nz-spin nzSize="large" nzTip="Loading user details..."></nz-spin>
-        <div *ngIf="!userDetails && !isModified">
-          <p>Error loading user details!</p>
+<nz-tabset nzType="card">
+  <nz-tab [nzTitle]="'User Details'">
+    <div *ngIf="!userDetails">
+      <nz-spin nzSize="large" nzTip="Loading user details..."></nz-spin>
+      <div *ngIf="!userDetails && !isModified">
+        <p>Error loading user details!</p>
+      </div>
+    </div>
+
+    <div *ngIf="userDetails">
+      <form nz-form>
+        <nz-table #editTable [nzData]="listOfData" [nzBordered]="true" [nzFrontPagination]="false">
+          <tbody>
+            <tr *ngFor="let item of listOfData">
+              <td>{{ item.field }}</td>
+              <td>
+                <!-- Boolean fields: Use nz-switch -->
+                <ng-container *ngIf="item.inputType === 'boolean'; else textInput">
+                  <nz-switch 
+                    [(ngModel)]="item.value" 
+                    [name]="item.field.replace(' ', '_')" 
+                    (ngModelChange)="checkForChanges()">
+                  </nz-switch>
+                </ng-container>                
+        
+                <!-- Text fields: Use regular input -->
+                <ng-template #textInput>
+                  <input nz-input [(ngModel)]="item.value" 
+                         [name]="item.field.replace(' ', '_')" 
+                         [readonly]="item.isRestricted" 
+                         (ngModelChange)="checkForChanges()" 
+                         class="wide-input"/>
+                </ng-template>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+
+        <div class="button-container">
+          <button nz-button nzType="default" (click)="resetChanges()" [disabled]="!isModified">Reset</button>
+          <button nz-button nzType="primary" (click)="saveAllChanges()" [disabled]="!isModified">Save Changes</button>
         </div>
-      </div>
+      </form>
+    </div>
+  </nz-tab>
 
-      <div *ngIf="userDetails">
-        <form nz-form>
-          <nz-table #editTable [nzData]="listOfData" [nzBordered]="true" [nzFrontPagination]="false">
-            <tbody>
-              <tr *ngFor="let item of listOfData">
-                <td>{{ item.field }}</td>
-                <td>
-                  <input nz-input [(ngModel)]="item.value" [name]="item.field.replace(' ', '_')" [readonly]="item.isRestricted" (ngModelChange)="checkForChanges()" class="wide-input"/>
-                </td>
-              </tr>
-            </tbody>
-          </nz-table>
+  <nz-tab [nzTitle]="'Reset Password'">
+    <app-reset-password [userId]="userId"></app-reset-password>
+  </nz-tab>
 
-          <div class="button-container">
-            <button nz-button nzType="default" (click)="resetChanges()" [disabled]="!isModified">Reset</button>
-            <button nz-button nzType="primary" (click)="saveAllChanges()" [disabled]="!isModified"> Save Changes</button>
-          </div>
-        </form>
-      </div>
-    </nz-tab>
+  <nz-tab [nzTitle]="'Role'">
+    <app-user-role [userId]="userId"></app-user-role>
+  </nz-tab>
 
-    <nz-tab [nzTitle]="'Reset Password'">
-      <app-reset-password [userId]="userId"></app-reset-password>
-    </nz-tab>
-      
-    <nz-tab [nzTitle]="'Role'">
-      <app-user-role [userId]="userId"></app-user-role>
-    </nz-tab>
-
-    <nz-tab [nzTitle]="'Session'">
-     <app-user-session [userId]="userId"></app-user-session>
-    </nz-tab>
-
-  </nz-tabset>
-
+  <nz-tab [nzTitle]="'Session'">
+    <app-user-session [userId]="userId"></app-user-session>
+  </nz-tab>
+</nz-tabset>

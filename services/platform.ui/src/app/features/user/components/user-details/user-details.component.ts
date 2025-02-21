@@ -1,5 +1,4 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { UserService } from '../../services/user.service';
@@ -14,22 +13,20 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { ResetPasswordComponent } from '../reset-password/reset-password.component';
 import { UserSessionComponent } from '../user-session/user-session.component';
 import { UserRoleComponent } from '../user-role/user-role.component';
-
-interface EditableField {
-  field: string;
-  value: string;
-  editable: boolean;
-  isRestricted: boolean; 
-  originalValue: string; 
-}
+import { EditableField } from '../../../../shared/model/EditableField';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-user-details',
   standalone: true,
-  imports: [ CommonModule, RouterLink, NzBreadCrumbModule, NzTabsModule, NzCardModule,NzFormModule, NzButtonModule, NzTableModule,
-              FormsModule, NzSpinModule, ResetPasswordComponent, UserSessionComponent, UserRoleComponent],
+  imports: [CommonModule, RouterLink, NzBreadCrumbModule, NzTabsModule, NzCardModule, NzFormModule, NzButtonModule, NzTableModule,
+            FormsModule, NzSpinModule, ResetPasswordComponent, UserSessionComponent, UserRoleComponent, NzIconModule,
+            NzSwitchModule],
   templateUrl: './user-details.component.html',
   styleUrls: ['./user-details.component.css'],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]  // Add this line
 })
 export class UserDetailsComponent implements OnInit {
   private _userService = inject(UserService);
@@ -64,35 +61,34 @@ export class UserDetailsComponent implements OnInit {
   prepareEditableData(): void {
     if (this.userDetails) {
       this.listOfData = [
-        { field: 'ID', value: this.userDetails.id, editable: false, isRestricted: true, originalValue: this.userDetails.id },
-        { field: 'Username', value: this.userDetails.username, editable: false, isRestricted: true, originalValue: this.userDetails.username },
-        { field: 'First Name', value: this.userDetails.firstName, editable: true, isRestricted: false, originalValue: this.userDetails.firstName },
-        { field: 'Last Name', value: this.userDetails.lastName, editable: true, isRestricted: false, originalValue: this.userDetails.lastName },
-        { field: 'Email', value: this.userDetails.email, editable: true, isRestricted: false, originalValue: this.userDetails.email },
+        { field: 'ID', value: this.userDetails.id, editable: false, isRestricted: true, originalValue: this.userDetails.id, inputType: 'text' },
+        { field: 'Username', value: this.userDetails.username, editable: false, isRestricted: true, originalValue: this.userDetails.username, inputType: 'text' },
+        { field: 'First Name', value: this.userDetails.firstName, editable: true, isRestricted: false, originalValue: this.userDetails.firstName, inputType: 'text' },
+        { field: 'Last Name', value: this.userDetails.lastName, editable: true, isRestricted: false, originalValue: this.userDetails.lastName, inputType: 'text' },
+        { field: 'Email', value: this.userDetails.email, editable: true, isRestricted: false, originalValue: this.userDetails.email, inputType: 'text' },
+        { field: 'Email Verified', value: this.userDetails.emailVerified, editable: true, isRestricted: false, originalValue: this.userDetails.emailVerified, inputType: 'boolean' },
+        { field: 'Enabled', value: this.userDetails.enabled, editable: true, isRestricted: false, originalValue: this.userDetails.enabled, inputType: 'boolean' },
+        { field: 'Created Timestamp', value: this.userDetails.createdTimestamp, editable: false, isRestricted: true, originalValue: this.userDetails.createdTimestamp, inputType: 'text' },
       ];
     }
   }
-
-  startEdit(item: EditableField): void {
-    if (!item.isRestricted) {
-      item.editable = true;
-    }
-  }
+  
 
   checkForChanges(): void {
     this.isModified = this.listOfData.some(item => item.value !== item.originalValue);
   }
 
-
   saveAllChanges(): void {
     const updatedData = {
       firstName: this.listOfData.find(item => item.field === 'First Name')?.value || '',
       lastName: this.listOfData.find(item => item.field === 'Last Name')?.value || '',
-      email: this.listOfData.find(item => item.field === 'Email')?.value || ''
+      email: this.listOfData.find(item => item.field === 'Email')?.value || '',
+      emailVerified: this.listOfData.find(item => item.field === 'Email Verified')?.value === 'true',
+      enabled: this.listOfData.find(item => item.field === 'Enabled')?.value === 'true',
     };
-  
+
     console.log('Sending data:', JSON.stringify(updatedData, null, 2));
-  
+
     this._userService.updateUser(this.userId, updatedData).subscribe(
       (response) => {
         console.log('User details updated successfully!', response);
@@ -104,14 +100,13 @@ export class UserDetailsComponent implements OnInit {
         }
       }
     );
-  }  
-  
+  }
+
   resetChanges(): void {
-    // Logic to reset changes, like reverting edited fields to original values
     this.listOfData.forEach(item => {
       item.value = item.originalValue;
       item.editable = false;
     });
     this.isModified = false;
-  }  
+  }
 }

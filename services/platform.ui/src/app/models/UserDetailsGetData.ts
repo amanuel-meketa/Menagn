@@ -4,4 +4,7 @@ export interface UserDetailsGetData {
   firstName: string;
   lastName: string;
   email: string;
+  emailVerified: boolean;
+  enabled:boolean;
+  createdTimestamp: string;
 }
