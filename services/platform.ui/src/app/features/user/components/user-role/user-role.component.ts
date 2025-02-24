@@ -30,21 +30,21 @@ export class UserRoleComponent implements OnInit {
 
     this.userService.assignedUserRole(this.userId).subscribe({
       next: (assignedRoles: GetRole[]) => {
-        // Fetch unassigned roles after getting assigned roles
         this.userService.unAssignedUserRole(this.userId).subscribe({
           next: (unassignedRoles: GetRole[]) => {
+            // Left side -> Unassigned roles, Right side -> Assigned roles
             this.list = [
-              ...assignedRoles.map(role => ({
-                key: role.id,
-                title: role.name,
-                description: role.description,
-                direction: 'left' as TransferDirection // Assigned roles on the left
-              })),
               ...unassignedRoles.map(role => ({
-                key: role.id,
+                key: role.id, 
                 title: role.name,
                 description: role.description,
-                direction: 'right' as TransferDirection // Unassigned roles on the right
+                direction: 'left' as TransferDirection // Available roles on the left
+              })),
+              ...assignedRoles.map(role => ({
+                key: role.id, 
+                title: role.name,
+                description: role.description,
+                direction: 'right' as TransferDirection // Assigned roles on the right
               }))
             ];
           },
@@ -69,6 +69,71 @@ export class UserRoleComponent implements OnInit {
   }
 
   change(event: any): void {
-    console.log('nzChange', event);
+    console.log('nzChange event:', event);
+
+    if (!event || !Array.isArray(event.list)) {
+      console.error('List is not an array or is undefined');
+      return;
+    }
+
+    // Map the roles to be assigned or unassigned based on the direction
+    const rolesToAssign: GetRole[] = event.list
+      .filter((role: TransferItem) => role.direction === 'right') // Move from left to right for assignment
+      .map((role: TransferItem) => ({
+        id: role['key'],  
+        name: role.title,
+        description: role['description']
+      }));
+
+    const rolesToUnassign: GetRole[] = event.list
+      .filter((role: TransferItem) => role.direction === 'left') // Move from right to left for unassignment
+      .map((role: TransferItem) => ({
+        id: role['key'],  
+        name: role.title,
+        description: role['description']
+      }));
+
+    console.log('Roles to assign:', rolesToAssign);
+    console.log('Roles to unassign:', rolesToUnassign);
+
+    // Call API for assigning roles if there are any roles to assign
+    if (rolesToAssign.length > 0) {
+      this.assignRoles(rolesToAssign);
+    }
+
+    // Call API for unassigning roles if there are any roles to unassign
+    if (rolesToUnassign.length > 0) {
+      this.unassignRoles(rolesToUnassign);
+    }
+  }
+
+  // Method to assign roles
+  assignRoles(roles: GetRole[]): void {
+    this.userService.assignUserRoles(this.userId, roles).subscribe({
+      next: (response) => {
+        console.log('Backend response for assignRoles:', response);
+        this.messageService.success('Roles assigned successfully!');
+        this.getData(); // Reload the data after assigning roles
+      },
+      error: (err) => {
+        console.error('Error assigning roles:', err);
+        this.messageService.error(`Failed to assign roles: ${err.message || 'Unknown error'}`);
+      }
+    });
+  }
+
+  // Method to unassign roles
+  unassignRoles(roles: GetRole[]): void {
+    this.userService.unassignUserRoles(this.userId, roles).subscribe({
+      next: (response) => {
+        console.log('Backend response for unassignRoles:', response);
+        this.messageService.success('Roles unassigned successfully!');
+        this.getData(); // Reload the data after unassigning roles
+      },
+      error: (err) => {
+        console.error('Error unassigning roles:', err);
+        this.messageService.error(`Failed to unassign roles: ${err.message || 'Unknown error'}`);
+      }
+    });
   }
 }

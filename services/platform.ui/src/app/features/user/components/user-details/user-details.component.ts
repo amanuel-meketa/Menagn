@@ -28,6 +28,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./user-details.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]  // Add this line
 })
+
 export class UserDetailsComponent implements OnInit {
   private _userService = inject(UserService);
   userId: string = '';
@@ -72,7 +73,6 @@ export class UserDetailsComponent implements OnInit {
       ];
     }
   }
-  
 
   checkForChanges(): void {
     this.isModified = this.listOfData.some(item => item.value !== item.originalValue);
@@ -83,12 +83,12 @@ export class UserDetailsComponent implements OnInit {
       firstName: this.listOfData.find(item => item.field === 'First Name')?.value || '',
       lastName: this.listOfData.find(item => item.field === 'Last Name')?.value || '',
       email: this.listOfData.find(item => item.field === 'Email')?.value || '',
-      emailVerified: this.listOfData.find(item => item.field === 'Email Verified')?.value === 'true',
-      enabled: this.listOfData.find(item => item.field === 'Enabled')?.value === 'true',
+      emailVerified: this.listOfData.find(item => item.field === 'Email Verified')?.value as boolean,  // Directly cast to boolean
+      enabled: this.listOfData.find(item => item.field === 'Enabled')?.value as boolean,  // Directly cast to boolean
     };
-
+  
     console.log('Sending data:', JSON.stringify(updatedData, null, 2));
-
+  
     this._userService.updateUser(this.userId, updatedData).subscribe(
       (response) => {
         console.log('User details updated successfully!', response);
