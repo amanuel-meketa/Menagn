@@ -67,14 +67,11 @@ export class UserService { [x: string]: any;
   }
 
   assignUserRoles(userId: string, roles: GetRole[]): Observable<any> {
-    return this.http.post(`${this.baseUrl}/user/${userId}/roles`, roles, {
-      headers: this.jsonHeaders
-    });
+    return this.http.post(`${this.baseUrl}/user/${userId}/roles`, roles, {});
   }
   
-
   unassignUserRoles(userId: string, roles: GetRole[]): Observable<any> {
-    const body = { roles }; 
-    return this.http.delete(`${this.baseUrl}/user/${userId}/roles`, { body, headers: this.jsonHeaders});
+    return this.http.delete(`${this.baseUrl}/user/${userId}/roles`, { body: roles });
   }  
+
 }

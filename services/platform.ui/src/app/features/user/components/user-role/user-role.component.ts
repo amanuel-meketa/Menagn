@@ -32,19 +32,18 @@ export class UserRoleComponent implements OnInit {
       next: (assignedRoles: GetRole[]) => {
         this.userService.unAssignedUserRole(this.userId).subscribe({
           next: (unassignedRoles: GetRole[]) => {
-            // Left side -> Unassigned roles, Right side -> Assigned roles
             this.list = [
               ...unassignedRoles.map(role => ({
                 key: role.id, 
                 title: role.name,
                 description: role.description,
-                direction: 'left' as TransferDirection // Available roles on the left
+                direction: 'left' as TransferDirection 
               })),
               ...assignedRoles.map(role => ({
                 key: role.id, 
                 title: role.name,
                 description: role.description,
-                direction: 'right' as TransferDirection // Assigned roles on the right
+                direction: 'right' as TransferDirection 
               }))
             ];
           },
@@ -78,7 +77,7 @@ export class UserRoleComponent implements OnInit {
 
     // Map the roles to be assigned or unassigned based on the direction
     const rolesToAssign: GetRole[] = event.list
-      .filter((role: TransferItem) => role.direction === 'right') // Move from left to right for assignment
+      .filter((role: TransferItem) => role.direction === 'right') 
       .map((role: TransferItem) => ({
         id: role['key'],  
         name: role.title,
@@ -86,7 +85,7 @@ export class UserRoleComponent implements OnInit {
       }));
 
     const rolesToUnassign: GetRole[] = event.list
-      .filter((role: TransferItem) => role.direction === 'left') // Move from right to left for unassignment
+      .filter((role: TransferItem) => role.direction === 'left') 
       .map((role: TransferItem) => ({
         id: role['key'],  
         name: role.title,
@@ -96,24 +95,21 @@ export class UserRoleComponent implements OnInit {
     console.log('Roles to assign:', rolesToAssign);
     console.log('Roles to unassign:', rolesToUnassign);
 
-    // Call API for assigning roles if there are any roles to assign
     if (rolesToAssign.length > 0) {
       this.assignRoles(rolesToAssign);
     }
 
-    // Call API for unassigning roles if there are any roles to unassign
     if (rolesToUnassign.length > 0) {
       this.unassignRoles(rolesToUnassign);
     }
   }
 
-  // Method to assign roles
   assignRoles(roles: GetRole[]): void {
     this.userService.assignUserRoles(this.userId, roles).subscribe({
       next: (response) => {
         console.log('Backend response for assignRoles:', response);
         this.messageService.success('Roles assigned successfully!');
-        this.getData(); // Reload the data after assigning roles
+        this.getData();
       },
       error: (err) => {
         console.error('Error assigning roles:', err);
@@ -122,13 +118,12 @@ export class UserRoleComponent implements OnInit {
     });
   }
 
-  // Method to unassign roles
   unassignRoles(roles: GetRole[]): void {
     this.userService.unassignUserRoles(this.userId, roles).subscribe({
       next: (response) => {
         console.log('Backend response for unassignRoles:', response);
         this.messageService.success('Roles unassigned successfully!');
-        this.getData(); // Reload the data after unassigning roles
+        this.getData(); 
       },
       error: (err) => {
         console.error('Error unassigning roles:', err);
