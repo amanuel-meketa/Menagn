@@ -22,6 +22,7 @@ export class AuthService {
 
   removeToken(): void {
     sessionStorage.removeItem('Bearer');
+    localStorage.removeItem('columnSettings');
     this.currentUserSubject.next(null);
   }
 
