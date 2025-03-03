@@ -10,6 +10,7 @@ import { ResetPasswordComponent } from './features/user/components/reset-passwor
 import { authGuard } from './guards/auth.guard';
 import { UserSessionComponent } from './features/user/components/user-session/user-session.component';
 import { UserRoleComponent } from './features/user/components/user-role/user-role.component';
+import { RoleListComponent } from './features/role/components/role-list/role-list.component';
 
 export const routes: Routes = 
 [
@@ -23,7 +24,9 @@ export const routes: Routes =
       { path: 'user-edit/:id', component: UserEditComponent, canActivate:[authGuard] },
       { path: 'reset-password', component: ResetPasswordComponent, canActivate:[authGuard]},
       { path: 'user-session', component: UserSessionComponent, canActivate:[authGuard]},
-      { path: 'user-role', component: UserRoleComponent, canActivate:[authGuard]}
+      { path: 'user-role', component: UserRoleComponent, canActivate:[authGuard]},
+
+      { path: 'role-list', component: RoleListComponent, canActivate:[authGuard]}
     ]
   },
 ];

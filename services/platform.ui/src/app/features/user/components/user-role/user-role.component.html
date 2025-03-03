@@ -5,9 +5,8 @@
   [nzListStyle]="{ 'width.px': 450, 'height.px': 470 }"
   (nzSelectChange)="select($event)"
   (nzChange)="change($event)"
-  [nzFooter]="footerTemplate"
->
-  <!-- Custom Footer Button -->
+  [nzFooter]="footerTemplate">
+  
   <ng-template #footerTemplate>
     <button nz-button (click)="reload()" nzSize="small" style="float: right; margin: 10px;">
       Reload
