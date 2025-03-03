@@ -5,9 +5,7 @@
     <thead>
       <tr>
         <th nzCellControl="name">Role Name</th>
-        <th nzCellControl="gender">Gender</th>
-        <th nzCellControl="age">Age</th>
-        <th nzCellControl="address">Address</th>
+        <th nzCellControl="description">Description</th>
         <th nzCellControl="action">Action</th>
       </tr>
     </thead>
@@ -15,9 +13,7 @@
       @for (data of basicTable.data; track data) {
         <tr>
           <td nzCellControl="name">{{ data.name }}</td>
-          <td nzCellControl="gender">{{ data.gender }}</td>
-          <td nzCellControl="age">{{ data.age }}</td>
-          <td nzCellControl="address">{{ data.address }}</td>
+          <td nzCellControl="description">{{ data.description }}</td>
           <td nzCellControl="action">
             <a>Action</a>
             <nz-divider nzType="vertical"></nz-divider>

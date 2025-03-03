@@ -22,15 +22,13 @@ interface CustomColumn {
 @Component({
   selector: 'app-role-list',
   standalone: true,
-  imports: [
-    NzButtonModule, NzDividerModule, NzGridModule, NzIconModule, NzModalModule, NzTableModule, 
-    CdkDrag, CdkDropList
-  ],
+  imports: [ NzButtonModule, NzDividerModule, NzGridModule, NzIconModule, NzModalModule, NzTableModule, CdkDrag, CdkDropList ],
   templateUrl: './role-list.component.html',
   styleUrls: ['./role-list.component.css']
 })
+
 export class RoleListComponent implements OnInit {
-  listOfData: GetRoleList[] = []; // Array to hold the data fetched from the API
+  listOfData: GetRoleList[] = []; 
 
   customColumn: CustomColumn[] = [
     {
@@ -43,20 +41,8 @@ export class RoleListComponent implements OnInit {
       fixWidth: true
     },
     {
-      name: 'Gender',
-      value: 'gender',
-      default: true,
-      width: 200
-    },
-    {
-      name: 'Address',
-      value: 'address',
-      default: true,
-      width: 200
-    },
-    {
-      name: 'Age',
-      value: 'age',
+      name: 'Description',
+      value: 'description',
       default: true,
       width: 200
     },
@@ -126,7 +112,6 @@ export class RoleListComponent implements OnInit {
   }
 
   handleOk(): void {
-    // Update the columns based on changes made
     this.customColumn = [...this.title, ...this.fix, ...this.notFix, ...this.footer];
     this.isVisible = false;
     this.cdr.markForCheck();
