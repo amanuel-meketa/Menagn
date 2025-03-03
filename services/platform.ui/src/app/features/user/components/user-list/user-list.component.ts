@@ -14,14 +14,13 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router, RouterLink } from '@angular/router';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [
-    FormsModule, NzBreadCrumbModule, NzButtonModule, NzDropDownModule, NzIconModule, NzInputModule, RouterLink,
-    NzTableModule, NzPageHeaderModule, NzSpaceModule, CommonModule, NzModalModule,
-  ],
+  imports: [ FormsModule, NzBreadCrumbModule, NzButtonModule, NzDropDownModule, NzIconModule, NzInputModule, RouterLink,
+    NzTableModule, NzPageHeaderModule, NzSpaceModule, CommonModule, NzModalModule, NzDividerModule],
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css'],
 })
@@ -35,8 +34,8 @@ export class UserListComponent implements OnInit {
   searchValue = '';  // Stores the value entered in the search input
   @ViewChild('menu', { static: true }) menu!: NzDropdownMenuComponent;
   isSearchVisible = false;  // Controls visibility of the search dropdown
-  originalUserList: UserListData[] = [];  // Stores the original user data
-  filteredUserList: UserListData[] = [];  // Stores the filtered user list for display
+  originalUserList: UserListData[] = [];  
+  filteredUserList: UserListData[] = [];  
 
   ngOnInit(): void {
     this.loadUserList();

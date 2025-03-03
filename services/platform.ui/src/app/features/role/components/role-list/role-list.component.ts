@@ -37,14 +37,14 @@ export class RoleListComponent implements OnInit {
       default: true,
       required: true,
       position: 'left',
-      width: 200,
+      width: 100,
       fixWidth: true
     },
     {
       name: 'Description',
       value: 'description',
       default: true,
-      width: 200
+      width: 400
     },
     {
       name: 'Action',
@@ -52,7 +52,7 @@ export class RoleListComponent implements OnInit {
       default: true,
       required: true,
       position: 'right',
-      width: 200
+      width: 50
     }
   ];
 
