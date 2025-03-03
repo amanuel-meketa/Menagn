@@ -20,7 +20,7 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
   selector: 'app-user-list',
   standalone: true,
   imports: [ FormsModule, NzBreadCrumbModule, NzButtonModule, NzDropDownModule, NzIconModule, NzInputModule, RouterLink,
-    NzTableModule, NzPageHeaderModule, NzSpaceModule, CommonModule, NzModalModule, NzDividerModule],
+             NzTableModule, NzPageHeaderModule, NzSpaceModule, CommonModule, NzModalModule, NzDividerModule],
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css'],
 })
@@ -41,7 +41,6 @@ export class UserListComponent implements OnInit {
     this.loadUserList();
   }
 
-  // Fetch the user list from the service
   loadUserList(): void {
     this._userService.getUserList().subscribe(
       (data) => {
@@ -54,7 +53,6 @@ export class UserListComponent implements OnInit {
     );
   }
 
-  // Delete a user
   deleteUser(userId: string): void {
     this.modal.confirm({
       nzTitle: 'Are you sure you want to delete this user?',
