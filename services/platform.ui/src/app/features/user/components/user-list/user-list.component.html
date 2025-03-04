@@ -1,49 +1,77 @@
-
-
-<div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
-  <button nz-button nzType="primary" nzShape="round" (click)="navigateToRegister()">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+  <button nz-button nzType="default" (click)="showModal()">
+    <i nz-icon nzType="setting" nzTheme="outline" nzSize="default"></i>
+  </button>
+  <button nz-button nzType="primary" (click)="navigateToRegister()">
+    <i nz-icon nzType="plus" nzTheme="outline" nzSize="default"></i>
     Add User
   </button>
 </div>
 
-<nz-table #nzTable [nzData]="filteredUserList" nzTableLayout="fixed">
+<nz-table #basicTable [nzData]="listOfData" [nzCustomColumn]="customColumn">
   <thead>
     <tr>
-      <th nzCustomFilter>
-        Username
-        <nz-filter-trigger [nzVisible]="isSearchVisible" [nzActive]="searchValue.length > 0" [nzDropdownMenu]="menu">
-          <!-- Search Icon Button to Toggle Search Box -->
-          <button nz-button nzType="default" nzShape="circle" (click)="toggleSearchVisibility()">
-            <span nz-icon nzType="search" nzTheme="outline" style="color: #4CAF50;"></span>
-          </button>
-        </nz-filter-trigger>
-        
-        <!-- Input box that becomes visible when the search icon is clicked -->
-        <nz-dropdown-menu #menu="nzDropdownMenu">
-          <div *ngIf="isSearchVisible" style="padding: 8px;">
-            <input nz-input [(ngModel)]="searchValue" (ngModelChange)="filterUserList()" placeholder="Search by username" />
-          </div>
-        </nz-dropdown-menu>
-      </th>
-      <th>Full Name</th>
-      <th>Email</th>
-      <th>Action</th>
+     
+      <th nzCellControl="username">User Name</th>
+      <th nzCellControl="firstName">full Name</th>
+      <th nzCellControl="email">Email</th>
+      <th nzCellControl="action">Action</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let user of filteredUserList">
-      <td>
-        <a [routerLink]="['/user-details/', user.id]">{{ user.username }}</a>
-      </td>
-      <td>{{ user.firstName }} {{ user.lastName }}</td>
-      <td>{{ user.email }}</td>
-      <td>
-        <nz-space [nzSize]="8">
-          <button nz-button nzSize="small" nzType="primary">Active</button>
+    @for (data of basicTable.data; track data) {
+      <tr>
+        <td nzCellControl="username">
+          <a [routerLink]="['/user-details', data.id]" class="username-link"> {{ data.username }} </a>
+        </td>
+        <td nzCellControl="firstName">{{ data.firstName }}  {{ data.lastName }}</td>
+        <td nzCellControl="email">{{ data.email }}</td>
+        <td nzCellControl="action">
           <nz-divider nzType="vertical"></nz-divider>
-          <button nz-button nzSize="small" (click)="deleteUser(user.id)" nzDanger>Delete</button>
-        </nz-space>        
-      </td>
-    </tr>
+          <button nz-button nzSize="small" (click)="deleteUser(data.id)" nzDanger>Delete</button>
+        </td>
+      </tr>
+    }
   </tbody>
 </nz-table>
+
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Custom Column" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <div nz-row [nzGutter]="24">
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="example-container">
+          <p>Displayed (drag and drop to sort)</p>
+          @for (item of title; track item) {
+            <div class="example-box">
+              {{ item.name }}
+            </div>
+          }
+          <div cdkDropList #todoList="cdkDropList" [cdkDropListData]="fix" [cdkDropListConnectedTo]="[doneList]" class="example-list" (cdkDropListDropped)="drop($event)">
+            @for (item of fix; track item; let i = $index) {
+              <div class="example-box" cdkDrag>
+                {{ item.name }}
+              </div>
+            }
+          </div>
+          @for (item of footer; track item) {
+            <div class="example-box">
+              {{ item.name }}
+            </div>
+          }
+        </div>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <div class="example-container">
+          <p>Not Shown</p>
+          <div cdkDropList #doneList="cdkDropList" [cdkDropListData]="notFix" [cdkDropListConnectedTo]="[todoList]" class="example-list" (cdkDropListDropped)="drop($event)">          
+            @for (item of notFix; track item; let i = $index) {
+              <div class="example-box" cdkDrag>
+                {{ item.name }}              
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</nz-modal>
