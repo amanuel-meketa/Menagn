@@ -14,25 +14,24 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 @Component({
   selector: 'app-role-list',
   standalone: true,
-  imports: [NzButtonModule, NzDividerModule, NzGridModule, NzIconModule, NzModalModule, NzTableModule, CdkDrag, CdkDropList],
+  imports: [ NzButtonModule, NzDividerModule, NzGridModule, NzIconModule, NzModalModule, NzTableModule, CdkDrag, CdkDropList ],
   templateUrl: './role-list.component.html',
   styleUrls: ['./role-list.component.css']
 })
 
 export class RoleListComponent implements OnInit {
-
   private _roleService = inject(RoleService);
   private cdr = inject(ChangeDetectorRef);
   private message = inject(NzMessageService);
   private modal = inject(NzModalService); 
 
-  listOfData: GetRoleList[] = [];
+  listOfData: GetRoleList[] = []; 
+
   customColumn: CustomColumn[] = [
-    { name: 'Id', value: 'id', default: true, width: 400 },
-    { name: 'Name', value: 'name', default: true, required: true, position: 'left', width: 100, fixWidth: true },
-    { name: 'Description', value: 'description', default: true, width: 400 },
-    { name: 'Action', value: 'action', default: true, required: true, position: 'right', width: 50 }
-  ];
+    { name: 'Name', value: 'name', default: true, required: true,position: 'left', width: 100,fixWidth: true },
+    { name: 'Description', value: 'description', default: true, width: 400},
+    { name: 'Action', value: 'action', default: true, required: true, position: 'right', width: 50
+    }];
 
   isVisible: boolean = false;
   title: CustomColumn[] = [];
@@ -42,10 +41,7 @@ export class RoleListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadRoleList(); 
-    this.loadColumnSettings();
-  }
-
-  private categorizeColumns(): void {
+  
     this.title = this.customColumn.filter(item => item.position === 'left' && item.required);
     this.footer = this.customColumn.filter(item => item.position === 'right' && item.required);
     this.fix = this.customColumn.filter(item => item.default && !item.required);
@@ -58,21 +54,14 @@ export class RoleListComponent implements OnInit {
     } else {
       transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
     }
-    this.updateColumnDefaults();
-  }
-
-  private updateColumnDefaults(): void {
     this.fix = this.fix.map(item => {
       item.default = true;
       return item;
     });
-
     this.notFix = this.notFix.map(item => {
       item.default = false;
       return item;
     });
-
-    this.saveColumnSettings();
     this.cdr.markForCheck();
   }
 
@@ -80,7 +69,6 @@ export class RoleListComponent implements OnInit {
     value.default = false;
     this.notFix = [...this.notFix, value];
     this.fix.splice(index, 1);
-    this.saveColumnSettings();
     this.cdr.markForCheck();
   }
 
@@ -88,7 +76,6 @@ export class RoleListComponent implements OnInit {
     value.default = true;
     this.fix = [...this.fix, value];
     this.notFix.splice(index, 1);
-    this.saveColumnSettings();
     this.cdr.markForCheck();
   }
 
@@ -99,16 +86,11 @@ export class RoleListComponent implements OnInit {
   handleOk(): void {
     this.customColumn = [...this.title, ...this.fix, ...this.notFix, ...this.footer];
     this.isVisible = false;
-    this.saveColumnSettings();
     this.cdr.markForCheck();
   }
 
   handleCancel(): void {
     this.isVisible = false;
-  }
-
-  editRole(data: GetRoleList): void {
-    console.log('Edit role:', data);
   }
 
   deleteRole(userId: string): void {
@@ -140,29 +122,5 @@ export class RoleListComponent implements OnInit {
       this.cdr.markForCheck();
     });
   }
-
-  private saveColumnSettings(): void {
-    const columnSettings = {
-      fix: this.fix,
-      notFix: this.notFix,
-      title: this.title,
-      footer: this.footer
-    };
-    localStorage.setItem('columnSettings', JSON.stringify(columnSettings));  // Save to localStorage
-  }
-
-  private loadColumnSettings(): void {
-    const savedSettings = localStorage.getItem('columnSettings');
-    if (savedSettings) {
-      const { fix, notFix, title, footer } = JSON.parse(savedSettings);
-
-      this.fix = fix || [];
-      this.notFix = notFix || [];
-      this.title = title || [];
-      this.footer = footer || [];
-      this.customColumn = [...this.title, ...this.fix, ...this.notFix, ...this.footer];
-
-      this.categorizeColumns(); 
-    }
-  }
+  
 }
