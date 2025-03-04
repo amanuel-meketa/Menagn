@@ -28,10 +28,11 @@ export class RoleListComponent implements OnInit {
   listOfData: GetRoleList[] = []; 
 
   customColumn: CustomColumn[] = [
-    { name: 'Name', value: 'name', default: true, required: true,position: 'left', width: 100,fixWidth: true },
-    { name: 'Description', value: 'description', default: true, width: 400},
-    { name: 'Action', value: 'action', default: true, required: true, position: 'right', width: 50
-    }];
+    { name: 'Name', value: 'name', default: true, required: true, position: 'left', width: 100, fixWidth: true },
+    { name: 'Description', value: 'description', default: true, width: 400 },
+    { name: 'Action', value: 'action', default: true, required: true, position: 'right', width: 50 }
+  ];
+  
 
   isVisible: boolean = false;
   title: CustomColumn[] = [];
@@ -112,7 +113,6 @@ export class RoleListComponent implements OnInit {
         );
       },
       nzCancelText: 'No',
-      nzOnCancel: () => console.log('Cancel'),
     });
   }
 
