@@ -7,14 +7,16 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { RoleService } from '../../services/role.service';
-import { GetRoleList } from '../../../../models/Role/GetRoleList';
 import { CustomColumn } from '../../../../shared/model/custom-column';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { GetRole } from '../../../../models/User/GetRole';
+import { RoleRegisterComponent } from '../role-register/role-register.component';
 
 @Component({
   selector: 'app-role-list',
   standalone: true,
-  imports: [ NzButtonModule, NzDividerModule, NzGridModule, NzIconModule, NzModalModule, NzTableModule, CdkDrag, CdkDropList ],
+  imports: [ NzButtonModule, NzDividerModule, NzGridModule, NzIconModule, NzModalModule, NzTableModule, CdkDrag, CdkDropList, 
+             RoleRegisterComponent ],
   templateUrl: './role-list.component.html',
   styleUrls: ['./role-list.component.css']
 })
@@ -25,7 +27,7 @@ export class RoleListComponent implements OnInit {
   private message = inject(NzMessageService);
   private modal = inject(NzModalService); 
 
-  listOfData: GetRoleList[] = []; 
+  listOfData: GetRole[] = []; 
 
   customColumn: CustomColumn[] = [
     { name: 'Name', value: 'name', default: true, required: true, position: 'left', width: 100, fixWidth: true },
@@ -117,7 +119,7 @@ export class RoleListComponent implements OnInit {
   }
 
   private loadRoleList(): void {
-    this._roleService.getRoleList().subscribe((roles: GetRoleList[]) => {
+    this._roleService.getRoleList().subscribe((roles: GetRole[]) => {
       this.listOfData = roles;
       this.cdr.markForCheck();
     });

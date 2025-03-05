@@ -1,0 +1,27 @@
+<button nz-button nzType="primary" (click)="openRoleRegisterModal()">
+    <i nz-icon nzType="plus" nzTheme="outline"></i> Add Role
+</button>
+
+<ng-template #roleFormTemplate>
+  <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzRequired>Role Name</nz-form-label>
+      <nz-form-control [nzSpan]="18" [nzErrorTip]="'Role name is required'">
+        <input nz-input formControlName="name" placeholder="Enter Role Name" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6">Description</nz-form-label>
+      <nz-form-control [nzSpan]="18">
+        <nz-textarea-count [nzMaxCharacterCount]="2000">
+          <textarea formControlName="description" nz-input rows="2" placeholder="Write anything"></textarea>
+        </nz-textarea-count>
+      </nz-form-control>
+    </nz-form-item>
+
+    <div class="modal-footer">
+      <button nz-button nzType="primary" [disabled]="!validateForm.valid" htmlType="submit">Submit</button>
+    </div>
+  </form>
+</ng-template>

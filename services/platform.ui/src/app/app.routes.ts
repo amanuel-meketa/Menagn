@@ -11,6 +11,7 @@ import { authGuard } from './guards/auth.guard';
 import { UserSessionComponent } from './features/user/components/user-session/user-session.component';
 import { UserRoleComponent } from './features/user/components/user-role/user-role.component';
 import { RoleListComponent } from './features/role/components/role-list/role-list.component';
+import { RoleRegisterComponent } from './features/role/components/role-register/role-register.component';
 
 export const routes: Routes = 
 [
@@ -26,7 +27,8 @@ export const routes: Routes =
       { path: 'user-session', component: UserSessionComponent, canActivate:[authGuard]},
       { path: 'user-role', component: UserRoleComponent, canActivate:[authGuard]},
 
-      { path: 'role-list', component: RoleListComponent, canActivate:[authGuard]}
+      { path: 'role-list', component: RoleListComponent, canActivate:[authGuard]},
+      { path: 'role-register', component: RoleRegisterComponent, canActivate:[authGuard]}
     ]
   },
 ];
