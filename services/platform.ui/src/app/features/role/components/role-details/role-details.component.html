@@ -1,24 +1,32 @@
-  <ng-template #roleFormTemplate>
-    <form nz-form [formGroup]="validateForm">
-      <nz-form-item>
-        <nz-form-label [nzSpan]="6">Role Name</nz-form-label>
-        <nz-form-control [nzSpan]="18">
-            <input nz-input formControlName="name" [disabled]="true" />
-        </nz-form-control>
-      </nz-form-item>
+<ng-template #roleFormTemplate>
+    <nz-tabset nzType="card">
+      <nz-tab [nzTitle]="'Role Details'">
+        <form nz-form [formGroup]="validateForm" nzLayout="horizontal">
+          <nz-form-item>
+            <nz-form-label [nzSpan]="6" nzLabelAlign="left">Role Name</nz-form-label>
+            <nz-form-control [nzSpan]="18">
+              <input nz-input formControlName="name" [disabled]="true" />
+            </nz-form-control>
+          </nz-form-item>
   
-      <nz-form-item>
-        <nz-form-label [nzSpan]="6">Description</nz-form-label>
-        <nz-form-control [nzSpan]="18">
-          <nz-textarea-count>
-            <textarea formControlName="description" nz-input rows="3" [disabled]="true"></textarea>
-          </nz-textarea-count>
-        </nz-form-control>
-      </nz-form-item>
-      
-      <div class="modal-footer">
+          <nz-form-item>
+            <nz-form-label [nzSpan]="6" nzLabelAlign="left">Description</nz-form-label>
+            <nz-form-control [nzSpan]="18">
+              <textarea formControlName="description" nz-input rows="3" [disabled]="true"></textarea>
+            </nz-form-control>
+          </nz-form-item>
+  
+          
+        </form>
+      </nz-tab>
+  
+      <nz-tab [nzTitle]="'User in role'">
+        <p>Role-related content here</p>
+      </nz-tab>
+
+    </nz-tabset>
+    <div class="modal-footer">
         <button nz-button nzType="default" (click)="closeModal()">Close</button>
       </div>
-    </form>
   </ng-template>
   

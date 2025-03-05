@@ -8,11 +8,12 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { GetRole } from '../../../../models/Role/GetRole';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
 
 @Component({
   selector: 'app-role-details',
   standalone: true,
-  imports: [NzButtonModule, NzModalModule, ReactiveFormsModule, NzFormModule, NzInputModule],
+  imports: [NzButtonModule, NzModalModule, ReactiveFormsModule, NzFormModule, NzInputModule, NzTabsModule],
   templateUrl: './role-details.component.html',
   styleUrl: './role-details.component.css'
 })
@@ -62,7 +63,7 @@ export class RoleDetailsComponent implements OnInit {
       nzTitle: 'Role Details',
       nzContent: this.roleFormTemplate,
       nzFooter: null,
-      nzWidth: 600,
+      nzWidth: 800,
       nzClosable: false,
       nzMaskClosable: false,
       nzOnCancel: () => this.closeModal()
