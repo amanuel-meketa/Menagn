@@ -3,7 +3,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzTransferModule, TransferItem, TransferDirection } from 'ng-zorro-antd/transfer';
 import { UserService } from '../../services/user.service';
-import { GetRole } from '../../../../models/User/GetRole';
+import { GetRole } from '../../../../models/User/GetUserRole';
 
 @Component({
   selector: 'app-user-role',

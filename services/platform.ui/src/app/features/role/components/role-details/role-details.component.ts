@@ -7,6 +7,7 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { GetRole } from '../../../../models/Role/GetRole';
 
 @Component({
   selector: 'app-role-details',
@@ -22,7 +23,7 @@ export class RoleDetailsComponent implements OnInit {
   private modal = inject(NzModalService);
   private fb = inject(NonNullableFormBuilder);
   private message = inject(NzMessageService);
-  private router = inject(Router); 
+  private router = inject(Router);
 
   roleId!: string;
 
@@ -46,23 +47,18 @@ export class RoleDetailsComponent implements OnInit {
 
   fetchRoleDetails(roleId: string): void {
     this._roleService.getroleDetails(roleId).subscribe({
-      next: (role) => {
-        this.validateForm.patchValue({
-          id: role.id,
-          name: role.name,
-          description: role.description
-        });
-        this.openRoleDetailsModal(); 
+      next: (role: GetRole) => {
+        this.validateForm.patchValue(role);
+        this.openRoleDetailsModal();
       },
-      error: (err) => {
-        console.error('Error fetching role details:', err);
+      error: () => {
         this.message.error('Failed to load role details.');
       }
     });
   }
 
   openRoleDetailsModal(): void {
-    const modalRef = this.modal.create({
+    this.modal.create({
       nzTitle: 'Role Details',
       nzContent: this.roleFormTemplate,
       nzFooter: null,

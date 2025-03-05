@@ -1,7 +1,7 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
-import { GetRole } from '../../../models/User/GetRole';
+import { GetRole } from '../../../models/User/GetUserRole';
 import { CreateRole } from '../../../models/Role/CreateRole';
 
 @Injectable({
@@ -22,8 +22,9 @@ export class RoleService {
     return this.http.get<GetRole[]>(`${this.baseUrl}/role`, { headers: this.jsonHeaders });
   }
 
-  getroleDetails(roleId: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/role/id`, { params: { id: roleId } });
+  getroleDetails(roleId: string): Observable<GetRole> {
+    const params = new HttpParams().set('id', roleId);
+    return this.http.get<GetRole>(`${this.baseUrl}/role/id`, { params });
   }  
 
   createRole(role: CreateRole): Observable<CreateRole> {

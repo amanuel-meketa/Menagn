@@ -9,7 +9,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { RoleService } from '../../services/role.service';
 import { CustomColumn } from '../../../../shared/model/custom-column';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { GetRole } from '../../../../models/User/GetRole';
+import { GetRole } from '../../../../models/User/GetUserRole';
 import { RoleRegisterComponent } from '../role-register/role-register.component';
 import { Subscription } from 'rxjs';
 import { RouterModule } from '@angular/router';

@@ -6,7 +6,7 @@ import { UserListData } from '../../../models/UserListData';
 import { LoginPostData } from '../../../models/LoginPostData';
 import { GetCurrentUser } from '../../../models/User/GetCurrentUser';
 import { UserSession } from '../../../models/User/UserSession';
-import { GetRole } from '../../../models/User/GetRole';
+import { GetRole } from '../../../models/User/GetUserRole';
 
 @Injectable({  providedIn: 'root' })
 
