@@ -22,6 +22,10 @@ export class RoleService {
     return this.http.get<GetRole[]>(`${this.baseUrl}/role`, { headers: this.jsonHeaders });
   }
 
+  getroleDetails(roleId: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/role/id`, { params: { id: roleId } });
+  }  
+
   createRole(role: CreateRole): Observable<CreateRole> {
     return this.http.post<CreateRole>(`${this.baseUrl}/role`, role).pipe(
       tap(() => {
@@ -29,7 +33,15 @@ export class RoleService {
       })
     );
   }
-
+  
+  updateRole(id: string, roleData: CreateRole): Observable<any> {
+    return this.http.put(`/api/roles/${id}`, roleData).pipe(
+      tap(() => {
+        this.roleListUpdated.next(true);
+      })
+    );
+  }
+  
   deleteRole(userId: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/role/id?id=${userId}`).pipe(
       tap(() => {

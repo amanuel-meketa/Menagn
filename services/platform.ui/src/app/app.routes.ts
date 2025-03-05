@@ -12,6 +12,7 @@ import { UserSessionComponent } from './features/user/components/user-session/us
 import { UserRoleComponent } from './features/user/components/user-role/user-role.component';
 import { RoleListComponent } from './features/role/components/role-list/role-list.component';
 import { RoleRegisterComponent } from './features/role/components/role-register/role-register.component';
+import { RoleDetailsComponent } from './features/role/components/role-details/role-details.component';
 
 export const routes: Routes = 
 [
@@ -28,7 +29,8 @@ export const routes: Routes =
       { path: 'user-role', component: UserRoleComponent, canActivate:[authGuard]},
 
       { path: 'role-list', component: RoleListComponent, canActivate:[authGuard]},
-      { path: 'role-register', component: RoleRegisterComponent, canActivate:[authGuard]}
+      { path: 'role-register', component: RoleRegisterComponent, canActivate:[authGuard]},
+      { path: 'role-details/:id', component: RoleDetailsComponent, canActivate:[authGuard]},
     ]
   },
 ];

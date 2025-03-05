@@ -12,12 +12,13 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { GetRole } from '../../../../models/User/GetRole';
 import { RoleRegisterComponent } from '../role-register/role-register.component';
 import { Subscription } from 'rxjs';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-role-list',
   standalone: true,
   imports: [ NzButtonModule, NzDividerModule, NzGridModule, NzIconModule, NzModalModule, NzTableModule, CdkDrag, CdkDropList, 
-             RoleRegisterComponent ],
+             RoleRegisterComponent, RouterModule ],
   templateUrl: './role-list.component.html',
   styleUrls: ['./role-list.component.css']
 })
