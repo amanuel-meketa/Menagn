@@ -11,6 +11,7 @@ import { CustomColumn } from '../../../../shared/model/custom-column';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { GetRole } from '../../../../models/User/GetRole';
 import { RoleRegisterComponent } from '../role-register/role-register.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-role-list',
@@ -27,6 +28,7 @@ export class RoleListComponent implements OnInit {
   private message = inject(NzMessageService);
   private modal = inject(NzModalService); 
 
+  private roleListUpdatedSubscription: Subscription | undefined;
   listOfData: GetRole[] = []; 
 
   customColumn: CustomColumn[] = [
@@ -35,7 +37,6 @@ export class RoleListComponent implements OnInit {
     { name: 'Action', value: 'action', default: true, required: true, position: 'right', width: 50 }
   ];
   
-
   isVisible: boolean = false;
   title: CustomColumn[] = [];
   footer: CustomColumn[] = [];
@@ -49,6 +50,10 @@ export class RoleListComponent implements OnInit {
     this.footer = this.customColumn.filter(item => item.position === 'right' && item.required);
     this.fix = this.customColumn.filter(item => item.default && !item.required);
     this.notFix = this.customColumn.filter(item => !item.default && !item.required);
+
+    this.roleListUpdatedSubscription = this._roleService.roleListUpdated$.subscribe(() => {
+      this.loadRoleList();
+    });
   }
 
   drop(event: CdkDragDrop<CustomColumn[]>): void {
@@ -124,5 +129,4 @@ export class RoleListComponent implements OnInit {
       this.cdr.markForCheck();
     });
   }
-  
 }

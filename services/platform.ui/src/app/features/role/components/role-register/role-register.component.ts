@@ -73,6 +73,7 @@ export class RoleRegisterComponent {
     this.message.success(`Role "${response.name}" created successfully!`);
     console.log('Role created successfully:', response);
     this.cancel();
+    this.validateForm.reset();  
 
     this.rout.navigate(['/role-list']);
   }
