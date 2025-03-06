@@ -9,11 +9,12 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { GetRole } from '../../../../models/Role/GetRole';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { CreateRole } from '../../../../models/Role/CreateRole';
 
 @Component({
   selector: 'app-role-details',
   standalone: true,
-  imports: [NzButtonModule, NzModalModule, ReactiveFormsModule, NzFormModule, NzInputModule, NzTabsModule],
+  imports: [NzButtonModule, NzModalModule, ReactiveFormsModule, NzFormModule, NzInputModule, NzTabsModule, NzButtonModule],
   templateUrl: './role-details.component.html',
   styleUrl: './role-details.component.css'
 })
@@ -57,12 +58,38 @@ export class RoleDetailsComponent implements OnInit {
       }
     });
   }
-
+  
+  updateRole(): void {
+    if (this.validateForm.valid) {
+      const roleData = this.validateForm.value;
+      const updatedRole: CreateRole = {
+        name: roleData.name || '',
+        description: roleData.description || ''
+      };
+  
+      this._roleService.updateRole(this.roleId, updatedRole).subscribe({
+        next: () => {
+          this.message.success('Role updated successfully');
+          this.closeModal();
+        },
+        error: (err) => {
+          const errorMessage = err?.error?.message || 'Failed to update role'; 
+          this.message.error(errorMessage);
+        }
+      });
+    }
+  }
+  
   openRoleDetailsModal(): void {
     this.modal.create({
       nzTitle: 'Role Details',
       nzContent: this.roleFormTemplate,
-      nzFooter: null,
+      nzFooter: [
+        {
+          label: 'Cancel',
+          onClick: () => this.closeModal()
+        }
+      ],
       nzWidth: 800,
       nzClosable: false,
       nzMaskClosable: false,

@@ -1,32 +1,33 @@
 <ng-template #roleFormTemplate>
-    <nz-tabset nzType="card">
-      <nz-tab [nzTitle]="'Role Details'">
-        <form nz-form [formGroup]="validateForm" nzLayout="horizontal">
-          <nz-form-item>
-            <nz-form-label [nzSpan]="6" nzLabelAlign="left">Role Name</nz-form-label>
-            <nz-form-control [nzSpan]="18">
-              <input nz-input formControlName="name" [disabled]="true" />
-            </nz-form-control>
-          </nz-form-item>
-  
-          <nz-form-item>
-            <nz-form-label [nzSpan]="6" nzLabelAlign="left">Description</nz-form-label>
-            <nz-form-control [nzSpan]="18">
-              <textarea formControlName="description" nz-input rows="3" [disabled]="true"></textarea>
-            </nz-form-control>
-          </nz-form-item>
-  
-          
-        </form>
-      </nz-tab>
-  
-      <nz-tab [nzTitle]="'User in role'">
-        <p>Role-related content here</p>
-      </nz-tab>
+  <nz-tabset nzType="card">
+    <nz-tab [nzTitle]="'Role Details'">
+      <form nz-form [formGroup]="validateForm" nzLayout="horizontal">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="4" nzLabelAlign="left">Role Id</nz-form-label>
+          <nz-form-control [nzSpan]="20">
+            <input nz-input formControlName="id" [readonly]="true" class="readonly-field" />
+          </nz-form-control>
+        </nz-form-item>
 
-    </nz-tabset>
-    <div class="modal-footer">
-        <button nz-button nzType="default" (click)="closeModal()">Close</button>
-      </div>
-  </ng-template>
-  
+        <nz-form-item>
+          <nz-form-label [nzSpan]="4" nzLabelAlign="left">Role Name</nz-form-label>
+          <nz-form-control [nzSpan]="20">
+            <input nz-input formControlName="name" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="4" nzLabelAlign="left">Description</nz-form-label>
+          <nz-form-control [nzSpan]="20">
+            <textarea formControlName="description" nz-input rows="3"></textarea>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </nz-tab>
+
+    <nz-tab [nzTitle]="'User in role'">
+      <p>Role-related content here</p>
+    </nz-tab>
+  </nz-tabset>
+  <button nz-button (click)="updateRole()">Save</button>
+</ng-template>

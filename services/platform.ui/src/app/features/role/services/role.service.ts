@@ -36,8 +36,8 @@ export class RoleService {
   }
   
   updateRole(id: string, roleData: CreateRole): Observable<any> {
-    return this.http.put(`/api/roles/${id}`, roleData).pipe(
-      tap(() => {
+    return this.http.put(`${this.baseUrl}/role/id`, roleData, {
+      params: { id } }).pipe(  tap(() => {
         this.roleListUpdated.next(true);
       })
     );
