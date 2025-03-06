@@ -9,7 +9,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { GetRole } from '../../../../models/Role/GetRole';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
-import { CreateRole } from '../../../../models/Role/CreateRole';
+import { RolesharedService } from '../../services/Roleshared.service';
 
 @Component({
   selector: 'app-role-details',
@@ -21,6 +21,8 @@ import { CreateRole } from '../../../../models/Role/CreateRole';
 export class RoleDetailsComponent implements OnInit {
 
   private _roleService = inject(RoleService);
+  private _rolesharedService = inject(RolesharedService);
+
   private route = inject(ActivatedRoute);
   private modal = inject(NzModalService);
   private fb = inject(NonNullableFormBuilder);
@@ -30,9 +32,9 @@ export class RoleDetailsComponent implements OnInit {
   roleId!: string;
 
   validateForm = this.fb.group({
-    id: ['', [Validators.required]],
-    name: ['', [Validators.required]],
-    description: ['']
+    id: ['', [Validators.required]], // Ensure this is a required field
+    name: ['', [Validators.required]], // Ensure this is a required field
+    description: [''] // Optional field
   });
 
   @ViewChild('roleFormTemplate', { static: true }) roleFormTemplate!: TemplateRef<any>;
@@ -58,28 +60,31 @@ export class RoleDetailsComponent implements OnInit {
       }
     });
   }
-  
+
   updateRole(): void {
     if (this.validateForm.valid) {
       const roleData = this.validateForm.value;
-      const updatedRole: CreateRole = {
+  
+      const updatedRole: GetRole = {
+        id: roleData.id || '', 
         name: roleData.name || '',
         description: roleData.description || ''
       };
   
-      this._roleService.updateRole(this.roleId, updatedRole).subscribe({
-        next: () => {
-          this.message.success('Role updated successfully');
-          this.closeModal();
-        },
-        error: (err) => {
-          const errorMessage = err?.error?.message || 'Failed to update role'; 
-          this.message.error(errorMessage);
-        }
-      });
-    }
-  }
+      this._rolesharedService.setCurrentRole(updatedRole);
   
+      this.closeModal();
+  
+      this.router.navigate(['/role-update']).then(() => {
+        console.log('Navigation complete');
+      }).catch((err) => {
+        this.message.error('Navigation error: ' + err);
+      });
+    } else {
+      this.message.error('Form is invalid');
+    }
+  }  
+
   openRoleDetailsModal(): void {
     this.modal.create({
       nzTitle: 'Role Details',
@@ -98,7 +103,8 @@ export class RoleDetailsComponent implements OnInit {
   }
 
   closeModal(): void {
+    console.log('Modal is closing');
     this.modal.closeAll();
     this.router.navigate(['/role-list']);
-  }
+  }  
 }

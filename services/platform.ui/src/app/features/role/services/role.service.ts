@@ -36,13 +36,14 @@ export class RoleService {
   }
   
   updateRole(id: string, roleData: CreateRole): Observable<any> {
-    return this.http.put(`${this.baseUrl}/role/id`, roleData, {
-      params: { id } }).pipe(  tap(() => {
+    const params = new HttpParams().set('id', id);
+    return this.http.put(`${this.baseUrl}/role/id`, roleData, { params }).pipe(
+      tap(() => {
         this.roleListUpdated.next(true);
       })
     );
   }
-  
+
   deleteRole(userId: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/role/id?id=${userId}`).pipe(
       tap(() => {
