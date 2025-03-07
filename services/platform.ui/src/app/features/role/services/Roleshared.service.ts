@@ -6,10 +6,10 @@ import { GetRole } from '../../../models/User/GetUserRole';
   providedIn: 'root',
 })
 export class RolesharedService {
-    private currentRoleSubject = new BehaviorSubject<GetRole | null>(null); // Holds the current role
-    currentRole$ = this.currentRoleSubject.asObservable(); // Expose it as an observable  
+    private currentRoleSubject = new BehaviorSubject<GetRole | null>(null); 
+    currentRole$ = this.currentRoleSubject.asObservable(); 
   
     setCurrentRole(role: GetRole): void {
       this.currentRoleSubject.next(role);
-    }
   }
+}

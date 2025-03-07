@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { GetRole } from '../../../models/User/GetUserRole';
 import { CreateRole } from '../../../models/Role/CreateRole';
+import { AssignedUser } from '../../../models/Role/AssignedUser';
 
 @Injectable({
   providedIn: 'root',
@@ -42,6 +43,10 @@ export class RoleService {
         this.roleListUpdated.next(true);
       })
     );
+  }
+  
+  fetchUsersForRole(roleName: string): Observable<AssignedUser[]> {
+    return this.http.get<AssignedUser[]>(`${this.baseUrl}/role/${roleName}/users`);
   }
 
   deleteRole(userId: string): Observable<any> {

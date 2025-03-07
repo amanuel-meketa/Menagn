@@ -5,5 +5,3 @@
     cursor: not-allowed;  /* Change cursor to indicate it's not editable */
     pointer-events: none;  /* Disable interaction with the field */
   }
-
-  

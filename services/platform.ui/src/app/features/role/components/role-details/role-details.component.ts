@@ -10,11 +10,13 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { GetRole } from '../../../../models/Role/GetRole';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { RolesharedService } from '../../services/Roleshared.service';
+import { RoleAssignedUsersComponent } from '../role-assigned-users/role-assigned-users.component';
 
 @Component({
   selector: 'app-role-details',
   standalone: true,
-  imports: [NzButtonModule, NzModalModule, ReactiveFormsModule, NzFormModule, NzInputModule, NzTabsModule, NzButtonModule],
+  imports: [ NzButtonModule, NzModalModule, ReactiveFormsModule, NzFormModule, NzInputModule, NzTabsModule, NzButtonModule,
+             RoleAssignedUsersComponent],
   templateUrl: './role-details.component.html',
   styleUrl: './role-details.component.css'
 })

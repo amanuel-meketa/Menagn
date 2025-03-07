@@ -14,6 +14,7 @@ import { RoleListComponent } from './features/role/components/role-list/role-lis
 import { RoleRegisterComponent } from './features/role/components/role-register/role-register.component';
 import { RoleDetailsComponent } from './features/role/components/role-details/role-details.component';
 import { RoleUpdateComponent } from './features/role/components/role-update/role-update.component';
+import { RoleAssignedUsersComponent } from './features/role/components/role-assigned-users/role-assigned-users.component';
 
 export const routes: Routes = 
 [
@@ -33,6 +34,8 @@ export const routes: Routes =
       { path: 'role-register', component: RoleRegisterComponent, canActivate:[authGuard]},
       { path: 'role-details/:id', component: RoleDetailsComponent, canActivate:[authGuard]},
       { path: 'role-update', component: RoleUpdateComponent, canActivate:[authGuard]},
+      { path: 'role-assigned-users', component: RoleAssignedUsersComponent, canActivate:[authGuard]},
+      
     ]
   },
 ];
