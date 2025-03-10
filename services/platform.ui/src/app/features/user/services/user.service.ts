@@ -12,7 +12,8 @@ import { GetRole } from '../../../models/User/GetUserRole';
 
 export class UserService { [x: string]: any;
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost:9090/api';
+  //private readonly baseUrl = 'http://platform.security:9090/api';
+  private readonly baseUrl =  window.location.origin + '/api';
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
   login(postData: LoginPostData): Observable<{ access_token: string; refresh_token: string; token_type: string }> 
