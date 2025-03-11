@@ -153,6 +153,15 @@ namespace security.business.Services
             return sessions;
         }
 
+        public async Task RemoveSession(string sessionId)
+        {
+            string accessToken = await _identityService.GetAccessTokenAsync();
+            string url = $"{_restApi}/sessions/{sessionId}";
+            var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Delete, accessToken);
+
+            response.EnsureSuccessStatusCode();
+        }
+
         public async Task RemoveAllSessions(string id)
         {
             string accessToken = await _identityService.GetAccessTokenAsync();

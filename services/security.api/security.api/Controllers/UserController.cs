@@ -24,7 +24,7 @@ namespace security.api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
+                return StatusCode(500, $"An error occurred while creating user. {ex.Message}");
             }
         }
 
@@ -50,7 +50,7 @@ namespace security.api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
+                return StatusCode(500, $"An error occurred while retrieving user. {ex.Message}");
             }
         }
 
@@ -63,7 +63,7 @@ namespace security.api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
+                return StatusCode(500, $"An error occurred while updating user. {ex.Message}");
             }
         }
 
@@ -77,11 +77,11 @@ namespace security.api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
+                return StatusCode(500, $"An error occurred while deleting user. {ex.Message}");
             }
         }
 
-        [HttpGet("{id}/sessions")]
+        [HttpGet("{id}/all-sessions")]
         public async Task<ActionResult<IEnumerable<UserSessionDto>>> Sessions([FromRoute] string id)
         {
             try
@@ -90,21 +90,35 @@ namespace security.api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
+                return StatusCode(500, $"An error occurred while retrieving sessions. {ex.Message}");
             }
         }
 
-        [HttpDelete("{id}/remove-sessions")]
-        public async Task<ActionResult> RemoveAllSessions([FromRoute] string id)
+        [HttpDelete("{sessionId}/remove-session")]
+        public async Task<ActionResult> RemoveSession([FromRoute] string sessionId)
         {
             try
             {
-                await _userService.RemoveAllSessions(id);
+                await _userService.RemoveSession(sessionId);
                 return NoContent();
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
+                return StatusCode(500, $"An error occurred while removing session. {ex.Message}");
+            }
+        }
+
+        [HttpDelete("{userId}/remove-sessions")]
+        public async Task<ActionResult> RemoveAllSessions([FromRoute] string userId)
+        {
+            try
+            {
+                await _userService.RemoveAllSessions(userId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while removing sessions. {ex.Message}");
             }
         }
 
@@ -118,7 +132,7 @@ namespace security.api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
+                return StatusCode(500, $"An error occurred while reseting password. {ex.Message}");
             }
         }
 
@@ -131,7 +145,7 @@ namespace security.api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
+                return StatusCode(500, $"An error occurred while retrieving assigned roles. {ex.Message}");
             }
         }
 
@@ -144,7 +158,7 @@ namespace security.api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred while retrieving users. {ex.Message}");
+                return StatusCode(500, $"An error occurred while unAssigned roles. {ex.Message}");
             }
         }
 
