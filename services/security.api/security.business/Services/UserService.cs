@@ -6,6 +6,7 @@ using security.sharedUtils.Dtos.Role.Incoming;
 using security.sharedUtils.Dtos.Role.Outgoing;
 using security.sharedUtils.Dtos.User.Incoming;
 using security.sharedUtils.Dtos.User.Outgoing;
+using security.sharedUtils.Utilities;
 using SharedLibrary.Utilities;
 using System.Data;
 using System.Net;
@@ -141,15 +142,15 @@ namespace security.business.Services
             response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync();
-            var sessions = JsonConvert.DeserializeObject<IEnumerable<dynamic>>(content);
+            var sessions = JsonConvert.DeserializeObject<IEnumerable<UserSessionDto>>(content);
 
-            // Convert each session's timestamps to formatted strings
-            return sessions.Select(session => new UserSessionDto
+            foreach (var session in sessions)
             {
-                IpAddress = session.ipAddress,
-                Start = DateTimeOffset.FromUnixTimeMilliseconds((long)session.start).ToString("M/d/yyyy, h:mm:ss tt"),
-                LastAccess = DateTimeOffset.FromUnixTimeMilliseconds((long)session.lastAccess).ToString("M/d/yyyy, h:mm:ss tt")
-            });
+                session.Start = DateTimeHelper.FormatUnixTimestamp(session.Start);
+                session.LastAccess = DateTimeHelper.FormatUnixTimestamp(session.LastAccess);
+            }
+
+            return sessions;
         }
 
         public async Task RemoveAllSessions(string id)
