@@ -104,7 +104,9 @@ namespace security.business.Services
             {
                 { "firstName", user.FirstName },
                 { "lastName", user.LastName },
-                { "email", user.Email }
+                { "email", user.Email },
+                { "emailVerified", user.EmailVerified },
+                { "enabled", user.IsLocked },
             };
 
             var content = HttpContentHelper.CreateHttpContent(userPayload);
