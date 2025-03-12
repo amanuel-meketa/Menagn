@@ -41,16 +41,17 @@ export class UserSessionComponent implements OnInit {
     });
   }
 
-  deleteSession(sessionId: string){
+  deleteSession(sessionId: string): void {
     this.modal.confirm({
       nzTitle: '<i>Do you Want to delete the session?</i>',
       nzOkText: 'Yes',
       nzOkType: 'primary',
       nzOkDanger: true,
-     nzOnOk: () => {
+      nzOnOk: () => {
         this._userService.deleteSession(sessionId).subscribe(
           () => {
-            this.message.success('session deleted successfully!');
+            this.message.success('Session deleted successfully!');
+            this.getSession();  
           },
           (error) => {
             this.message.remove();
@@ -61,8 +62,8 @@ export class UserSessionComponent implements OnInit {
       nzCancelText: 'No',
       nzOnCancel: () => console.log('Cancel'),
     });
-  };
-
+  }
+  
   showDeleteConfirm(): void {
     this.modal.confirm({
       nzTitle: '<i>Do you Want to delete all session?</i>',
