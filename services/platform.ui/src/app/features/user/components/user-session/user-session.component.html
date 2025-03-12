@@ -4,12 +4,13 @@
   </div>
   
   <!-- Table displaying the user sessions -->
-  <nz-table *ngIf="listOfData.length > 0" #headerTable [nzScroll]="{ y: '380px' }">
+  <nz-table *ngIf="listOfData.length > 0" #headerTable [nzScroll]="{ y: '280px' }">
     <thead>
       <tr>
         <th>Ip Address</th>
         <th>Start</th>
         <th>Last Access</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -17,6 +18,10 @@
         <td>{{ data.ipAddress }}</td>
         <td>{{ data.start }}</td>
         <td>{{ data.lastAccess }}</td>
+        <td nzCellControl="action">
+          <nz-divider nzType="vertical"></nz-divider>
+          <button nz-button nzSize="small" (click)="deleteSession(data.id)" nzDanger>Delete</button>
+        </td>
       </tr>
     </tbody>
   </nz-table>

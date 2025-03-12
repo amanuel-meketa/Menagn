@@ -6,11 +6,12 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { CommonModule } from '@angular/common';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
 
 @Component({
   selector: 'app-user-session',
   standalone: true,
-  imports: [NzTableModule, CommonModule, NzModalModule, NzButtonModule], 
+  imports: [NzTableModule, CommonModule, NzModalModule, NzButtonModule, NzDividerModule], 
   templateUrl: './user-session.component.html',
   styleUrls: ['./user-session.component.css']
 })
@@ -40,6 +41,28 @@ export class UserSessionComponent implements OnInit {
     });
   }
 
+  deleteSession(sessionId: string){
+    this.modal.confirm({
+      nzTitle: '<i>Do you Want to delete the session?</i>',
+      nzOkText: 'Yes',
+      nzOkType: 'primary',
+      nzOkDanger: true,
+     nzOnOk: () => {
+        this._userService.deleteSession(sessionId).subscribe(
+          () => {
+            this.message.success('session deleted successfully!');
+          },
+          (error) => {
+            this.message.remove();
+            this.message.error(`Error deleting session: ${error.message || 'Unknown error'}`);
+          }
+        );
+      },
+      nzCancelText: 'No',
+      nzOnCancel: () => console.log('Cancel'),
+    });
+  };
+
   showDeleteConfirm(): void {
     this.modal.confirm({
       nzTitle: '<i>Do you Want to delete all session?</i>',
@@ -48,9 +71,9 @@ export class UserSessionComponent implements OnInit {
       nzOkType: 'primary',
       nzOkDanger: true,
      nzOnOk: () => {
-        this._userService.deleteUserSession(this.userId).subscribe(
+        this._userService.deleteSessions(this.userId).subscribe(
           () => {
-            this.message.success('session deleted successfully!');
+            this.message.success('all session deleted successfully!');
           },
           (error) => {
             this.message.remove();
