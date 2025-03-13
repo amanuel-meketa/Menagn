@@ -41,6 +41,7 @@ To get started with Menagn Platform, ensure you have the following tools install
 - [Docker](https://www.docker.com/get-started) for containerization.
 - [Node.js](https://nodejs.org/) (version 16 or later) for the Angular UI.
 - [Docker Compose](https://docs.docker.com/compose/) for managing multi-container Docker applications.
+- [.NET 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0/) or the latest version for building and running the ASP.NET security service.
 
 ### Clone the Repository
 
