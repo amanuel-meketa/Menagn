@@ -45,6 +45,6 @@ To get started with Menagn Platform, ensure you have the following tools install
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/menagn-platform.git
+git clone https://github.com/amanuel-meketae/menagn-platform.git
 cd menagn-platform
 # Security-Service
