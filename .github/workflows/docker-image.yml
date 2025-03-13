@@ -14,7 +14,7 @@ on:
       - README.md
       - .gitignore
       - .dockerignore
-       - ./services/platform.api
+      - ./services/platform.api
   workflow_dispatch:
 
 jobs:
@@ -45,10 +45,14 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Debug Docker Login
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/platform.ui:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/platform.ui:latest
+          docker buildx build --push \
+            --tag ${{ secrets.DOCKER_USERNAME }}/platform.ui:latest \
+            -f ./Dockerfile .
 
       - name: Deploy to production
         env:
@@ -60,4 +64,3 @@ jobs:
           docker rm platform-ui || true
           docker run -d -p 8000:8000 --name platform-ui ${{ secrets.DOCKER_USERNAME }}/platform.ui:latest
           EOF
-
