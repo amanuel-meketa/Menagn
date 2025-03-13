@@ -65,10 +65,8 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           ssh -o StrictHostKeyChecking=no user@your-server.com << 'EOF'
-            bash -l -c "
-              docker pull ${{ secrets.DOCKERHUB_USERNAME }}/platform.ui:latest &&
-              docker stop platform-ui || true &&
-              docker rm platform-ui || true &&
-              docker run -d -p 8000:8000 --name platform-ui ${{ secrets.DOCKERHUB_USERNAME }}/platform.ui:latest
-            "
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/platform.ui:latest
+            docker stop platform-ui || true
+            docker rm platform-ui || true
+            docker run -d -p 8000:8000 --name platform-ui ${{ secrets.DOCKERHUB_USERNAME }}/platform.ui:latest
           EOF
