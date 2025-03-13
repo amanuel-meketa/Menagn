@@ -3,8 +3,6 @@ name: menagn.identitypro.pipeline
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - 'services/security.api/**'
     paths-ignore:
       - README.md
       - .gitignore
@@ -12,8 +10,6 @@ on:
       - ./services/platform.ui 
   pull_request:
     branches: [ "main" ]
-    paths:
-      - 'services/security.api/**'
     paths-ignore:
       - README.md
       - .gitignore
