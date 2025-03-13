@@ -4,16 +4,16 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - 'services/security.api/**'  # Only trigger when changes happen in security.api
+      - 'services/security.api/**'
     paths-ignore:
       - README.md
       - .gitignore
       - .dockerignore
-      - ./services/platform.ui  # Ignore changes in platform.ui
+      - ./services/platform.ui 
   pull_request:
     branches: [ "main" ]
     paths:
-      - 'services/security.api/**'  # Only trigger on changes in security.api
+      - 'services/security.api/**'
     paths-ignore:
       - README.md
       - .gitignore
