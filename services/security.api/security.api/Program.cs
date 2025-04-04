@@ -22,13 +22,10 @@ builder.Services.AddHttpClient<IdentityService>();
 /// Keycloak roles can be automatically transformed to AspNetCore Roles. This feature is disabled by
 /// default and is based on KeycloakRolesClaimsTransformation
 /// </summary>
-builder.Services.AddAuthorization()
-    .AddKeycloakAuthorization(options =>
-    {
+builder.Services.AddAuthorization().AddKeycloakAuthorization(options =>{
         options.EnableRolesMapping = RolesClaimTransformationSource.ResourceAccess;
         options.RolesResource = builder.Configuration["Keycloak:resource"];
-    })
-    .AddAuthorizationBuilder();
+    }).AddAuthorizationBuilder();
 
 builder.Services.AddCors(options =>
 {

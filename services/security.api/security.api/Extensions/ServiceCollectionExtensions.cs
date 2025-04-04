@@ -17,7 +17,7 @@ internal static class ServiceCollectionExtensions
                     AuthorizationCode = new OpenApiOAuthFlow
                     {
                         AuthorizationUrl = new Uri(configuration["Authentication:AuthorizationUrl"]!),
-                        TokenUrl = new Uri(configuration["Authentication:TokenUrl"]!),
+                        TokenUrl = new Uri(configuration["Keycloak:TokenUrl"]!),
                         Scopes = new Dictionary<string, string>
                         {
                             { "openid", "openid" },

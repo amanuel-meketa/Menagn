@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using security.business.Contracts;
+using security.sharedUtils.Dtos.Account.Outgoing;
 using System.Net.Http.Headers;
 
 public class IdentityService : IIdentityService
@@ -12,16 +13,21 @@ public class IdentityService : IIdentityService
     private readonly string? _clientId;
     private readonly string? _username;
     private readonly string? _password;
+    private readonly string? _clientSecret;
+    private readonly string? _tokenUrl;
 
     public IdentityService(IConfiguration configuration)
     {
         var identityProviderSection = configuration.GetSection("Keycloak:AdminRest");
+        var identityProviderSecretSection = configuration.GetSection("Keycloak:credentials");
         _tokenEndpoint = $"{identityProviderSection.GetValue<string>("RestAuthority")}{identityProviderSection.GetValue<string>("RestTokenStub")}";
         _clientId = identityProviderSection.GetValue<string>("RestClientId");
         _username = identityProviderSection.GetValue<string>("RestUsername");
         _password = identityProviderSection.GetValue<string>("RestPassword");
         _restApi = identityProviderSection.GetValue<string>("RestApi");
+        _clientSecret = identityProviderSecretSection.GetValue<string>("secret");
         _resource = configuration["Keycloak:resource"];
+        _tokenUrl = configuration["Keycloak:TokenUrl"];
     }
 
     public async Task<string> GetAccessTokenAsync()
@@ -45,6 +51,34 @@ public class IdentityService : IIdentityService
 
         var responseContent = await response.Content.ReadAsStringAsync();
         return JObject.Parse(responseContent)["access_token"]?.ToString();
+    }
+
+    public async Task<TokenResponseDto> GetAccessTokenStandardFlowAsync(string code, string redirectUri)
+    {
+        var requestContent = new FormUrlEncodedContent(new[]
+        {
+        new KeyValuePair<string, string>("grant_type", "authorization_code"),
+        new KeyValuePair<string, string>("client_id", _resource),
+        new KeyValuePair<string, string>("client_secret", _clientSecret),
+        new KeyValuePair<string, string>("code", code),
+        new KeyValuePair<string, string>("redirect_uri", redirectUri)
+    });
+
+        using var client = new HttpClient();
+        var response = await client.PostAsync(_tokenUrl, requestContent);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorResponse = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"❌ Error: {errorResponse}"); // Log the error response
+            throw new Exception($"Could not retrieve access token. Status Code: {response.StatusCode}, Error: {errorResponse}");
+        }
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var token = JsonConvert.DeserializeObject<TokenResponseDto>(responseContent)
+                    ?? throw new Exception("Failed to parse token response.");
+
+        return token;
     }
 
     public async Task<HttpResponseMessage> SendHttpRequestAsync(string url, HttpMethod method, string? accessToken, HttpContent? content = null)

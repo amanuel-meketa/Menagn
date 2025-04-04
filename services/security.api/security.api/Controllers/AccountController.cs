@@ -1,17 +1,51 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using security.business.Contracts;
 using security.sharedUtils.Dtos.Account.Incoming;
 using security.sharedUtils.Dtos.Account.Outgoing;
 using System.Security.Claims;
+using System.Web;
 
 namespace security.api.Controllers
 {
     [ApiController]
     [Route("api/account")]
-    public class AccountController(IAccountService accountService) : ControllerBase
+    public class AccountController(IAccountService accountService, IIdentityService iIdentityService, IConfiguration _configuration) : ControllerBase
     {
+        private readonly IIdentityService _IIdentityService = iIdentityService;
         private readonly IAccountService _accountService = accountService;
+
+        [AllowAnonymous]
+        [HttpGet("token")]
+        public async Task<ActionResult<TokenResponseDto>> GetToken([FromQuery] string? code)
+        {
+            var authorizationUrl = _configuration["Authentication:AuthorizationUrl"]!;
+            var clientId = _configuration["Keycloak:resource"]!;
+
+            // Construct the redirect URI dynamically
+            var redirectUri = $"{Request.Scheme}://{Request.Host}{Request.Path}";
+
+            if (string.IsNullOrEmpty(code))
+            {
+                var queryParams = new Dictionary<string, string>
+                {
+                    { "client_id", clientId },
+                    { "redirect_uri", redirectUri },
+                    { "response_type", "code" },
+                    { "scope", "openid profile" }
+                };
+
+                var queryString = string.Join("&", queryParams.Select(kvp => $"{kvp.Key}={HttpUtility.UrlEncode(kvp.Value)}"));
+                var keycloakRedirectUrl = $"{authorizationUrl}?{queryString}";
+
+                Console.WriteLine("🔁 Redirecting to Keycloak with URI: " + redirectUri);
+                return Redirect(keycloakRedirectUrl);
+            }
+
+            var responseBody = await _IIdentityService.GetAccessTokenStandardFlowAsync(code, redirectUri);
+
+            return Ok(responseBody);
+        }
 
         [AllowAnonymous]
         [HttpPost("log-in")]
