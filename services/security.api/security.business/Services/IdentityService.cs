@@ -64,21 +64,20 @@ public class IdentityService : IIdentityService
         new KeyValuePair<string, string>("redirect_uri", redirectUri)
     });
 
-        using var client = new HttpClient();
-        var response = await client.PostAsync(_tokenUrl, requestContent);
+    using var client = new HttpClient();
+    var response = await client.PostAsync(_tokenUrl, requestContent);
 
-        if (!response.IsSuccessStatusCode)
-        {
-            var errorResponse = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"❌ Error: {errorResponse}"); // Log the error response
-            throw new Exception($"Could not retrieve access token. Status Code: {response.StatusCode}, Error: {errorResponse}");
-        }
+    if (!response.IsSuccessStatusCode)
+    {
+        var errorResponse = await response.Content.ReadAsStringAsync();
+        throw new Exception($"Could not retrieve access token. Status Code: {response.StatusCode}, Error: {errorResponse}");
+    }
 
         var responseContent = await response.Content.ReadAsStringAsync();
         var token = JsonConvert.DeserializeObject<TokenResponseDto>(responseContent)
                     ?? throw new Exception("Failed to parse token response.");
 
-        return token;
+       return token;
     }
 
     public async Task<HttpResponseMessage> SendHttpRequestAsync(string url, HttpMethod method, string? accessToken, HttpContent? content = null)

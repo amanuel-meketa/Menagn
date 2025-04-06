@@ -9,60 +9,80 @@ using System.Web;
 namespace security.api.Controllers
 {
     [Authorize]
-    [ApiController]
-    [Route("api/account")]
-    public class AccountController(IAccountService accountService, IIdentityService iIdentityService, IConfiguration _configuration) : ControllerBase
+    [ApiController()]
+    [Route("api/auth")]
+    public class AccountController : ControllerBase
     {
-        private readonly IIdentityService _IIdentityService = iIdentityService;
-        private readonly IAccountService _accountService = accountService;
+        private readonly IIdentityService _identityService;
+        private readonly IAccountService _accountService;
+        private readonly IConfiguration _configuration;
 
-        [AllowAnonymous]
-        [HttpGet("token")]
-        public async Task<ActionResult<TokenResponseDto>> GetToken([FromQuery] string? code)
+        public AccountController(IAccountService accountService, IIdentityService identityService, IConfiguration configuration)
         {
-            var authorizationUrl = _configuration["Authentication:AuthorizationUrl"]!;
-            var clientId = _configuration["Keycloak:resource"]!;
+            _accountService = accountService;
+            _identityService = identityService;
+            _configuration = configuration;
+        }
 
-            // Construct the redirect URI dynamically
-            var redirectUri = $"{Request.Scheme}://{Request.Host}{Request.Path}";
+        /// <summary>
+        /// Redirects the user to the external authentication provider (e.g., Keycloak).
+        /// </summary>
+        [AllowAnonymous]
+        [HttpGet("authenticate")]
+        public IActionResult Authenticate()
+        {
+            var authorizationUrl = _configuration["Authentication:AuthorizationUrl"];
+            var clientId = _configuration["Keycloak:resource"];
+            var redirectUri = _configuration["Authentication:RedirectUri"];
 
-            if (string.IsNullOrEmpty(code))
+            var queryParams = new Dictionary<string, string>
             {
-                var queryParams = new Dictionary<string, string>
-                {
-                    { "client_id", clientId },
-                    { "redirect_uri", redirectUri },
-                    { "response_type", "code" },
-                    { "scope", "openid profile" }
-                };
+                { "client_id", clientId },
+                { "redirect_uri", redirectUri },
+                { "response_type", "code" },
+                { "scope", "openid profile" }
+            };
 
-                var queryString = string.Join("&", queryParams.Select(kvp => $"{kvp.Key}={HttpUtility.UrlEncode(kvp.Value)}"));
-                var keycloakRedirectUrl = $"{authorizationUrl}?{queryString}";
+            var keycloakRedirectUrl = BuildUrlWithParams(authorizationUrl, queryParams);
 
-                Console.WriteLine("🔁 Redirecting to Keycloak with URI: " + redirectUri);
-                return Redirect(keycloakRedirectUrl);
-            }
+            return Redirect(keycloakRedirectUrl);
+        }
 
-            var responseBody = await _IIdentityService.GetAccessTokenStandardFlowAsync(code, redirectUri);
+        /// <summary>
+        /// Exchanges the authorization code for an access token.
+        /// </summary>
+        [AllowAnonymous]
+        [HttpGet("exchange-token")]
+        public async Task<ActionResult<TokenResponseDto>> ExchangeAuthorizationCode([FromQuery] string? code)
+        {
+            if (string.IsNullOrEmpty(code))
+                return BadRequest("Authorization code is missing.");
 
-            return Ok(responseBody);
+            var redirectUri = _configuration["Authentication:RedirectUri"];
+            var tokenResponse = await _identityService.GetAccessTokenStandardFlowAsync(code, redirectUri);
+
+            if (tokenResponse == null)
+                return Unauthorized("Failed to retrieve access token.");
+
+            return Ok(tokenResponse);
         }
 
         [AllowAnonymous]
         [HttpPost("log-in")]
-        public async Task<ActionResult<TokenResponseDto>> Login([FromBody] LoginCredentialsDto credential)
+        public async Task<ActionResult<TokenResponseDto>> Login([FromBody] LoginCredentialsDto credentials)
         {
             try
             {
-                return Ok(await _accountService.LogIn(credential));
+                var tokenResponse = await _accountService.LogIn(credentials);
+                return Ok(tokenResponse);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred while loging users. {ex.Message}");
+                return StatusCode(500, $"An error occurred while logging in the user: {ex.Message}");
             }
         }
 
-        [HttpPost("Log-out")]
+        [HttpPost("log-out")]
         public async Task<ActionResult> LogOut([FromBody] string refreshToken)
         {
             try
@@ -72,23 +92,33 @@ namespace security.api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred while loging out the user. {ex.Message}");
+                return StatusCode(500, $"An error occurred while logging out the user: {ex.Message}");
             }
         }
 
+        /// <summary>
+        /// Retrieves the user information from the claims in the current context.
+        /// </summary>
         [HttpGet("userinfo")]
         public ActionResult<UserInfoDto> GetUserInfo()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
 
             if (identity == null || !identity.IsAuthenticated)
-            {
                 return Unauthorized(new { message = "User is not authenticated" });
-            }
 
             var claims = identity.Claims.Select(c => new { c.Type, c.Value }).ToList();
 
             return Ok(claims);
+        }
+
+        /// <summary>
+        /// Helper method to build a URL with query parameters.
+        /// </summary>
+        private string BuildUrlWithParams(string baseUrl, Dictionary<string, string> queryParams)
+        {
+            var queryString = string.Join("&", queryParams.Select(kvp => $"{kvp.Key}={HttpUtility.UrlEncode(kvp.Value)}"));
+            return $"{baseUrl}?{queryString}";
         }
     }
 }
