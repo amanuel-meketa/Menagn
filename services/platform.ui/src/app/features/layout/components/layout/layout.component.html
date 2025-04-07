@@ -126,7 +126,7 @@
         <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" (click)="isCollapsed = !isCollapsed"></span>
     
        <!-- Display Login button if token does not exist -->
-        <button *ngIf="!token" nz-button routerLink="/login" style="margin-left: auto;">Login</button>
+       <button *ngIf="!token" nz-button (click)="login()" style="margin-left: auto;">Login</button>
 
         <!-- Display user email and dropdown if token exists -->
         <nz-button-group *ngIf="token" style="margin-left: auto;">

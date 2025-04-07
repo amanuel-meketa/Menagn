@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './features/user/components/login/login.component';
 import { UserRegisterComponent } from './features/user/components/user-register/user-register.component';
 import { UserListComponent } from './features/user/components/user-list/user-list.component';
 import { DashboardComponent } from './features/layout/components/dashboard/dashboard.component';
@@ -15,10 +14,11 @@ import { RoleRegisterComponent } from './features/role/components/role-register/
 import { RoleDetailsComponent } from './features/role/components/role-details/role-details.component';
 import { RoleUpdateComponent } from './features/role/components/role-update/role-update.component';
 import { RoleAssignedUsersComponent } from './features/role/components/role-assigned-users/role-assigned-users.component';
+import { AuthCallbackComponent } from './features/auth/components/auth-callback/auth-callback.component';
 
 export const routes: Routes = 
 [
-  { path: 'login', component: LoginComponent, pathMatch: 'full' },
+  { path: 'auth-callback', component: AuthCallbackComponent, pathMatch: 'full' },
   { path: '', component: LayoutComponent, children: 
     [
       { path: 'dashboard', component: DashboardComponent, canActivate:[authGuard]},

@@ -3,7 +3,6 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RegisterPostData } from '../../../models/RegisterPostData';
 import { UserListData } from '../../../models/UserListData';
-import { LoginPostData } from '../../../models/LoginPostData';
 import { GetCurrentUser } from '../../../models/User/GetCurrentUser';
 import { UserSession } from '../../../models/User/UserSession';
 import { GetRole } from '../../../models/User/GetUserRole';
@@ -12,15 +11,9 @@ import { GetRole } from '../../../models/User/GetUserRole';
 
 export class UserService { [x: string]: any;
   private readonly http = inject(HttpClient);
-   //private readonly baseUrl = 'http://localhost:9090/api';
+  //private readonly baseUrl = 'http://localhost:9090/api';
   private readonly baseUrl =  window.location.origin + '/api';;
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
-
-  login(postData: LoginPostData): Observable<{ access_token: string; refresh_token: string; token_type: string }> 
-  {
-    return this.http.post<{ access_token: string; refresh_token: string; token_type: string }>(
-         `${this.baseUrl}/account/log-in`,postData);
-  }
 
   registerUser(postData: RegisterPostData): Observable<any> {
     return this.http.post(`${this.baseUrl}/user`, postData);
@@ -48,7 +41,7 @@ export class UserService { [x: string]: any;
     );}
 
   getCurrentUser(): Observable<GetCurrentUser> {
-    return this.http.get<GetCurrentUser>(`${this.baseUrl}/account/userinfo`);
+    return this.http.get<GetCurrentUser>(`${this.baseUrl}/auth/userinfo`);
   }
   
   getUserSeesion(userId: string): Observable<UserSession[]> {

@@ -26,6 +26,10 @@ export class LayoutComponent {
   currentYear: number = new Date().getFullYear();
 
   token = this._authService.getStoredToken()?.emailAddress || null;
+  
+  login() {
+    this._authService.authenticateUser();
+  }  
 
   onPasswordReset(): void {
     console.log('Password Reset clicked');
