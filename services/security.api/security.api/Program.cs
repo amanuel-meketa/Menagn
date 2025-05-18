@@ -10,7 +10,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGenWithAuth(builder.Configuration);
 builder.Services.ConfigurApplicationServices();
-builder.Services.AddKeycloakWebApiAuthentication(builder.Configuration);
+builder.Services.AddKeycloakWebApiAuthentication(
+builder.Configuration,
+    options =>
+    {
+        options.TokenValidationParameters.ValidateIssuer = true;
+        options.TokenValidationParameters.ValidIssuers = new[]
+        {
+            "http://localhost:8180/realms/Menagn",
+            "http://platform.keycloak:8080/realms/Menagn"
+        };
+        options.RequireHttpsMetadata = false;
+    }
+);
+
 builder.Services.AddScoped<IIdentityService, IdentityService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAccountService, AccountService>();

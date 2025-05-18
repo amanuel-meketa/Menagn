@@ -9,7 +9,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly baseUrl = 'http://localhost:9090/api';
+  private readonly baseUrl = 'http://localhost/api';
   private readonly _userService = inject(UserService);
   private readonly http = inject(HttpClient);
 
