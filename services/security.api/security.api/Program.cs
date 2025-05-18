@@ -57,6 +57,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Security Service Api v1");
+        var clientId = builder.Configuration["Keycloak:resource"];
+        var clientSecret = builder.Configuration["Keycloak:credentials:secret"];
+
+        c.OAuthClientId(clientId);                     // Pre-fill client_id
+        c.OAuthClientSecret(clientSecret);             // Pre-fill client_secret (may not autofill due to browser security)
+        c.OAuthUsePkce();                              // For Authorization Code Flow
+        c.OAuthAppName("Menagn Swagger UI");
+        c.OAuthScopes("openid", "profile");            // Pre-selected scopes
     });
 }
 
