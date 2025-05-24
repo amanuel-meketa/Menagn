@@ -1,5 +1,6 @@
 ﻿using approvals.application.Interfaces;
 using approvals.infrastructure.Persistence;
+using approvals.infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,21 +19,25 @@ namespace YourProject.Infrastructure.Extensions
                 switch (provider)
                 {
                     case "SqlServer":
-                        options.UseSqlServer(connectionStrings["SqlServer"]);
+                        options.UseSqlServer(connectionStrings["SqlServer"],
+                            sql => sql.EnableRetryOnFailure()); 
                         break;
+
                     case "SqlLocalDb":
-                        options.UseSqlServer(connectionStrings["SqlLocalDb"]);
+                        options.UseSqlServer(connectionStrings["SqlLocalDb"],
+                            sql => sql.EnableRetryOnFailure());
                         break;
-                    case "Postgres":
-                        options.UseNpgsql(connectionStrings["Postgres"]);
+
+                    case "Postgres":options.UseNpgsql(connectionStrings["Postgres"]);
                         break;
+
                     default:
                         throw new InvalidOperationException($"Unsupported provider: {provider}");
                 }
             });
 
             services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
-
+            services.AddScoped<IApprovalRepository, ApprovalRepository>();
             return services;
         }
     }

@@ -1,3 +1,5 @@
+using approvals.application.Interfaces;
+using approvals.infrastructure.Persistence.Repositories;
 using YourProject.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+builder.Services.AddScoped<IApprovalRepository, ApprovalRepository>();
 
 // Add persistence from Infrastructure
 builder.Services.AddPersistence(builder.Configuration);

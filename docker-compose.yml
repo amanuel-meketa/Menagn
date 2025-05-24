@@ -37,6 +37,8 @@ services:
       POSTGRES_PASSWORD: postgres
     networks:
       - menagn-network
+    ports:
+      - "5432:5432"  
 
   pgadmin:
     container_name: pgadmin
