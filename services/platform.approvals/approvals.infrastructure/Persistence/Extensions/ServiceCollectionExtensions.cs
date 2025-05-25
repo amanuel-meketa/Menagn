@@ -32,7 +32,7 @@ namespace YourProject.Infrastructure.Extensions
                         break;
 
                     default:
-                        throw new InvalidOperationException($"Unsupported provider: {provider}");
+                        throw new InvalidOperationException($"Unsupported database provider: {provider}");
                 }
             });
 
