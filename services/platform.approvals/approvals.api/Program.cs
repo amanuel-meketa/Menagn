@@ -1,3 +1,6 @@
+using approvals.application;
+using approvals.infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using platform.Infrastructure.Extensions;
 
@@ -15,10 +18,17 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddControllers();
 
-// Add persistence from Infrastructure
+// Add services from all class liberary
 builder.Services.AddPersistence(builder.Configuration);
+builder.Services.ConfigurApplicationServices();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
+}
 
 if (app.Environment.IsDevelopment())
 {

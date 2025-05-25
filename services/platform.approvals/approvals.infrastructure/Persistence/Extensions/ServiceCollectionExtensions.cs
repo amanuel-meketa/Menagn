@@ -28,7 +28,8 @@ namespace platform.Infrastructure.Extensions
                             sql => sql.EnableRetryOnFailure());
                         break;
 
-                    case "Postgres":options.UseNpgsql(connectionStrings["Postgres"]);
+                    case "Postgres":
+                        options.UseNpgsql(connectionStrings["Postgres"]);
                         break;
 
                     default:
@@ -38,6 +39,7 @@ namespace platform.Infrastructure.Extensions
 
             services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
             services.AddScoped<IApprovalRepository, ApprovalRepository>();
+
             return services;
         }
     }
