@@ -1,11 +1,11 @@
-using approvals.application;
+﻿using approvals.application;
 using approvals.infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using platform.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -16,19 +16,15 @@ builder.Services.AddSwaggerGen(options =>
         Description = "API documentation for the Approvals microservice."
     });
 });
-builder.Services.AddControllers();
 
-// Add services from all class liberary
+// Register class Liberarys 
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.ConfigurApplicationServices();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    dbContext.Database.Migrate();
-}
+// ✅ Ensure DB migration runs in development
+await app.EnsureMigrationAppliedAsync(app.Environment);
 
 if (app.Environment.IsDevelopment())
 {
@@ -36,7 +32,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "Approvals API v1");
-        options.RoutePrefix = "swagger"; // Serves Swagger UI at /swagger
+        options.RoutePrefix = "swagger";
     });
 }
 
