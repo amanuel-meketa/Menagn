@@ -23,8 +23,10 @@ builder.Services.ConfigurApplicationServices();
 
 var app = builder.Build();
 
-// ✅ Ensure DB migration runs in development
-await app.EnsureMigrationAppliedAsync(app.Environment);
+// Ensure DB migration runs in docker container and development envaroment
+var isRunningInDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
+if (isRunningInDocker)
+    await app.EnsureMigrationAppliedAsync(app.Environment);
 
 if (app.Environment.IsDevelopment())
 {

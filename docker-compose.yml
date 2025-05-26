@@ -24,6 +24,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://0.0.0.0:7070
+      - DatabaseProvider=Postgres
+      - ConnectionStrings__Postgres=Host=platform-database;Port=5432;Database=Approvals;Username=postgres;Password=postgres
     ports:
       - 2000:7070
     networks:

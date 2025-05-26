@@ -1,5 +1,4 @@
-﻿// File: ApplyMigrations.cs
-using approvals.infrastructure.Persistence;
+﻿using approvals.infrastructure.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

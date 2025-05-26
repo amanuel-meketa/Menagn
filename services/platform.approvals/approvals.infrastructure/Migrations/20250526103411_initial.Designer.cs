@@ -12,8 +12,8 @@ using approvals.infrastructure.Persistence;
 namespace approvals.infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250526004005_approvalsModels")]
-    partial class approvalsModels
+    [Migration("20250526103411_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
