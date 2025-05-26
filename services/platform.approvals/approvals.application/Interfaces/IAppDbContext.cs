@@ -5,7 +5,8 @@ namespace approvals.application.Interfaces
 {
     public interface IAppDbContext
     {
-        DbSet<Approval> Approvals { get; set; }
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+        DbSet<ApplicationType> applicationType { get; set; }
+        DbSet<FormDefinition> formDefinitions { get; set; }
+        DbSet<ApplicationFlowDefinition> applicationFlowDefinitions { get; set; }
     }
 }

@@ -1,10 +1,10 @@
-﻿using approvals.application.DTOs;
+﻿using approvals.application.DTOs.ApplicationType;
 using approvals.application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace approvals.api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/approvalsType")]
     [ApiController]
     public class ApprovalsController : ControllerBase
     {
@@ -16,30 +16,31 @@ namespace approvals.api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<GetApplicationTypeDto>> GetAll()
         {
             var list = await _approvalRepo.GetAllAsync();
             return Ok(list);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
+        public async Task<ActionResult<GetApplicationTypeDto>> Get(Guid id)
         {
             var item = await _approvalRepo.GetByIdAsync(id);
             return item == null ? NotFound() : Ok(item);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] ApprovalDto dto)
+        public async Task<IActionResult> Create([FromBody] CreateApplicationTypeDto dto)
         {
+
             var id = await _approvalRepo.CreateAsync(dto);
             return CreatedAtAction(nameof(Get), new { id }, dto);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] ApprovalDto dto)
+        public async Task<IActionResult> Update(Guid id, [FromBody] CreateApplicationTypeDto dto)
         {
-            if (id != dto.Id) return BadRequest("ID mismatch");
+           // if (id != dto.Id) return BadRequest("ID mismatch");
             var updated = await _approvalRepo.UpdateAsync(dto);
             return updated ? NoContent() : NotFound();
         }

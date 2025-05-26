@@ -1,11 +1,18 @@
 ﻿using approvals.application;
+using approvals.application.DTOs.ApplicationType.Validator;
 using approvals.infrastructure.Persistence;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using platform.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
+builder.Services.AddFluentValidationAutoValidation(); // auto model validation
+builder.Services.AddValidatorsFromAssemblyContaining<CreateAppTypeDtoValidator>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {

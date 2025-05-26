@@ -63,7 +63,7 @@ services:
       - menagn-network
     restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@menagn.com
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
       - "5050:8083"

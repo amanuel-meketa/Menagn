@@ -1,4 +1,4 @@
-﻿using approvals.application.DTOs;
+﻿using approvals.application.DTOs.ApplicationType;
 using approvals.domain.Entities;
 using AutoMapper;
 
@@ -8,7 +8,8 @@ namespace approvals.application.Profiles
     {
         public MappingProfile()
         {
-            CreateMap<Approval, ApprovalDto>().ReverseMap();
+            CreateMap<ApplicationType, ApplicationTypeDto>().ReverseMap();
+            CreateMap<ApplicationType, CreateApplicationTypeDto>().ReverseMap();
         }
     }
 }

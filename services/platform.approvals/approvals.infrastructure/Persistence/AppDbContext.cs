@@ -8,11 +8,9 @@ namespace approvals.infrastructure.Persistence
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<Approval> Approvals { get; set; }
+        public DbSet<ApplicationType> applicationType { get; set; }
+        public DbSet<FormDefinition> formDefinitions { get; set; }
+        public DbSet<ApplicationFlowDefinition> applicationFlowDefinitions { get; set; }
 
-        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            return await base.SaveChangesAsync(cancellationToken);
-        }
     }
 }
