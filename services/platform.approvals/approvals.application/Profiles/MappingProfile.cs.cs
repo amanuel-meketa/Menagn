@@ -8,7 +8,7 @@ namespace approvals.application.Profiles
     {
         public MappingProfile()
         {
-            CreateMap<ApplicationType, ApplicationTypeDto>().ReverseMap();
+            CreateMap<ApplicationType, GetApplicationTypeDto>().ReverseMap();
             CreateMap<ApplicationType, CreateApplicationTypeDto>().ReverseMap();
         }
     }
