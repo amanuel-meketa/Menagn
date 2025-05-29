@@ -27,6 +27,15 @@ builder.Services.AddSwaggerGen(options =>
 // Register class Liberarys 
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.ConfigurApplicationServices();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
 
@@ -47,4 +56,5 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthorization();
 app.MapControllers();
+app.UseCors("AllowAll");
 app.Run();
