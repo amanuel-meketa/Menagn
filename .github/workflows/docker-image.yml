@@ -1,20 +1,14 @@
-name: menagn.ui pipeline
+name: platform-ci
 
 on:
   push:
     branches: [ "main" ]
-    paths-ignore:
-      - README.md
-      - .gitignore
-      - .dockerignore
-      - ./services/platform.api
+    paths:
+      - 'services/platform.ui/**'
   pull_request:
     branches: [ "main" ]
-    paths-ignore:
-      - README.md
-      - .gitignore
-      - .dockerignore
-      - ./services/platform.api
+    paths:
+      - 'services/platform.ui/**'
   workflow_dispatch:
 
 jobs:
