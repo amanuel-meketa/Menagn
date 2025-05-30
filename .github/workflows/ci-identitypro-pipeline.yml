@@ -40,7 +40,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: services/security.api
-          file: services/security.api/security.api/Dockerfile
+          file: services/platform.security/security.api/Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/identitypro:latest
