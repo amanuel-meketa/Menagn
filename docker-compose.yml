@@ -4,11 +4,8 @@ services:
   security.api:
     container_name: platform.security
     image: menagn/security
-    build:
-      context: ./services/platform.security
-      dockerfile: security.api/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=9090
     ports:
       - 9090:9090
@@ -18,30 +15,24 @@ services:
   platform.approvals:
     container_name: platform.approvals
     image: menagn/approvals
-    build:
-      context: ./services/platform.approvals
-      dockerfile: approvals.api/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://0.0.0.0:7070
       - DatabaseProvider=Postgres
       - ConnectionStrings__Postgres=Host=platform-database;Port=5432;Database=Approvals;Username=postgres;Password=postgres
     ports:
       - 2000:7070
     networks:
-      - menagn-network 
+      - menagn-network
 
   platform.ui:
     container_name: platform.ui
     image: menagn/ui
-    build:
-      context: ./services/platform.ui
-      dockerfile: Dockerfile
     ports:
       - 8000:8000
     networks:
-      - menagn-network 
-      
+      - menagn-network
+
   postgres:
     container_name: platform-database
     image: postgres:16.2
@@ -51,16 +42,14 @@ services:
       POSTGRES_DB: Keycloak
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
     networks:
       - menagn-network
-    ports:
-      - "5432:5432"  
 
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
-    networks:
-      - menagn-network
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
@@ -69,6 +58,8 @@ services:
       - "5050:8083"
     volumes:
       - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - menagn-network
 
   keycloak:
     container_name: platform.keycloak
@@ -83,19 +74,15 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: admin
     ports:
       - "8180:8080"
-    restart: always
     depends_on:
       - postgres
+    restart: always
     networks:
       - menagn-network
-      
+
   nginx:
-    image: nginx
-    restart: always
-    build:
-      context: ./gateway
-      dockerfile: Dockerfile
     container_name: nginx
+    image: nginx:latest
     ports:
       - 80:80
     depends_on:
@@ -109,6 +96,8 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:80"]
       interval: 30s
       retries: 3
+    restart: always
+
 volumes:
   postgres_data:
   pgadmin-data:

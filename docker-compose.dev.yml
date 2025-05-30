@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  security.api:
+    build:
+      context: ./services/platform.security
+      dockerfile: security.api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  platform.approvals:
+    build:
+      context: ./services/platform.approvals
+      dockerfile: approvals.api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  platform.ui:
+    build:
+      context: ./services/platform.ui
+      dockerfile: Dockerfile
+
+  nginx:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
