@@ -39,7 +39,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
-          context: services/security.api
+          context: services/platform.security
           file: services/platform.security/security.api/Dockerfile
           push: true
           tags: |
