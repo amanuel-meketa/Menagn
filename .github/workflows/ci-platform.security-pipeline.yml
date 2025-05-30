@@ -1,4 +1,4 @@
-name: menagn.identitypro.pipeline
+name: platform.security.pipeline
 
 on:
   push:
