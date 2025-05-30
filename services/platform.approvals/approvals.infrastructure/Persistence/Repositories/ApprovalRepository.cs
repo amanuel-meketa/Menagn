@@ -49,13 +49,13 @@ namespace approvals.infrastructure.Persistence.Repositories
             return entity.Id;
         }
 
-        public async Task<bool> UpdateAsync(Guid id, CreateApplicationTypeDto dto)
+        public async Task<bool> UpdateAsync(UpdateApplicationTypeDto updateApp)
         {
-            var entity = await _context.ApplicationTypes.FindAsync(id);
+            var entity = await _context.ApplicationTypes.FindAsync(updateApp.Id);
             if (entity == null)
                 return false;
 
-            _mapper.Map(dto, entity);
+            _mapper.Map(updateApp, entity);
 
             try
             {

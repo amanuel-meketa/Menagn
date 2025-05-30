@@ -2,10 +2,11 @@
 
 namespace approvals.application.DTOs.ApplicationType.Validator
 {
-    public class CreateAppTypeDtoValidator : BaseAppTypeValidator<CreateApplicationTypeDto>
+    public class UpdateAppTypeDtoValidator : BaseAppTypeValidator<UpdateApplicationTypeDto>
     {
-        public CreateAppTypeDtoValidator()
+        public UpdateAppTypeDtoValidator()
         {
+            ApplyGuidIdRules(RuleFor(v => v.Id));
             ApplyNameRules(RuleFor(v => v.Name));
             ApplyDescriptionRules(RuleFor(v => v.Description));
         }

@@ -1,4 +1,5 @@
 ﻿using approvals.application.DTOs.ApplicationType;
+using approvals.application.DTOs.ApplicationType.Validator;
 using approvals.application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,18 +31,18 @@ namespace approvals.api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateApplicationTypeDto dto)
+        public async Task<IActionResult> Create([FromBody] CreateApplicationTypeDto updateApp)
         {
 
-            var id = await _approvalRepo.CreateAsync(dto);
-            return CreatedAtAction(nameof(Get), new { id }, dto);
+            var id = await _approvalRepo.CreateAsync(updateApp);
+            return CreatedAtAction(nameof(Get), new { id }, updateApp);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] CreateApplicationTypeDto dto)
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] UpdateApplicationTypeDto updateApp)
         {
-           // if (id != dto.Id) return BadRequest("ID mismatch");
-            var updated = await _approvalRepo.UpdateAsync(id, dto);
+            
+            var updated = await _approvalRepo.UpdateAsync(updateApp);
             return updated ? NoContent() : NotFound();
         }
 

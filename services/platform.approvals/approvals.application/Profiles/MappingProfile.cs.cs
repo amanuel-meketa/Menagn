@@ -10,6 +10,7 @@ namespace approvals.application.Profiles
         {
             CreateMap<ApplicationType, GetApplicationTypeDto>().ReverseMap();
             CreateMap<ApplicationType, CreateApplicationTypeDto>().ReverseMap();
+            CreateMap<ApplicationType, UpdateApplicationTypeDto>().ReverseMap();
         }
     }
 }
