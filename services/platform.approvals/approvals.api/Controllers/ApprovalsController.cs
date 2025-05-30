@@ -26,7 +26,7 @@ namespace approvals.api.Controllers
         public async Task<ActionResult<GetApplicationTypeDto>> Get(Guid id)
         {
             var item = await _approvalRepo.GetByIdAsync(id);
-            return item == null ? NotFound() : Ok(item);
+            return Ok(item); 
         }
 
         [HttpPost]
@@ -41,7 +41,7 @@ namespace approvals.api.Controllers
         public async Task<IActionResult> Update(Guid id, [FromBody] CreateApplicationTypeDto dto)
         {
            // if (id != dto.Id) return BadRequest("ID mismatch");
-            var updated = await _approvalRepo.UpdateAsync(dto);
+            var updated = await _approvalRepo.UpdateAsync(id, dto);
             return updated ? NoContent() : NotFound();
         }
 

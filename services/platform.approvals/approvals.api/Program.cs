@@ -1,4 +1,5 @@
-﻿using approvals.application;
+﻿using approvals.api.Middleware;
+using approvals.application;
 using approvals.application.DTOs.ApplicationType.Validator;
 using approvals.infrastructure.Persistence;
 using FluentValidation;
@@ -8,11 +9,8 @@ using platform.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container
 builder.Services.AddControllers();
-
-builder.Services.AddFluentValidationAutoValidation(); // auto model validation
-builder.Services.AddValidatorsFromAssemblyContaining<CreateAppTypeDtoValidator>();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -24,26 +22,37 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// Register class Liberarys 
-builder.Services.AddPersistence(builder.Configuration);
+// FluentValidation
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateAppTypeDtoValidator>();
+
+// Application and Infrastructure DI
 builder.Services.ConfigurApplicationServices();
+builder.Services.AddPersistence(builder.Configuration);
+
+// CORS policy
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", builder =>
+    options.AddPolicy("AllowAll", policy =>
     {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
 
+builder.Services.AddScoped<ExceptionHandlingMiddleware>();
+
 var app = builder.Build();
 
-// Ensure DB migration runs in docker container and development envaroment
-var isRunningInDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
-if (isRunningInDocker)
+// Use global exception handler middleware
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+// Run migrations if inside Docker
+if (Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true")
     await app.EnsureMigrationAppliedAsync(app.Environment);
 
+// Swagger UI
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -54,7 +63,9 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+// Standard middleware order
+app.UseCors("AllowAll");
 app.UseAuthorization();
 app.MapControllers();
-app.UseCors("AllowAll");
+
 app.Run();

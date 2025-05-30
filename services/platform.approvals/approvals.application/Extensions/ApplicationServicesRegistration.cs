@@ -9,7 +9,7 @@ namespace approvals.application
     {
         public static IServiceCollection ConfigurApplicationServices(this IServiceCollection services)
         {
-            services.AddValidatorsFromAssemblyContaining<CreateAppTypeDtoValidator>(); // Register your validators
+            services.AddValidatorsFromAssemblyContaining<CreateAppTypeDtoValidator>();
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddAutoMapper(typeof(ApplicationServicesRegistration).Assembly);
 

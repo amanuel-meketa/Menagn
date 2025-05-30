@@ -3,6 +3,7 @@ using approvals.application.Interfaces;
 using approvals.domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using approvals.application.DTOs.ApplicationType;
+using approvals.application.Common.Exceptions;
 
 namespace approvals.infrastructure.Persistence.Repositories
 {
@@ -19,42 +20,71 @@ namespace approvals.infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<GetApplicationTypeDto>> GetAllAsync()
         {
-            var approvals = await _context.applicationType.ToListAsync();
-            return _mapper.Map<List<GetApplicationTypeDto>>(approvals);
+            var entities = await _context.ApplicationTypes.AsNoTracking().ToListAsync();
+
+            return _mapper.Map<List<GetApplicationTypeDto>>(entities);
         }
 
-        public async Task<GetApplicationTypeDto?> GetByIdAsync(Guid id)
+        public async Task<GetApplicationTypeDto> GetByIdAsync(Guid id)
         {
-            var approval = await _context.applicationType.FindAsync(id);
-            return approval == null ? null : _mapper.Map<GetApplicationTypeDto>(approval);
+            var entity = await _context.ApplicationTypes.FindAsync(id);
+
+            if (entity == null)
+                throw new NotFoundException($"ApplicationType with ID {id} not found.");
+
+            return _mapper.Map<GetApplicationTypeDto>(entity);
         }
 
         public async Task<Guid> CreateAsync(CreateApplicationTypeDto dto)
         {
+            var exists = await _context.ApplicationTypes.AnyAsync(x => x.Name == dto.Name); 
+
+            if (exists)
+                throw new ConflictException("Application type already exists.");
+
             var entity = _mapper.Map<ApplicationType>(dto);
-            _context.applicationType.Add(entity);
+            _context.ApplicationTypes.Add(entity);
             await _context.SaveChangesAsync();
+
             return entity.Id;
         }
 
-        public async Task<bool> UpdateAsync(CreateApplicationTypeDto dto)
+        public async Task<bool> UpdateAsync(Guid id, CreateApplicationTypeDto dto)
         {
-            //var entity = await _context.Approvals.FindAsync(dto.Id);
-            //if (entity == null) return false;
+            var entity = await _context.ApplicationTypes.FindAsync(id);
+            if (entity == null)
+                return false;
 
-            //_mapper.Map(dto, entity); // Map only changed properties
-            //await _context.SaveChangesAsync();
-            return true;
+            _mapper.Map(dto, entity);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false; 
+            }
         }
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            var entity = await _context.applicationType.FindAsync(id);
-            if (entity == null) return false;
+            var entity = await _context.ApplicationTypes.FindAsync(id);
+            if (entity == null)
+                return false;
 
-            _context.applicationType.Remove(entity);
-            await _context.SaveChangesAsync();
-            return true;
+            _context.ApplicationTypes.Remove(entity);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

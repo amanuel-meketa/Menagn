@@ -8,7 +8,7 @@ namespace approvals.application.Interfaces
         Task<IEnumerable<GetApplicationTypeDto>> GetAllAsync();
         Task<GetApplicationTypeDto?> GetByIdAsync(Guid id);
         Task<Guid> CreateAsync(CreateApplicationTypeDto approval);
-        Task<bool> UpdateAsync(CreateApplicationTypeDto approval);
+        Task<bool> UpdateAsync(Guid id, CreateApplicationTypeDto approval);
         Task<bool> DeleteAsync(Guid id);
     }
 }
