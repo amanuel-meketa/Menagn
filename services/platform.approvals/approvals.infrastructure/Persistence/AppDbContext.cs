@@ -1,4 +1,4 @@
-﻿using approvals.application.Interfaces;
+﻿using approvals.application.Interfaces.Services;
 using approvals.domain.Entities;
 using Microsoft.EntityFrameworkCore;
 

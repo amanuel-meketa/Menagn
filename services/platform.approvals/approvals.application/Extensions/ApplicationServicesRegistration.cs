@@ -12,7 +12,7 @@ namespace approvals.application
             services.AddValidatorsFromAssemblyContaining<CreateAppTypeDtoValidator>();
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddAutoMapper(typeof(ApplicationServicesRegistration).Assembly);
-
+            services.AddScoped<IApplicationTypeService, ApplicationTypeService>();
             return services;
         }
     }

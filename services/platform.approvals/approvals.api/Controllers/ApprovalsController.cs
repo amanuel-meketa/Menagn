@@ -1,56 +1,53 @@
 ﻿using approvals.application.DTOs.ApplicationType;
-using approvals.application.DTOs.ApplicationType.Validator;
-using approvals.application.Interfaces;
+using approvals.domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace approvals.api.Controllers
 {
-    [Route("api/approvalsType")]
+    [Route("api/approvals-type")]
     [ApiController]
     public class ApprovalsController : ControllerBase
     {
-        private readonly IApprovalRepository _approvalRepo;
-
-        public ApprovalsController(IApprovalRepository repo)
+        private readonly IApplicationTypeService _appTypeservice;
+   
+        public ApprovalsController(IApplicationTypeService appTypeservice)
         {
-            _approvalRepo = repo;
+            _appTypeservice = appTypeservice;
         }
 
         [HttpGet]
-        public async Task<ActionResult<GetApplicationTypeDto>> GetAll()
+        public async Task<ActionResult<IEnumerable<GetApplicationTypeDto>>> GetAll()
         {
-            var list = await _approvalRepo.GetAllAsync();
+            var list = await _appTypeservice.GetAllAsync();
             return Ok(list);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<GetApplicationTypeDto>> Get(Guid id)
         {
-            var item = await _approvalRepo.GetByIdAsync(id);
+            var item = await _appTypeservice.GetByIdAsync(id);
             return Ok(item); 
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateApplicationTypeDto updateApp)
+        public async Task<ActionResult<Guid>> Create([FromBody] CreateApplicationTypeDto createAppDto)
         {
-
-            var id = await _approvalRepo.CreateAsync(updateApp);
-            return CreatedAtAction(nameof(Get), new { id }, updateApp);
+            var newId = await _appTypeservice.CreateApplicationTypeAsync(createAppDto);
+            return CreatedAtAction(nameof(Get), new { id = newId }, null);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateApplicationTypeDto updateApp)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateApplicationTypeDto updateAppDto)
         {
-            
-            var updated = await _approvalRepo.UpdateAsync(updateApp);
-            return updated ? NoContent() : NotFound();
+            await _appTypeservice.UpdateAsync(id, updateAppDto);
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var deleted = await _approvalRepo.DeleteAsync(id);
-            return deleted ? NoContent() : NotFound();
+            await _appTypeservice.DeleteAsync(id);
+            return NoContent();
         }
     }
 }

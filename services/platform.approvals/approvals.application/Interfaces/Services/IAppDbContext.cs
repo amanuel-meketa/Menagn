@@ -1,7 +1,7 @@
 ﻿using approvals.domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace approvals.application.Interfaces
+namespace approvals.application.Interfaces.Services
 {
     public interface IAppDbContext
     {

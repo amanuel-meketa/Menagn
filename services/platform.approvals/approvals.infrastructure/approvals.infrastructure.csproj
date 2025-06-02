@@ -27,6 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\approvals.application\approvals.application.csproj" />
     <ProjectReference Include="..\approvals.domain\approvals.domain.csproj" />
+    <ProjectReference Include="..\approvals.shared\approvals.shared.csproj" />
   </ItemGroup>
 
 </Project>
