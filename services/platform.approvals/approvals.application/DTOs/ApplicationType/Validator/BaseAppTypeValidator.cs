@@ -14,7 +14,7 @@ namespace approvals.application.DTOs.ApplicationType.Validator
         protected void ApplyNameRules(IRuleBuilder<T, string> rule)
         {
             rule.NotEmpty().WithMessage("{PropertyName} is required.")
-                .MaximumLength(5).WithMessage("{PropertyName} must not exceed {MaxLength} characters.");
+                .MaximumLength(64).WithMessage("{PropertyName} must not exceed {MaxLength} characters.");
         }
 
         protected void ApplyDescriptionRules(IRuleBuilder<T, string> rule)
