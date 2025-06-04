@@ -16,6 +16,7 @@ import { RoleUpdateComponent } from './features/role/components/role-update/role
 import { RoleAssignedUsersComponent } from './features/role/components/role-assigned-users/role-assigned-users.component';
 import { AuthCallbackComponent } from './features/auth/components/auth-callback/auth-callback.component';
 import { ApplicationTypeListComponent } from './features/application-types/components/application-type-list/application-type-list.component';
+import { ApplicationTypeDetailsComponent } from './features/application-types/components/application-type-details/application-type-details.component';
 
 export const routes: Routes = 
 [
@@ -38,6 +39,7 @@ export const routes: Routes =
       { path: 'role-assigned-users', component: RoleAssignedUsersComponent, canActivate:[authGuard]},
       
       { path: 'app-type-list', component: ApplicationTypeListComponent},
+      { path: 'app-type-details/:id', component: ApplicationTypeDetailsComponent},
 
     ]
   },

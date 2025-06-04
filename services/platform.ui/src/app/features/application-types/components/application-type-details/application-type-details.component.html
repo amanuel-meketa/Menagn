@@ -1,0 +1,32 @@
+<ng-template #roleFormTemplate>
+    <nz-tabset nzType="card">
+      <nz-tab [nzTitle]="'Application Type Details'">
+        <form nz-form [formGroup]="validateForm" nzLayout="horizontal">
+          <nz-form-item>
+            <nz-form-label [nzSpan]="6" nzLabelAlign="left">App Type Id</nz-form-label>
+            <nz-form-control [nzSpan]="18">
+              <input nz-input formControlName="id" [readonly]="true" class="readonly-field" />
+            </nz-form-control>
+          </nz-form-item>
+  
+          <nz-form-item>
+            <nz-form-label [nzSpan]="6" nzLabelAlign="left">Application Type Name</nz-form-label>
+            <nz-form-control [nzSpan]="18">
+              <input nz-input formControlName="name" />
+            </nz-form-control>
+          </nz-form-item>
+  
+          <nz-form-item>
+            <nz-form-label [nzSpan]="6" nzLabelAlign="left">Description</nz-form-label>
+            <nz-form-control [nzSpan]="18">
+              <textarea formControlName="description" nz-input rows="3"></textarea>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+  
+        <button nz-button (click)="updateRole()">Save</button>
+      </nz-tab>
+  
+    </nz-tabset>
+  </ng-template>
+  

@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { GetAppTypeModel } from '../../../models/Application-Type/GetAppTypeModel';
@@ -21,4 +21,9 @@ export class ApplicationTypeService {
   getAppTypeList(): Observable<GetAppTypeModel[]> {
     return this.http.get<GetAppTypeModel[]>(`${this.baseUrl}/approvals-type`, { headers: this.jsonHeaders });
   }
+
+  getAppDetails(appId: string): Observable<GetAppTypeModel> {
+    return this.http.get<GetAppTypeModel>(`${this.baseUrl}/approvals-type/${appId}`);
+  }
+    
 }
