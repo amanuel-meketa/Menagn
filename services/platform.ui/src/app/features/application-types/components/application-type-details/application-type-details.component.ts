@@ -10,6 +10,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { ApplicationTypeService } from '../../services/application-type.service';
 import { GetAppTypeModel } from '../../../../models/Application-Type/GetAppTypeModel';
+import { UpdateAppTypeMode } from '../../../../models/Application-Type/UpdateAppTypeMode';
+import { AppTypesharedService } from '../../services/application-type-shared.service';
 
 @Component({
   selector: 'app-application-type-details',
@@ -27,12 +29,13 @@ export class ApplicationTypeDetailsComponent implements OnInit{
   private router = inject(Router);
 
   private _appTypeService = inject(ApplicationTypeService);
+  private _appTypeSharedService = inject(AppTypesharedService);
 
   appTypeId!: string;
   validateForm = this.fb.group({
-    id: ['', [Validators.required]], // Ensure this is a required field
-    name: ['', [Validators.required]], // Ensure this is a required field
-    description: [''] // Optional field
+    id: ['', [Validators.required]], 
+    name: ['', [Validators.required]],
+    description: ['']
   });
   
   @ViewChild('roleFormTemplate', { static: true }) roleFormTemplate!: TemplateRef<any>;
@@ -50,26 +53,48 @@ export class ApplicationTypeDetailsComponent implements OnInit{
     this._appTypeService.getAppDetails(appTypeId).subscribe({
       next: (role: GetAppTypeModel) => {
         this.validateForm.patchValue(role);
-        this.openRoleDetailsModal();
+        this.openAppTypeDetailsModal();
       },
       error: () => {
         this.message.error('Failed to load application type details.');
       }
     });
   }
-  updateRole(): void {
-  }  
 
-  openRoleDetailsModal(): void {
+  updateAppType(): void {
+    if (this.validateForm.valid) {
+      const appTypeData = this.validateForm.value;
+  
+      const updatedRole: UpdateAppTypeMode = {
+        id: appTypeData.id || '', 
+        name: appTypeData.name || '',
+        description: appTypeData.description || ''
+      };
+  
+      this._appTypeSharedService.setAppType(updatedRole);
+  
+      this.closeModal();
+  
+      this.router.navigate(['/app-type-update']).then(() => {
+        console.log('Navigation complete');
+      }).catch((err) => {
+        this.message.error('Navigation error: ' + err);
+      });
+    } else {
+      this.message.error('Form is invalid');
+    }
+  }  
+  
+  openAppTypeDetailsModal(): void {
     this.modal.create({
-      nzTitle: 'Role Details',
+      nzTitle: 'Applicatio Type Details',
       nzContent: this.roleFormTemplate,
       nzFooter: [
         {
           label: 'Cancel',
           onClick: () => this.closeModal()
         }
-      ],
+ ],
       nzWidth: 800,
       nzClosable: false,
       nzMaskClosable: false,
@@ -80,8 +105,7 @@ export class ApplicationTypeDetailsComponent implements OnInit{
   closeModal(): void {
     console.log('Modal is closing');
     this.modal.closeAll();
-    this.router.navigate(['/role-list']);
+    this.router.navigate(['/app-type-list']);
   }  
   
 }
-

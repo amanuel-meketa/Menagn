@@ -17,6 +17,7 @@ import { RoleAssignedUsersComponent } from './features/role/components/role-assi
 import { AuthCallbackComponent } from './features/auth/components/auth-callback/auth-callback.component';
 import { ApplicationTypeListComponent } from './features/application-types/components/application-type-list/application-type-list.component';
 import { ApplicationTypeDetailsComponent } from './features/application-types/components/application-type-details/application-type-details.component';
+import { ApplicationTypeUpdateComponent } from './features/application-types/components/application-type-update/application-type-update.component';
 
 export const routes: Routes = 
 [
@@ -40,7 +41,7 @@ export const routes: Routes =
       
       { path: 'app-type-list', component: ApplicationTypeListComponent},
       { path: 'app-type-details/:id', component: ApplicationTypeDetailsComponent},
-
+      { path: 'app-type-update', component: ApplicationTypeUpdateComponent},
     ]
   },
 ];

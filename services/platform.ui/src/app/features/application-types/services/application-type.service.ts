@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { GetAppTypeModel } from '../../../models/Application-Type/GetAppTypeModel';
+import { UpdateAppTypeMode } from '../../../models/Application-Type/UpdateAppTypeMode';
 
 @Injectable({
   providedIn: 'root'
@@ -25,5 +26,10 @@ export class ApplicationTypeService {
   getAppDetails(appId: string): Observable<GetAppTypeModel> {
     return this.http.get<GetAppTypeModel>(`${this.baseUrl}/approvals-type/${appId}`);
   }
-    
+  
+  updateAppType(id: string, appData: UpdateAppTypeMode): Observable<any> {
+    return this.http.put(`${this.baseUrl}/approvals-type/${id}`, appData).pipe(
+      tap(() => { this.AppTypeListUpdated.next(true); }) );
+  }  
 }
+
