@@ -5,8 +5,9 @@ namespace approvals.application.Interfaces.Services
 {
     public interface IAppDbContext
     {
-        DbSet<ApplicationType> ApplicationTypes { get; set; }
-        DbSet<FormDefinition> formDefinitions { get; set; }
-        DbSet<ApplicationFlowDefinition> applicationFlowDefinitions { get; set; }
+        public DbSet<ApprovalTemplate> ApprovalTemplates { get; set; } 
+        public DbSet<StageDefinition> StageDefinitions { get; set; } 
+        public DbSet<ApprovalInstance> ApprovalInstances { get; set; } 
+        public DbSet<StageInstance> StageInstances { get; set; }
     }
 }

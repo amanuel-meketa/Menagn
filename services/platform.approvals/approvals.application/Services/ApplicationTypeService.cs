@@ -19,7 +19,7 @@ public class ApplicationTypeService : IApplicationTypeService
 
     public async Task<Guid> CreateApplicationTypeAsync(CreateApplicationTypeDto dto)
     {
-        ApplicationType entity = _mapper.Map<ApplicationType>(dto);
+        ApprovalTemplate entity = _mapper.Map<ApprovalTemplate>(dto);
 
         await _repository.AddAsync(entity);
         await _unitOfWork.CommitAsync();
@@ -35,7 +35,7 @@ public class ApplicationTypeService : IApplicationTypeService
 
     public async Task<GetApplicationTypeDto?> GetByIdAsync(Guid id)
     {
-        ApplicationType? entity = await _repository.GetByIdAsync(id);
+        ApprovalTemplate? entity = await _repository.GetByIdAsync(id);
         return _mapper.Map<GetApplicationTypeDto>(entity);
     }
 

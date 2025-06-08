@@ -5,7 +5,7 @@ using approvals.infrastructure.Persistence.Repositories.Base;
 
 namespace approvals.infrastructure.Persistence.Repositories
 {
-    public class ApprovalRepository : GenericRepository<ApplicationType>, IApprovalRepository
+    public class ApprovalRepository : GenericRepository<ApprovalTemplate>, IApprovalRepository
     {
         public ApprovalRepository(AppDbContext dbContext) : base(dbContext) { }
     }
