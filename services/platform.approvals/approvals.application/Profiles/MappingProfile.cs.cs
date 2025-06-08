@@ -8,9 +8,9 @@ namespace approvals.application.Profiles
     {
         public MappingProfile()
         {
-            CreateMap<ApprovalTemplate, GetApplicationTypeDto>().ReverseMap();
-            CreateMap<ApprovalTemplate, CreateApplicationTypeDto>().ReverseMap();
-            CreateMap<ApprovalTemplate, UpdateApplicationTypeDto>().ReverseMap();
+            CreateMap<ApprovalTemplate, GetAppTemplateDto>().ReverseMap();
+            CreateMap<ApprovalTemplate, CreateApprovalTemplateDto>().ReverseMap();
+            CreateMap<ApprovalTemplate, UpdatAppemplateDto>().ReverseMap();
         }
     }
 }

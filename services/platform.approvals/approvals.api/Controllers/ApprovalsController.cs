@@ -1,52 +1,50 @@
 ﻿using approvals.application.DTOs.ApplicationType;
-using approvals.domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace approvals.api.Controllers
 {
-    [Route("api/approvals-type")]
-    [ApiController]
-    public class ApprovalsController : ControllerBase
+    [Route("approvals-template")]
+    public class ApprovalTemplateController : ControllerBase
     {
-        private readonly IApplicationTypeService _appTypeservice;
+        private readonly IApprovalTemplateService _appTemplateservice;
    
-        public ApprovalsController(IApplicationTypeService appTypeservice)
+        public ApprovalTemplateController(IApprovalTemplateService appTemplateservice)
         {
-            _appTypeservice = appTypeservice;
+            _appTemplateservice = appTemplateservice;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GetApplicationTypeDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<GetAppTemplateDto>>> GetAll()
         {
-            var list = await _appTypeservice.GetAllAsync();
+            var list = await _appTemplateservice.GetAllAsync();
             return Ok(list);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<GetApplicationTypeDto>> Get(Guid id)
+        public async Task<ActionResult<GetAppTemplateDto>> Get(Guid id)
         {
-            var item = await _appTypeservice.GetByIdAsync(id);
+            var item = await _appTemplateservice.GetByIdAsync(id);
             return Ok(item); 
         }
 
         [HttpPost]
-        public async Task<ActionResult<Guid>> Create([FromBody] CreateApplicationTypeDto createAppDto)
+        public async Task<ActionResult<Guid>> Create([FromBody] CreateApprovalTemplateDto createAppDto)
         {
-            var newId = await _appTypeservice.CreateApplicationTypeAsync(createAppDto);
+            var newId = await _appTemplateservice.CreateApplicationTypeAsync(createAppDto);
             return CreatedAtAction(nameof(Get), new { id = newId }, null);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateApplicationTypeDto updateAppDto)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdatAppemplateDto updateAppDto)
         {
-            await _appTypeservice.UpdateAsync(id, updateAppDto);
+            await _appTemplateservice.UpdateAsync(id, updateAppDto);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _appTypeservice.DeleteAsync(id);
+            await _appTemplateservice.DeleteAsync(id);
             return NoContent();
         }
     }

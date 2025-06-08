@@ -1,12 +1,12 @@
 ﻿namespace approvals.application.DTOs.ApplicationType.Common
 {
-    public class ApplicationBaseDto
+    public class AppBaseDto
     {
         public string? Name { get; set; }
         public string? Description { get; set; }
     }
 
-    public class ApplicationDto : ApplicationBaseDto
+    public class AppTemplateDto : AppBaseDto
     {
         public Guid Id { get; set; }
     }

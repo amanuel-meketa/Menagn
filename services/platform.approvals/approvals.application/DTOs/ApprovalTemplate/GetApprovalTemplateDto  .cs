@@ -2,6 +2,5 @@
 
 namespace approvals.application.DTOs.ApplicationType
 {
-    public class UpdateApplicationTypeDto : ApplicationDto
-    {}
+    public class GetAppTemplateDto : AppTemplateDto {}
 }

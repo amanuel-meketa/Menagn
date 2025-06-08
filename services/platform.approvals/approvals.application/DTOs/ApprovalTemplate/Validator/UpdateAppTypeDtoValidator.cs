@@ -2,7 +2,7 @@
 
 namespace approvals.application.DTOs.ApplicationType.Validator
 {
-    public class UpdateAppTypeDtoValidator : BaseAppTypeValidator<UpdateApplicationTypeDto>
+    public class UpdateAppTypeDtoValidator : BaseAppTypeValidator<UpdatAppemplateDto>
     {
         public UpdateAppTypeDtoValidator()
         {

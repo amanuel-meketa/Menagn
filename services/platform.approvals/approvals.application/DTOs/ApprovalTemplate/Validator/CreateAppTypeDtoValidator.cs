@@ -2,7 +2,7 @@
 
 namespace approvals.application.DTOs.ApplicationType.Validator
 {
-    public class CreateAppTypeDtoValidator : BaseAppTypeValidator<CreateApplicationTypeDto>
+    public class CreateAppTypeDtoValidator : BaseAppTypeValidator<CreateApprovalTemplateDto>
     {
         public CreateAppTypeDtoValidator()
         {

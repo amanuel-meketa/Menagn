@@ -4,20 +4,20 @@ using approvals.application.Interfaces.Repository;
 using approvals.domain.Entities;
 using AutoMapper;
 
-public class ApplicationTypeService : IApplicationTypeService
+public class ApprovalTemplateService : IApprovalTemplateService
 {
     private readonly IApprovalRepository _repository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public ApplicationTypeService(IApprovalRepository repository, IUnitOfWork unitOfWork, IMapper mapper)
+    public ApprovalTemplateService(IApprovalRepository repository, IUnitOfWork unitOfWork, IMapper mapper)
     {
         _repository = repository;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
-    public async Task<Guid> CreateApplicationTypeAsync(CreateApplicationTypeDto dto)
+    public async Task<Guid> CreateApplicationTypeAsync(CreateApprovalTemplateDto dto)
     {
         ApprovalTemplate entity = _mapper.Map<ApprovalTemplate>(dto);
 
@@ -27,19 +27,19 @@ public class ApplicationTypeService : IApplicationTypeService
         return entity.Id;
     }
 
-    public async Task<IEnumerable<GetApplicationTypeDto>> GetAllAsync()
+    public async Task<IEnumerable<GetAppTemplateDto>> GetAllAsync()
     {
         var list = await _repository.ListAsync();
-        return _mapper.Map<IEnumerable<GetApplicationTypeDto>>(list);
+        return _mapper.Map<IEnumerable<GetAppTemplateDto>>(list);
     }
 
-    public async Task<GetApplicationTypeDto?> GetByIdAsync(Guid id)
+    public async Task<GetAppTemplateDto?> GetByIdAsync(Guid id)
     {
         ApprovalTemplate? entity = await _repository.GetByIdAsync(id);
-        return _mapper.Map<GetApplicationTypeDto>(entity);
+        return _mapper.Map<GetAppTemplateDto>(entity);
     }
 
-    public async Task<Guid> UpdateAsync(Guid id, UpdateApplicationTypeDto dto)
+    public async Task<Guid> UpdateAsync(Guid id, UpdatAppemplateDto dto)
     {
         var entity = await _repository.GetByIdAsync(id);
         if (entity == null) return Guid.Empty;
