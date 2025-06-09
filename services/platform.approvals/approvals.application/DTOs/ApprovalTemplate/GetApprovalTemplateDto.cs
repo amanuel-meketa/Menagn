@@ -1,6 +1,13 @@
-﻿using approvals.application.DTOs.Common;
+﻿using approvals.application.DTOs.StageDefinition;
 
 namespace approvals.application.DTOs.ApplicationType
 {
-    public class GetAppTemplateDto : AppTemplateDto {}
+    public class GetAppTemplateDto 
+    {
+        public Guid TemplateId { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; } 
+
+        public List<GetStageDefinitionDto> StageDefinitions { get; set; } = new();
+    }
 }

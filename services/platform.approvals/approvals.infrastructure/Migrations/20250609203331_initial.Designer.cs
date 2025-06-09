@@ -12,8 +12,8 @@ using approvals.infrastructure.Persistence;
 namespace approvals.infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250608214810_approvals")]
-    partial class approvals
+    [Migration("20250609203331_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,9 +27,12 @@ namespace approvals.infrastructure.Migrations
 
             modelBuilder.Entity("approvals.domain.Entities.ApprovalInstance", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("InstanceId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -47,36 +50,33 @@ namespace approvals.infrastructure.Migrations
                     b.Property<Guid>("TemplateId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
+                    b.HasKey("InstanceId");
 
-                    b.HasIndex("TemplateId");
-
-                    b.ToTable("ApprovalInstance", (string)null);
+                    b.ToTable("ApprovalInstances");
                 });
 
             modelBuilder.Entity("approvals.domain.Entities.ApprovalTemplate", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("TemplateId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("TemplateId");
 
-                    b.ToTable("ApprovalTemplate", (string)null);
+                    b.ToTable("ApprovalTemplates");
                 });
 
             modelBuilder.Entity("approvals.domain.Entities.StageDefinition", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("StageDefId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -88,40 +88,38 @@ namespace approvals.infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("ParallelAllowed")
-                        .HasColumnType("bit");
 
                     b.Property<int>("SequenceOrder")
                         .HasColumnType("int");
 
+                    b.Property<string>("StageName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("TemplateId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
+                    b.HasKey("StageDefId");
 
-                    b.HasIndex("TemplateId", "SequenceOrder")
-                        .IsUnique();
+                    b.HasIndex("TemplateId");
 
-                    b.ToTable("StageDefinition", (string)null);
+                    b.ToTable("StageDefinitions");
                 });
 
             modelBuilder.Entity("approvals.domain.Entities.StageInstance", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("StageInstanceId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AssignedTo")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("ApprovalInstanceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ApprovedBy")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Comments")
                         .HasColumnType("nvarchar(max)");
@@ -129,11 +127,15 @@ namespace approvals.infrastructure.Migrations
                     b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("InstanceId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("SequenceOrder")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("StageDefId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("StageName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("StartedAt")
                         .HasColumnType("datetime2");
@@ -142,25 +144,13 @@ namespace approvals.infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("StageInstanceId");
+
+                    b.HasIndex("ApprovalInstanceId");
 
                     b.HasIndex("StageDefId");
 
-                    b.HasIndex("InstanceId", "StageDefId")
-                        .IsUnique();
-
-                    b.ToTable("StageInstance", (string)null);
-                });
-
-            modelBuilder.Entity("approvals.domain.Entities.ApprovalInstance", b =>
-                {
-                    b.HasOne("approvals.domain.Entities.ApprovalTemplate", "Template")
-                        .WithMany("ApprovalInstances")
-                        .HasForeignKey("TemplateId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Template");
+                    b.ToTable("StageInstances");
                 });
 
             modelBuilder.Entity("approvals.domain.Entities.StageDefinition", b =>
@@ -176,19 +166,19 @@ namespace approvals.infrastructure.Migrations
 
             modelBuilder.Entity("approvals.domain.Entities.StageInstance", b =>
                 {
-                    b.HasOne("approvals.domain.Entities.ApprovalInstance", "Instance")
+                    b.HasOne("approvals.domain.Entities.ApprovalInstance", "ApprovalInstance")
                         .WithMany("StageInstances")
-                        .HasForeignKey("InstanceId")
+                        .HasForeignKey("ApprovalInstanceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("approvals.domain.Entities.StageDefinition", "StageDefinition")
-                        .WithMany("StageInstances")
+                        .WithMany()
                         .HasForeignKey("StageDefId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Instance");
+                    b.Navigation("ApprovalInstance");
 
                     b.Navigation("StageDefinition");
                 });
@@ -200,14 +190,7 @@ namespace approvals.infrastructure.Migrations
 
             modelBuilder.Entity("approvals.domain.Entities.ApprovalTemplate", b =>
                 {
-                    b.Navigation("ApprovalInstances");
-
                     b.Navigation("StageDefinitions");
-                });
-
-            modelBuilder.Entity("approvals.domain.Entities.StageDefinition", b =>
-                {
-                    b.Navigation("StageInstances");
                 });
 #pragma warning restore 612, 618
         }

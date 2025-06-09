@@ -14,7 +14,7 @@ namespace approvals.infrastructure.Persistence.Repositories.Base
             _dbSet = dbContext.Set<T>();
         }
 
-        public async Task<T?> GetByIdAsync(Guid id) => await _dbSet.FindAsync(id);
+        public virtual async Task<T?> GetByIdAsync(Guid id) => await _dbSet.FindAsync(id);
 
         public async Task<IEnumerable<T>> ListAsync() => await _dbSet.ToListAsync();
 

@@ -13,62 +13,28 @@ namespace approvals.infrastructure.Persistence
         public DbSet<ApprovalInstance> ApprovalInstances { get; set; } = null!;
         public DbSet<StageInstance> StageInstances { get; set; } = null!;
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // ApprovalTemplate
-            builder.Entity<ApprovalTemplate>(e =>
-            {
-                e.ToTable("ApprovalTemplate");
-                e.HasKey(x => x.Id);
-            });
+            // ApprovalTemplate -> StageDefinition
+            modelBuilder.Entity<ApprovalTemplate>()
+                .HasMany(t => t.StageDefinitions)
+                .WithOne(sd => sd.Template)
+                .HasForeignKey(sd => sd.TemplateId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // StageDefinition
-            builder.Entity<StageDefinition>(e =>
-            {
-                e.ToTable("StageDefinition");
-                e.HasKey(x => x.Id);
+            // ApprovalInstance -> StageInstance
+            modelBuilder.Entity<ApprovalInstance>()
+                .HasMany(ai => ai.StageInstances)
+                .WithOne(si => si.ApprovalInstance)
+                .HasForeignKey(si => si.ApprovalInstanceId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-                e.HasIndex(x => new { x.TemplateId, x.SequenceOrder })
-                 .IsUnique();
-
-                e.HasOne(x => x.Template)
-                 .WithMany(t => t.StageDefinitions)
-                 .HasForeignKey(x => x.TemplateId)
-                 .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            // ApprovalInstance
-            builder.Entity<ApprovalInstance>(e =>
-            {
-                e.ToTable("ApprovalInstance");
-                e.HasKey(x => x.Id);
-
-                e.HasOne(x => x.Template)
-                 .WithMany(t => t.ApprovalInstances)
-                 .HasForeignKey(x => x.TemplateId)
-                 .OnDelete(DeleteBehavior.Restrict);
-            });
-
-            // StageInstance
-            builder.Entity<StageInstance>(e =>
-            {
-                e.ToTable("StageInstance");
-                e.HasKey(x => x.Id);
-
-                e.HasIndex(x => new { x.InstanceId, x.StageDefId })
-                 .IsUnique();
-
-                e.HasOne(x => x.Instance)
-                 .WithMany(i => i.StageInstances)
-                 .HasForeignKey(x => x.InstanceId)
-                 .OnDelete(DeleteBehavior.Cascade);
-
-                e.HasOne(x => x.StageDefinition)
-                 .WithMany(d => d.StageInstances)
-                 .HasForeignKey(x => x.StageDefId)
-                 .OnDelete(DeleteBehavior.Restrict);
-            });
+            // StageInstance -> StageDefinition
+            modelBuilder.Entity<StageInstance>()
+                .HasOne(si => si.StageDefinition)
+                .WithMany()
+                .HasForeignKey(si => si.StageDefId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
-
     }
 }

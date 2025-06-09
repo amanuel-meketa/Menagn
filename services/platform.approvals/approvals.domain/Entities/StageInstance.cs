@@ -1,18 +1,38 @@
-﻿using approvals.domain.Entities.Common;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace approvals.domain.Entities
 {
-    public class StageInstance : EntityBase
+    public class StageInstance
     {
-        public Guid InstanceId { get; set; }
+        [Key]
+        public Guid StageInstanceId { get; set; } = Guid.NewGuid();
+
+        public Guid ApprovalInstanceId { get; set; }
+        public ApprovalInstance ApprovalInstance { get; set; } = null!;
+
         public Guid StageDefId { get; set; }
+        public StageDefinition StageDefinition { get; set; } = null!;
+
+        public string StageName { get; set; } = string.Empty;
+        public int SequenceOrder { get; set; }
         public string Status { get; set; } = "Pending";
-        public string? AssignedTo { get; set; }
         public DateTime? StartedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
         public string? Comments { get; set; }
+        public Guid? ApprovedBy { get; set; }
 
-        public ApprovalInstance Instance { get; set; } = null!;
-        public StageDefinition StageDefinition { get; set; } = null!;
+        public void Activate()
+        {
+            Status = "InProgress";
+            StartedAt = DateTime.UtcNow;
+        }
+
+        public void Complete(string decision, Guid approverId, string comment)
+        {
+            Status = decision;
+            ApprovedBy = approverId;
+            Comments = comment;
+            CompletedAt = DateTime.UtcNow;
+        }
     }
 }

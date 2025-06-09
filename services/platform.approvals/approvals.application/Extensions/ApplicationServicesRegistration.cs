@@ -14,6 +14,7 @@ namespace approvals.application
             services.AddAutoMapper(typeof(ApplicationServicesRegistration).Assembly);
             services.AddScoped<IApprovalTemplateService, ApprovalTemplateService>();
             services.AddScoped<IStageDefinitionService, StageDefinitionService>();
+            services.AddScoped<IApprovalInstanceService, ApprovalInstanceService>();
             return services;
         }
     }

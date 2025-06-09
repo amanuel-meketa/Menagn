@@ -1,12 +1,13 @@
-﻿using approvals.application.DTOs.Common;
-
-namespace approvals.application.DTOs.StageDefinition
+﻿namespace approvals.application.DTOs.StageDefinition
 {
-    public class GetStageDefinitionDto : AppTemplateDto
+    public class GetStageDefinitionDto 
     {
-        public Guid? TemplateId { get; set; }
+        public Guid StageDefId { get; set; }
+        public Guid TemplateId { get; set; }
+        public string StageName { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         public int SequenceOrder { get; set; }
-        public string AssignmentType { get; set; } = null!;
-        public string AssignmentKey { get; set; } = null!;
+        public string AssignmentType { get; set; } = string.Empty;
+        public string AssignmentKey { get; set; } = string.Empty;
     }
 }

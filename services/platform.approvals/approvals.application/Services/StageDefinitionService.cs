@@ -24,7 +24,7 @@ public class StageDefinitionService : IStageDefinitionService
         await _repository.AddAsync(entity);
         await _unitOfWork.CommitAsync();
         dto.Description = entity.Description;
-        return entity.Id;
+        return entity.StageDefId;
     }
 
     public async Task<IEnumerable<GetStageDefinitionDto>> GetAllAsync()

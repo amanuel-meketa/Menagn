@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Enums\" />
-    <Folder Include="Interfaces\" />
+    <Compile Remove="Enums\**" />
+    <Compile Remove="Interfaces\**" />
+    <EmbeddedResource Remove="Enums\**" />
+    <EmbeddedResource Remove="Interfaces\**" />
+    <None Remove="Enums\**" />
+    <None Remove="Interfaces\**" />
   </ItemGroup>
 
 </Project>
