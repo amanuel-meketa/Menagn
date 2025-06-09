@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace approvals.api.Controllers
 {
-    [Route("approvals-template")]
+    [Route("approval-template")]
     public class ApprovalTemplateController : ControllerBase
     {
         private readonly IApprovalTemplateService _appTemplateservice;

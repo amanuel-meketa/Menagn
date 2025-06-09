@@ -13,6 +13,7 @@ namespace approvals.application
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddAutoMapper(typeof(ApplicationServicesRegistration).Assembly);
             services.AddScoped<IApprovalTemplateService, ApprovalTemplateService>();
+            services.AddScoped<IStageDefinitionService, StageDefinitionService>();
             return services;
         }
     }

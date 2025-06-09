@@ -44,6 +44,7 @@ namespace platform.Infrastructure.Extensions
             services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IApprovalRepository, ApprovalRepository>();
+            services.AddScoped<IStageDefinitionRepository, StageDefinitionRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;

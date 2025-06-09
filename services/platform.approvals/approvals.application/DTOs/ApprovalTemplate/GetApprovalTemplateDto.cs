@@ -1,4 +1,4 @@
-﻿using approvals.application.DTOs.ApplicationType.Common;
+﻿using approvals.application.DTOs.Common;
 
 namespace approvals.application.DTOs.ApplicationType
 {

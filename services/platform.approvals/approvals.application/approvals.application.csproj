@@ -17,4 +17,9 @@
     <ProjectReference Include="..\approvals.shared\approvals.shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Common\" />
+    <Folder Include="DTOs\StageDefinition\Validator\" />
+  </ItemGroup>
+
 </Project>

@@ -1,5 +1,4 @@
-﻿using approvals.api.Middleware;
-using approvals.application;
+﻿using approvals.application;
 using approvals.application.DTOs.ApplicationType.Validator;
 using approvals.infrastructure.Persistence;
 using FluentValidation;
@@ -16,9 +15,9 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "Approvals API",
+        Title = "approvals service",
         Version = "v1",
-        Description = "API documentation for the Approvals microservice."
+        Description = "API documentation for the approvals microservice."
     });
 });
 
@@ -41,12 +40,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddScoped<ExceptionHandlingMiddleware>();
-
 var app = builder.Build();
-
-// Use global exception handler middleware
-app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Run migrations if inside Docker
 if (Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true")

@@ -1,4 +1,4 @@
-﻿namespace approvals.application.DTOs.ApplicationType.Common
+﻿namespace approvals.application.DTOs.Common
 {
     public class AppBaseDto
     {

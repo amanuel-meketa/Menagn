@@ -4,8 +4,8 @@ using approvals.infrastructure.Persistence.Repositories.Base;
 
 namespace approvals.infrastructure.Persistence.Repositories
 {
-    public class ApprovalRepository : GenericRepository<ApprovalTemplate>, IApprovalRepository
+    public class StageDefinitionRepository : GenericRepository<StageDefinition>, IStageDefinitionRepository
     {
-        public ApprovalRepository(AppDbContext dbContext) : base(dbContext) { }
+        public StageDefinitionRepository(AppDbContext dbContext) : base(dbContext) { }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace approvals.application.DTOs.ApplicationType.Validator
+namespace approvals.application.DTOs.CommonDTOs.Validator
 {
     public abstract class BaseAppTypeValidator<T> : AbstractValidator<T>
     {

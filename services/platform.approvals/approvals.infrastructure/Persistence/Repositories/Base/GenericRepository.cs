@@ -1,5 +1,4 @@
-﻿using approvals.application.Interfaces;
-using approvals.shared.Repositories;
+﻿using approvals.shared.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace approvals.infrastructure.Persistence.Repositories.Base
