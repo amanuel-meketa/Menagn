@@ -1,10 +1,11 @@
-﻿using approvals.domain.Entities;
+﻿using approvals.application.DTOs.StageDefinition;
+using approvals.domain.Entities;
 
 namespace approvals.application.DTOs.ApprovalInstance
 {
-    public class GetApprovalInstanceDto 
+    public class UpdateApprovaleInstanceDto 
     {
-        public Guid InstanceId { get; set; }
+        public Guid InstanceId { get; set; } 
         public Guid TemplateId { get; set; }
 
         public Guid CreatedBy { get; set; }
@@ -13,6 +14,6 @@ namespace approvals.application.DTOs.ApprovalInstance
         public DateTime CreatedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
 
-        public List<StageInstance> StageInstances { get; set; } = new();
+        public List<StageInstance> StageInstances { get; set; }
     }
 }

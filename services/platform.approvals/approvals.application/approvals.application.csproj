@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <Folder Include="Common\" />
+    <Folder Include="DTOs\StageInstance\Validator\" />
     <Folder Include="DTOs\StageDefinition\Validator\" />
   </ItemGroup>
 

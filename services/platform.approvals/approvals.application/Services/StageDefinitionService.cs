@@ -1,4 +1,5 @@
-﻿using approvals.application.DTOs.StageDefinition;
+﻿using approvals.application.DTOs.ApprovalInstance;
+using approvals.application.DTOs.StageDefinition;
 using approvals.application.Interfaces;
 using approvals.application.Interfaces.Repository;
 using approvals.domain.Entities;
@@ -7,12 +8,14 @@ using AutoMapper;
 public class StageDefinitionService : IStageDefinitionService
 {
     private readonly IStageDefinitionRepository _repository;
+    private readonly IApprovalInstanceService _approvalInstanceService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public StageDefinitionService(IStageDefinitionRepository repository, IUnitOfWork unitOfWork, IMapper mapper)
+    public StageDefinitionService(IStageDefinitionRepository repository, IApprovalInstanceService approvalInstanceService, IUnitOfWork unitOfWork, IMapper mapper)
     {
         _repository = repository;
+        _approvalInstanceService = approvalInstanceService;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
@@ -59,5 +62,33 @@ public class StageDefinitionService : IStageDefinitionService
         await _repository.DeleteAsync(entity);
         await _unitOfWork.CommitAsync();
         return true;
+    }
+
+    public async Task<Guid> ApproveStageAsync(Guid instanceId, Guid approverId, string comment)
+    {
+        var instance = await _approvalInstanceService.GetByIdAsync(instanceId);
+        if (instance == null) throw new Exception("Instance not found");
+
+        var instanceUpdate = _mapper.Map<UpdateApprovaleInstanceDto>(instance);
+
+        var currentStage = instanceUpdate.StageInstances.First(si => si.SequenceOrder == instanceUpdate.CurrentStageOrder);
+        currentStage.Complete("Approved", approverId, comment);
+
+        var nextStage = instanceUpdate.StageInstances.FirstOrDefault(si => si.SequenceOrder == currentStage.SequenceOrder + 1);
+        if (nextStage != null)
+        {
+            nextStage.Activate();
+            instanceUpdate.CurrentStageOrder = nextStage.SequenceOrder;
+        }
+        else
+        {
+            instanceUpdate.OverallStatus = "Approved";
+            //instance.CurrentStageOrder = nextStage.SequenceOrder;
+            instanceUpdate.CompletedAt = DateTime.UtcNow;
+        }
+
+        await _approvalInstanceService.UpdateAsync(instanceUpdate.InstanceId, instanceUpdate);
+        await _unitOfWork.CommitAsync();
+        return instanceUpdate.InstanceId;
     }
 }

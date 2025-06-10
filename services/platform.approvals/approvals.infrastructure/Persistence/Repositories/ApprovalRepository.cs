@@ -15,7 +15,6 @@ public class ApprovalRepository : GenericRepository<ApprovalTemplate>, IApproval
 
     public override async Task<ApprovalTemplate?> GetByIdAsync(Guid id)
     {
-        return await _dbContext.ApprovalTemplates.Include(t => t.StageDefinitions)
-            .FirstOrDefaultAsync(t => t.TemplateId == id);
+        return await _dbContext.ApprovalTemplates.Include(t => t.StageDefinitions).FirstOrDefaultAsync(t => t.TemplateId == id);
     }
 }

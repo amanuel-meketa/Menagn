@@ -1,4 +1,5 @@
-﻿using approvals.application.DTOs.StageDefinition;
+﻿using approvals.application.DTOs.ApprovalInstance;
+using approvals.application.DTOs.StageDefinition;
 using Microsoft.AspNetCore.Mvc;
 
 namespace approvals.api.Controllers
@@ -46,6 +47,12 @@ namespace approvals.api.Controllers
         {
             await _stageDefinService.DeleteAsync(id);
             return NoContent();
+        }
+
+        [HttpPost("approve")]
+        public async Task<ActionResult<Guid>> ApproveStage([FromBody] ApproveStageRequestDto request)
+        {
+            return await _stageDefinService.ApproveStageAsync(request.InstanceId, request.ApproverId, request.Comment);
         }
     }
 }

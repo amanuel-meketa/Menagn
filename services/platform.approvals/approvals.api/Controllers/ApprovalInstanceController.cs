@@ -1,4 +1,5 @@
-﻿using approvals.application.DTOs.ApprovalInstance;
+﻿using approvals.application.DTOs.ApplicationType;
+using approvals.application.DTOs.ApprovalInstance;
 using Microsoft.AspNetCore.Mvc;
 
 namespace approvals.api.Controllers
@@ -16,8 +17,36 @@ namespace approvals.api.Controllers
         [HttpPost("start")]
         public async Task<IActionResult> StartApproval([FromBody] StartApprovalRequestDto request)
         {
-            var instanceId = await _appInstanceservice.StartAppInstance(request.TemplateId, request.UserId);
+            var instanceId = await _appInstanceservice.StartAppInstanceAsync(request.TemplateId, request.UserId);
             return Ok(instanceId);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<GetApprovalInstanceDto>>> GetAll()
+        {
+            var list = await _appInstanceservice.GetAllAsync();
+            return Ok(list);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<GetApprovalInstanceDto>> Get(Guid id)
+        {
+            var item = await _appInstanceservice.GetByIdAsync(id);
+            return Ok(item);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateApprovaleInstanceDto updateAppDto)
+        {
+            await _appInstanceservice.UpdateAsync(id, updateAppDto);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _appInstanceservice.DeleteAsync(id);
+            return NoContent();
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using approvals.application.DTOs.ApplicationType;
+using approvals.application.DTOs.ApprovalInstance;
+using approvals.application.DTOs.StageDefinition;
 using approvals.application.Interfaces;
 using approvals.application.Interfaces.Repository;
 using approvals.domain.Entities;
@@ -23,7 +25,41 @@ public class ApprovalInstanceService : IApprovalInstanceService
         _mapper = mapper;
     }
 
-    public async Task<Guid> StartAppInstance(Guid templateId, Guid createdBy)
+    public async Task<IEnumerable<GetApprovalInstanceDto>> GetAllAsync()
+    {
+        var list = await _approvalInstanceRepository.ListAsync();
+        return _mapper.Map<IEnumerable<GetApprovalInstanceDto>>(list);
+    }
+
+    public async Task<GetApprovalInstanceDto?> GetByIdAsync(Guid id)
+    {
+        var entity = await _approvalInstanceRepository.GetByIdAsync(id);
+        return _mapper.Map<GetApprovalInstanceDto>(entity);
+    }
+
+    public async Task<Guid> UpdateAsync(Guid id, UpdateApprovaleInstanceDto dto)
+    {
+        var entity = await _approvalInstanceRepository.GetByIdAsync(id);
+        if (entity == null) return Guid.Empty;
+
+        _mapper.Map(dto, entity);
+
+        await _approvalInstanceRepository.UpdateAsync(entity);
+        await _unitOfWork.CommitAsync();
+        return id;
+    }
+
+    public async Task<bool> DeleteAsync(Guid id)
+    {
+        var entity = await _approvalInstanceRepository.GetByIdAsync(id);
+        if (entity == null) return false;
+
+        await _approvalInstanceRepository.DeleteAsync(entity);
+        await _unitOfWork.CommitAsync();
+        return true;
+    }
+
+    public async Task<Guid> StartAppInstanceAsync(Guid templateId, Guid createdBy)
     {
         // 1. Get the template with stage definitions - with AsNoTracking already done in repo
         var templateDto = await _approvalTemplateService.GetByIdAsync(templateId);
@@ -50,6 +86,7 @@ public class ApprovalInstanceService : IApprovalInstanceService
         var firstStage = instance.StageInstances.FirstOrDefault(s => s.SequenceOrder == 1);
         if (firstStage == null)
             throw new Exception("No first stage found in the template.");
+
         firstStage.Activate();
 
         // 4. Add instance
@@ -59,5 +96,4 @@ public class ApprovalInstanceService : IApprovalInstanceService
         return instance.InstanceId;
 
     }
-
 }

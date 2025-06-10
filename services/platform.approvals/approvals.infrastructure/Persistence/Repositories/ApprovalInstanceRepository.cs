@@ -1,6 +1,7 @@
 ﻿using approvals.application.Interfaces.Repository;
 using approvals.domain.Entities;
 using approvals.infrastructure.Persistence.Repositories.Base;
+using Microsoft.EntityFrameworkCore;
 
 namespace approvals.infrastructure.Persistence.Repositories
 {
@@ -11,6 +12,11 @@ namespace approvals.infrastructure.Persistence.Repositories
         public ApprovalInstanceRepository(AppDbContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        }
+
+        public override async Task<ApprovalInstance?> GetByIdAsync(Guid id)
+        {
+           return  await _dbContext.ApprovalInstances.Include(t => t.StageInstances).FirstOrDefaultAsync(t => t.InstanceId == id);
         }
 
         public async Task<ApprovalInstance> CreateApprovalInstanceAsync(Guid templateId, Guid createdBy, List<StageDefinition> stageDefinitions)
