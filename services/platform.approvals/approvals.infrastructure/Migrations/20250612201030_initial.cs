@@ -15,13 +15,13 @@ namespace approvals.infrastructure.Migrations
                 name: "ApprovalInstances",
                 columns: table => new
                 {
-                    InstanceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CurrentStageOrder = table.Column<int>(type: "int", nullable: false),
-                    OverallStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CompletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    InstanceId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TemplateId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    CurrentStageOrder = table.Column<int>(type: "integer", nullable: false),
+                    OverallStatus = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CompletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -32,9 +32,9 @@ namespace approvals.infrastructure.Migrations
                 name: "ApprovalTemplates",
                 columns: table => new
                 {
-                    TemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    TemplateId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -45,13 +45,13 @@ namespace approvals.infrastructure.Migrations
                 name: "StageDefinitions",
                 columns: table => new
                 {
-                    StageDefId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StageName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SequenceOrder = table.Column<int>(type: "int", nullable: false),
-                    AssignmentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AssignmentKey = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    StageDefId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TemplateId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StageName = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    SequenceOrder = table.Column<int>(type: "integer", nullable: false),
+                    AssignmentType = table.Column<string>(type: "text", nullable: false),
+                    AssignmentKey = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -68,16 +68,16 @@ namespace approvals.infrastructure.Migrations
                 name: "StageInstances",
                 columns: table => new
                 {
-                    StageInstanceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ApprovalInstanceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StageDefId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StageName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SequenceOrder = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StartedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CompletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Comments = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ApprovedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    StageInstanceId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ApprovalInstanceId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StageDefId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StageName = table.Column<string>(type: "text", nullable: false),
+                    SequenceOrder = table.Column<int>(type: "integer", nullable: false),
+                    Status = table.Column<string>(type: "text", nullable: false),
+                    StartedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CompletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Comments = table.Column<string>(type: "text", nullable: true),
+                    ApprovedBy = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
