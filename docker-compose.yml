@@ -3,7 +3,8 @@ version: '3.9'
 services:
   security.api:
     container_name: platform.security
-    image: menagn/security
+    image: amanuelmeketa/identitypro:latest
+    platform: linux/amd64  #  # ⚠️ This line is for Mac development only — remove in production
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=9090
@@ -14,7 +15,8 @@ services:
 
   platform.approvals:
     container_name: platform.approvals
-    image: menagn/approvals
+    image: amanuelmeketa/platform.approvals:latest
+    platform: linux/amd64  #  # ⚠️ This line is for Mac development only — remove in production
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://0.0.0.0:7070
@@ -27,7 +29,8 @@ services:
 
   platform.ui:
     container_name: platform.ui
-    image: menagn/ui
+    image: amanuelmeketa/platform.ui:latest
+    platform: linux/amd64   # ⚠️ This line is for Mac development only — remove in production
     ports:
       - 8000:8000
     networks:
