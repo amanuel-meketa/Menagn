@@ -33,7 +33,7 @@ export class ApplicationTypeDetailsComponent implements OnInit{
 
   appTypeId!: string;
   validateForm = this.fb.group({
-    id: ['', [Validators.required]], 
+    templateId: ['', [Validators.required]], 
     name: ['', [Validators.required]],
     description: ['']
   });
@@ -41,15 +41,16 @@ export class ApplicationTypeDetailsComponent implements OnInit{
   @ViewChild('roleFormTemplate', { static: true }) roleFormTemplate!: TemplateRef<any>;
   
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => { const appTypeId = params.get('id');
+    this.route.paramMap.subscribe(params => { const appTypeId = params.get('templateId');
       if (appTypeId) {
         this.appTypeId = appTypeId;
+        console.log("custom log" + appTypeId);
         this.fetchAppTypeDetails(appTypeId);
       }
     });
   }
 
-  fetchAppTypeDetails(appTypeId: string): void {
+  fetchAppTypeDetails(appTypeId: any): void {
     this._appTypeService.getAppDetails(appTypeId).subscribe({
       next: (role: GetAppTypeModel) => {
         this.validateForm.patchValue(role);
@@ -66,7 +67,7 @@ export class ApplicationTypeDetailsComponent implements OnInit{
       const appTypeData = this.validateForm.value;
   
       const updatedRole: UpdateAppTypeMode = {
-        id: appTypeData.id || '', 
+        templateId: appTypeData.templateId || '', 
         name: appTypeData.name || '',
         description: appTypeData.description || ''
       };
@@ -103,7 +104,6 @@ export class ApplicationTypeDetailsComponent implements OnInit{
   }
 
   closeModal(): void {
-    console.log('Modal is closing');
     this.modal.closeAll();
     this.router.navigate(['/app-type-list']);
   }  

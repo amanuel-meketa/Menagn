@@ -31,7 +31,7 @@ export class ApplicationTypeUpdateComponent implements OnInit {
       next: (data: GetAppTypeModel | null) => {
         if (data) {
           this.appTypeData = {
-            id: data.id,
+            templateId: data.templateId,
             name: data.name,
             description: data.description
           };
@@ -55,12 +55,12 @@ export class ApplicationTypeUpdateComponent implements OnInit {
     }
 
     const updatedAppType = {
-      id: this.appTypeData.id,
+      templateId: this.appTypeData.templateId,
       name: this.appTypeData.name || '',
       description: this.appTypeData.description || ''
     };
 
-    this._appTypeService.updateAppType(this.appTypeData.id, updatedAppType).subscribe({
+    this._appTypeService.updateAppType(this.appTypeData.templateId, updatedAppType).subscribe({
       next: (response) => {
         this.message.success('App type updated successfully');
         this.router.navigate(['/app-type-list']);

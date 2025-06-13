@@ -16,7 +16,7 @@
       @for (data of basicTable.data; track data) {
         <tr>
           <td nzCellControl="name">
-            <a [routerLink]="['/app-type-details', data.id]" class="username-link">{{ data.name }}</a>
+            <a [routerLink]="['/app-type-details', data.templateId]" class="username-link">{{ data.name }}</a>
           </td>        
           <td nzCellControl="description">{{ data.description }}</td>
           <td nzCellControl="action">

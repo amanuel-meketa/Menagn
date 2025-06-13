@@ -1,5 +1,5 @@
 export interface UpdateAppTypeMode {
-  id: string;
+  templateId: string;
   name: string;
   description: string;
 }

@@ -40,7 +40,7 @@ export const routes: Routes =
       { path: 'role-assigned-users', component: RoleAssignedUsersComponent, canActivate:[authGuard]},
       
       { path: 'app-type-list', component: ApplicationTypeListComponent},
-      { path: 'app-type-details/:id', component: ApplicationTypeDetailsComponent},
+      { path: 'app-type-details/:templateId', component: ApplicationTypeDetailsComponent},
       { path: 'app-type-update', component: ApplicationTypeUpdateComponent},
     ]
   },

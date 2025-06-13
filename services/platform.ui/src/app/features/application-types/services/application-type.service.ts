@@ -10,7 +10,7 @@ import { UpdateAppTypeMode } from '../../../models/Application-Type/UpdateAppTyp
 export class ApplicationTypeService {
 
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost/approvals/api';
+  private readonly baseUrl = 'http://localhost/approvals/approval-template';
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
   private AppTypeListUpdated = new BehaviorSubject<boolean>(false);
@@ -20,15 +20,15 @@ export class ApplicationTypeService {
   }
 
   getAppTypeList(): Observable<GetAppTypeModel[]> {
-    return this.http.get<GetAppTypeModel[]>(`${this.baseUrl}/approvals-type`, { headers: this.jsonHeaders });
+    return this.http.get<GetAppTypeModel[]>(`${this.baseUrl}`, { headers: this.jsonHeaders });
   }
 
   getAppDetails(appId: string): Observable<GetAppTypeModel> {
-    return this.http.get<GetAppTypeModel>(`${this.baseUrl}/approvals-type/${appId}`);
+    return this.http.get<GetAppTypeModel>(`${this.baseUrl}/${appId}`);
   }
   
   updateAppType(id: string, appData: UpdateAppTypeMode): Observable<any> {
-    return this.http.put(`${this.baseUrl}/approvals-type/${id}`, appData).pipe(
+    return this.http.put(`${this.baseUrl}/${id}`, appData).pipe(
       tap(() => { this.AppTypeListUpdated.next(true); }) );
   }  
 }

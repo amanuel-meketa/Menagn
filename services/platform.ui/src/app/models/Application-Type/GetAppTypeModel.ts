@@ -1,5 +1,5 @@
 export interface GetAppTypeModel {
-  id: string;
+  templateId: string;
   name: string;
   description: string;
 }
