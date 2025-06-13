@@ -8,18 +8,18 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 
-import { ApplicationTypeService } from '../../services/application-type.service';
-import { AppTypesharedService } from '../../services/application-type-shared.service';
+import { AppTypesharedService } from '../../services/app-template-shared.service';
 import { GetAppTypeModel } from '../../../../models/Application-Type/GetAppTypeModel';
 import { UpdateAppTypeMode } from '../../../../models/Application-Type/UpdateAppTypeMode';
 import { RoleAssignedUsersComponent } from '../../../role/components/role-assigned-users/role-assigned-users.component';
+import { AppTemplateService } from '../../services/app-template.service';
 
 @Component({
-  selector: 'app-application-type-details',
+  selector: 'app-app-template-details',
   standalone: true,
   imports: [ ReactiveFormsModule, NzButtonModule, NzFormModule, NzInputModule, NzModalModule, NzTabsModule, RoleAssignedUsersComponent ],
-  templateUrl: './application-type-details.component.html',
-  styleUrl: './application-type-details.component.css'
+  templateUrl: './app-template-details.component.html',
+  styleUrl: './app-template-details.component.css'
 })
 export class ApplicationTypeDetailsComponent implements OnInit {
 
@@ -29,7 +29,7 @@ export class ApplicationTypeDetailsComponent implements OnInit {
   private readonly message = inject(NzMessageService);
   private readonly router = inject(Router);
 
-  private readonly appTypeService = inject(ApplicationTypeService);
+  private readonly _appTemplateService = inject(AppTemplateService);
   private readonly appTypeSharedService = inject(AppTypesharedService);
 
   appTypeId!: string;
@@ -55,7 +55,7 @@ export class ApplicationTypeDetailsComponent implements OnInit {
   }
 
   private fetchAppTypeDetails(appTypeId: string): void {
-    this.appTypeService.getAppDetails(appTypeId).subscribe({
+    this._appTemplateService.getAppDetails(appTypeId).subscribe({
       next: (data: GetAppTypeModel) => {
         this.validateForm.patchValue(data);
         this.openAppTypeDetailsModal();
@@ -84,7 +84,7 @@ export class ApplicationTypeDetailsComponent implements OnInit {
     this.appTypeSharedService.setAppType(updatedAppType);
     this.closeModal();
 
-    this.router.navigate(['/app-type-update']).catch(err => {
+    this.router.navigate(['/app-template-update']).catch(err => {
       this.message.error(`Navigation error: ${err}`);
     });
   }
@@ -108,6 +108,6 @@ export class ApplicationTypeDetailsComponent implements OnInit {
 
   private closeModal(): void {
     this.modalService.closeAll();
-    this.router.navigate(['/app-type-list']);
+    this.router.navigate(['/app-template-list']);
   }
 }

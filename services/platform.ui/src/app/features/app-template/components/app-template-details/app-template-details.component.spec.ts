@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ApplicationTypeDetailsComponent } from './application-type-details.component';
+import { ApplicationTypeDetailsComponent } from './app-template-details.component';
 
 describe('ApplicationTypeDetailsComponent', () => {
   let component: ApplicationTypeDetailsComponent;

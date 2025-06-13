@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ApplicationTypeUpdateComponent } from './application-type-update.component';
+import { ApplicationTypeUpdateComponent } from './app-template-update.component';
 
 describe('ApplicationTypeUpdateComponent', () => {
   let component: ApplicationTypeUpdateComponent;

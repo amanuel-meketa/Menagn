@@ -7,23 +7,23 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzTableModule } from 'ng-zorro-antd/table';
-import { RoleRegisterComponent } from '../../../role/components/role-register/role-register.component';
-import { ApplicationTypeService } from '../../services/application-type.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { GetAppTypeModel } from '../../../../models/Application-Type/GetAppTypeModel';
 import { CustomColumn } from '../../../../shared/model/custom-column';
 import { Subject, takeUntil } from 'rxjs';
+import { AppTemplateService } from '../../services/app-template.service';
+import { AppTemplateCreateComponent } from '../app-template-create/app-template-create.component';
 
 @Component({
-  selector: 'app-application-type-list',
+  selector: 'app-app-template-list',
   standalone: true,
   imports: [ NzButtonModule, NzDividerModule, NzGridModule, NzIconModule, NzModalModule, NzTableModule,CdkDrag,
-              CdkDropList, RoleRegisterComponent, RouterModule ],
-  templateUrl: './application-type-list.component.html',
-  styleUrl: './application-type-list.component.css'
+             CdkDropList, AppTemplateCreateComponent, RouterModule ],
+  templateUrl: './app-template-list.component.html',
+  styleUrl: './app-template-list.component.css'
 })
-export class ApplicationTypeListComponent implements OnInit, OnDestroy {
-  private readonly _appTemplateService = inject(ApplicationTypeService);
+export class AppTemplateListComponent implements OnInit, OnDestroy {
+  private readonly _appTemplateService = inject(AppTemplateService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly message = inject(NzMessageService);
   private readonly destroy$ = new Subject<void>();
@@ -55,7 +55,7 @@ export class ApplicationTypeListComponent implements OnInit, OnDestroy {
    }
 
   private loadAppTypeList(): void {
-    this._appTemplateService.getAppTypeList().subscribe({
+    this._appTemplateService.getAppTemplateList().subscribe({
       next: (data: GetAppTypeModel[]) => {
         this.listOfData = data;
         this.cdr.markForCheck();
@@ -71,7 +71,7 @@ export class ApplicationTypeListComponent implements OnInit, OnDestroy {
       nzOkType: 'primary',
       nzOkDanger: true,
       nzOnOk: () => {
-        this._appTemplateService.deleteTemplate(templateId).subscribe(() => {
+        this._appTemplateService.deleteAppTemplate(templateId).subscribe(() => {
             this.message.success('Template deleted successfully!');
             this.loadAppTypeList();
           },

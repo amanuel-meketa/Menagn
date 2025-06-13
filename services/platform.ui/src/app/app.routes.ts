@@ -15,9 +15,10 @@ import { RoleDetailsComponent } from './features/role/components/role-details/ro
 import { RoleUpdateComponent } from './features/role/components/role-update/role-update.component';
 import { RoleAssignedUsersComponent } from './features/role/components/role-assigned-users/role-assigned-users.component';
 import { AuthCallbackComponent } from './features/auth/components/auth-callback/auth-callback.component';
-import { ApplicationTypeListComponent } from './features/application-types/components/application-type-list/application-type-list.component';
-import { ApplicationTypeDetailsComponent } from './features/application-types/components/application-type-details/application-type-details.component';
-import { ApplicationTypeUpdateComponent } from './features/application-types/components/application-type-update/application-type-update.component';
+import { ApplicationTypeDetailsComponent } from './features/app-template/components/app-template-details/app-template-details.component';
+import { ApplicationTypeUpdateComponent } from './features/app-template/components/app-template-update/app-template-update.component';
+import { AppTemplateListComponent } from './features/app-template/components/app-template-list/app-template-list.component';
+import { AppTemplateCreateComponent } from './features/app-template/components/app-template-create/app-template-create.component';
 
 export const routes: Routes = 
 [
@@ -39,9 +40,10 @@ export const routes: Routes =
       { path: 'role-update', component: RoleUpdateComponent, canActivate:[authGuard]},
       { path: 'role-assigned-users', component: RoleAssignedUsersComponent, canActivate:[authGuard]},
       
-      { path: 'app-type-list', component: ApplicationTypeListComponent},
-      { path: 'app-type-details/:templateId', component: ApplicationTypeDetailsComponent},
-      { path: 'app-type-update', component: ApplicationTypeUpdateComponent},
+      { path: 'app-template-list', component: AppTemplateListComponent},
+      { path: 'app-template-create', component: AppTemplateCreateComponent},
+      { path: 'app-template-details/:templateId', component: ApplicationTypeDetailsComponent},
+      { path: 'app-template-update', component: ApplicationTypeUpdateComponent},
     ]
   },
 ];

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ApplicationTypeListComponent } from './application-type-list.component';
+import {AppTemplateListComponent } from './app-template-list.component';
 
 describe('ApplicationTypeLissComponent', () => {
-  let component: ApplicationTypeListComponent;
-  let fixture: ComponentFixture<ApplicationTypeListComponent>;
+  let component: AppTemplateListComponent;
+  let fixture: ComponentFixture<AppTemplateListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ApplicationTypeListComponent]
+      imports: [AppTemplateListComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ApplicationTypeListComponent);
+    fixture = TestBed.createComponent(AppTemplateListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

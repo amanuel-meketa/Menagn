@@ -3,11 +3,12 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { GetAppTypeModel } from '../../../models/Application-Type/GetAppTypeModel';
 import { UpdateAppTypeMode } from '../../../models/Application-Type/UpdateAppTypeMode';
+import { CreateAppTemplateModel } from '../../../models/Application-Type/CreateAppTemplateModel';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ApplicationTypeService {
+export class AppTemplateService {
 
   private readonly http = inject(HttpClient);
   private readonly baseUrl = 'http://localhost/approvals/approval-template';
@@ -19,7 +20,7 @@ export class ApplicationTypeService {
     return this.AppTempListUpdated.asObservable();
   }
 
-  getAppTypeList(): Observable<GetAppTypeModel[]> {
+  getAppTemplateList(): Observable<GetAppTypeModel[]> {
     return this.http.get<GetAppTypeModel[]>(`${this.baseUrl}`, { headers: this.jsonHeaders });
   }
 
@@ -27,12 +28,19 @@ export class ApplicationTypeService {
     return this.http.get<GetAppTypeModel>(`${this.baseUrl}/${appId}`);
   }
   
-  updateAppType(id: string, appData: UpdateAppTypeMode): Observable<any> {
+  createAppTemplate(role: any): Observable<CreateAppTemplateModel> {
+    return this.http.post<CreateAppTemplateModel>(`${this.baseUrl}`, role).pipe(
+      tap(() => {
+        this.AppTempListUpdated.next(true);
+      }));
+  }
+  
+  updateAppTemplate(id: string, appData: UpdateAppTypeMode): Observable<any> {
     return this.http.put(`${this.baseUrl}/${id}`, appData).pipe(
       tap(() => { this.AppTempListUpdated.next(true); }) );
   } 
   
-  deleteTemplate(userId: string): Observable<any> {
+  deleteAppTemplate(userId: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${userId}`).pipe(tap(() => {
         this.AppTempListUpdated.next(true);
       }));
