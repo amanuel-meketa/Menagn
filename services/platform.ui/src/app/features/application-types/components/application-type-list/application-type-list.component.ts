@@ -1,36 +1,34 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { RoleRegisterComponent } from '../../../role/components/role-register/role-register.component';
 import { ApplicationTypeService } from '../../services/application-type.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { GetAppTypeModel } from '../../../../models/Application-Type/GetAppTypeModel';
 import { CustomColumn } from '../../../../shared/model/custom-column';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-application-type-list',
   standalone: true,
-  imports: [ NzButtonModule, NzDividerModule, NzGridModule, NzIconModule, NzModalModule, NzTableModule, CdkDrag, CdkDropList, 
-    RoleRegisterComponent, RouterModule ],
+  imports: [ NzButtonModule, NzDividerModule, NzGridModule, NzIconModule, NzModalModule, NzTableModule,CdkDrag,
+              CdkDropList, RoleRegisterComponent, RouterModule ],
   templateUrl: './application-type-list.component.html',
   styleUrl: './application-type-list.component.css'
 })
+export class ApplicationTypeListComponent implements OnInit, OnDestroy {
+  private readonly _appTemplateService = inject(ApplicationTypeService);
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly message = inject(NzMessageService);
+  private readonly destroy$ = new Subject<void>();
 
-export class ApplicationTypeListComponent implements OnInit{
-  private _appTypeervice = inject(ApplicationTypeService);
-  private cdr = inject(ChangeDetectorRef);
-  private message = inject(NzMessageService);
-  private modal = inject(NzModalService); 
-
-  private AppTypeListUpdatedSubscription: Subscription | undefined;
-  listOfData: GetAppTypeModel[] = []; 
+  listOfData: GetAppTypeModel[] = [];
 
   customColumn: CustomColumn[] = [
     { name: 'Name', value: 'name', default: true, required: true, position: 'left', width: 100, fixWidth: true },
@@ -38,33 +36,35 @@ export class ApplicationTypeListComponent implements OnInit{
     { name: 'Action', value: 'action', default: true, required: true, position: 'right', width: 50 }
   ];
 
-  isVisible: boolean = false;
+  isVisible = false;
   title: CustomColumn[] = [];
   footer: CustomColumn[] = [];
   fix: CustomColumn[] = [];
   notFix: CustomColumn[] = [];
 
   ngOnInit(): void {
-    this.loadRoleList(); 
-  
+    this.loadAppTypeList();
+
     this.title = this.customColumn.filter(item => item.position === 'left' && item.required);
     this.footer = this.customColumn.filter(item => item.position === 'right' && item.required);
     this.fix = this.customColumn.filter(item => item.default && !item.required);
     this.notFix = this.customColumn.filter(item => !item.default && !item.required);
 
-    this.AppTypeListUpdatedSubscription = this._appTypeervice.AppTypeListUpdated$.subscribe(() => {
-      this.loadRoleList();
+    this._appTemplateService.AppTypeListUpdated$.pipe(takeUntil(this.destroy$)).subscribe(() => this.loadAppTypeList());
+   }
+
+  private loadAppTypeList(): void {
+    this._appTemplateService.getAppTypeList().subscribe({
+      next: (data: GetAppTypeModel[]) => {
+        this.listOfData = data;
+        this.cdr.markForCheck();
+      },
+      error: () => this.message.error('Failed to load application types.')
     });
   }
 
-  private loadRoleList(): void {
-    this._appTypeervice.getAppTypeList().subscribe((roles: GetAppTypeModel[]) => {
-      this.listOfData = roles;
-      this.cdr.markForCheck();
-    });
-  }
   deleteRole(userId: string): void {
-    
+    // To be implemented
   }
 
   drop(event: CdkDragDrop<CustomColumn[]>): void {
@@ -73,16 +73,13 @@ export class ApplicationTypeListComponent implements OnInit{
     } else {
       transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
     }
-    this.fix = this.fix.map(item => {
-      item.default = true;
-      return item;
-    });
-    this.notFix = this.notFix.map(item => {
-      item.default = false;
-      return item;
-    });
+
+    this.fix = this.fix.map(item => ({ ...item, default: true }));
+    this.notFix = this.notFix.map(item => ({ ...item, default: false }));
+
     this.cdr.markForCheck();
   }
+
   deleteCustom(value: CustomColumn, index: number): void {
     value.default = false;
     this.notFix = [...this.notFix, value];
@@ -109,5 +106,10 @@ export class ApplicationTypeListComponent implements OnInit{
 
   handleCancel(): void {
     this.isVisible = false;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

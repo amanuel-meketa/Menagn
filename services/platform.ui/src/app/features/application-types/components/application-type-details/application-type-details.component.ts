@@ -1,101 +1,104 @@
-import { Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, inject } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalService, NzModalModule } from 'ng-zorro-antd/modal';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
-import { RoleAssignedUsersComponent } from '../../../role/components/role-assigned-users/role-assigned-users.component';
-import { ActivatedRoute, Router } from '@angular/router';
-import { NzMessageService } from 'ng-zorro-antd/message';
+
 import { ApplicationTypeService } from '../../services/application-type.service';
+import { AppTypesharedService } from '../../services/application-type-shared.service';
 import { GetAppTypeModel } from '../../../../models/Application-Type/GetAppTypeModel';
 import { UpdateAppTypeMode } from '../../../../models/Application-Type/UpdateAppTypeMode';
-import { AppTypesharedService } from '../../services/application-type-shared.service';
+import { RoleAssignedUsersComponent } from '../../../role/components/role-assigned-users/role-assigned-users.component';
 
 @Component({
   selector: 'app-application-type-details',
   standalone: true,
-  imports: [ NzButtonModule, NzModalModule, ReactiveFormsModule, NzFormModule, NzInputModule, NzTabsModule, NzButtonModule,
-             RoleAssignedUsersComponent],
+  imports: [ ReactiveFormsModule, NzButtonModule, NzFormModule, NzInputModule, NzModalModule, NzTabsModule, RoleAssignedUsersComponent ],
   templateUrl: './application-type-details.component.html',
   styleUrl: './application-type-details.component.css'
 })
-export class ApplicationTypeDetailsComponent implements OnInit{
-  private route = inject(ActivatedRoute);
-  private modal = inject(NzModalService);
-  private fb = inject(NonNullableFormBuilder);
-  private message = inject(NzMessageService);
-  private router = inject(Router);
+export class ApplicationTypeDetailsComponent implements OnInit {
 
-  private _appTypeService = inject(ApplicationTypeService);
-  private _appTypeSharedService = inject(AppTypesharedService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly modalService = inject(NzModalService);
+  private readonly fb = inject(NonNullableFormBuilder);
+  private readonly message = inject(NzMessageService);
+  private readonly router = inject(Router);
+
+  private readonly appTypeService = inject(ApplicationTypeService);
+  private readonly appTypeSharedService = inject(AppTypesharedService);
 
   appTypeId!: string;
+
   validateForm = this.fb.group({
-    templateId: ['', [Validators.required]], 
-    name: ['', [Validators.required]],
+    templateId: ['', Validators.required],
+    name: ['', Validators.required],
     description: ['']
   });
-  
-  @ViewChild('roleFormTemplate', { static: true }) roleFormTemplate!: TemplateRef<any>;
-  
+
+  @ViewChild('approvalFormTemplate', { static: true }) approvalFormTemplate!: TemplateRef<any>;
+
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => { const appTypeId = params.get('templateId');
-      if (appTypeId) {
-        this.appTypeId = appTypeId;
-        console.log("custom log" + appTypeId);
-        this.fetchAppTypeDetails(appTypeId);
+    this.route.paramMap.subscribe(params => {
+      const templateId = params.get('templateId');
+      if (templateId) {
+        this.appTypeId = templateId;
+        this.fetchAppTypeDetails(templateId);
+      } else {
+        this.message.error('Invalid app template ID.');
       }
     });
   }
 
-  fetchAppTypeDetails(appTypeId: any): void {
-    this._appTypeService.getAppDetails(appTypeId).subscribe({
-      next: (role: GetAppTypeModel) => {
-        this.validateForm.patchValue(role);
+  private fetchAppTypeDetails(appTypeId: string): void {
+    this.appTypeService.getAppDetails(appTypeId).subscribe({
+      next: (data: GetAppTypeModel) => {
+        this.validateForm.patchValue(data);
         this.openAppTypeDetailsModal();
       },
-      error: () => {
-        this.message.error('Failed to load application type details.');
+      error: (err) => {
+        console.error('Error fetching app template:', err);
+        this.message.error('Failed to load app template details.');
       }
     });
   }
 
   updateAppType(): void {
-    if (this.validateForm.valid) {
-      const appTypeData = this.validateForm.value;
-  
-      const updatedRole: UpdateAppTypeMode = {
-        templateId: appTypeData.templateId || '', 
-        name: appTypeData.name || '',
-        description: appTypeData.description || ''
-      };
-  
-      this._appTypeSharedService.setAppType(updatedRole);
-  
-      this.closeModal();
-  
-      this.router.navigate(['/app-type-update']).then(() => {
-        console.log('Navigation complete');
-      }).catch((err) => {
-        this.message.error('Navigation error: ' + err);
-      });
-    } else {
+    if (this.validateForm.invalid) {
       this.message.error('Form is invalid');
+      return;
     }
-  }  
-  
-  openAppTypeDetailsModal(): void {
-    this.modal.create({
-      nzTitle: 'Applicatio Type Details',
-      nzContent: this.roleFormTemplate,
+
+    const formData = this.validateForm.getRawValue();
+
+    const updatedAppType: UpdateAppTypeMode = {
+      templateId: formData.templateId,
+      name: formData.name,
+      description: formData.description || ''
+    };
+
+    this.appTypeSharedService.setAppType(updatedAppType);
+    this.closeModal();
+
+    this.router.navigate(['/app-type-update']).catch(err => {
+      this.message.error(`Navigation error: ${err}`);
+    });
+  }
+
+  private openAppTypeDetailsModal(): void {
+    this.modalService.create({
+      nzTitle: 'App template details',
+      nzContent: this.approvalFormTemplate,
       nzFooter: [
         {
           label: 'Cancel',
           onClick: () => this.closeModal()
         }
- ],
+      ],
       nzWidth: 800,
       nzClosable: false,
       nzMaskClosable: false,
@@ -103,9 +106,8 @@ export class ApplicationTypeDetailsComponent implements OnInit{
     });
   }
 
-  closeModal(): void {
-    this.modal.closeAll();
+  private closeModal(): void {
+    this.modalService.closeAll();
     this.router.navigate(['/app-type-list']);
-  }  
-  
+  }
 }
