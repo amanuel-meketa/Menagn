@@ -5,7 +5,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { RoleRegisterComponent } from '../../../role/components/role-register/role-register.component';
 import { ApplicationTypeService } from '../../services/application-type.service';
@@ -27,7 +27,7 @@ export class ApplicationTypeListComponent implements OnInit, OnDestroy {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly message = inject(NzMessageService);
   private readonly destroy$ = new Subject<void>();
-
+  private readonly model = inject(NzModalService);
   listOfData: GetAppTypeModel[] = [];
 
   customColumn: CustomColumn[] = [
@@ -50,7 +50,8 @@ export class ApplicationTypeListComponent implements OnInit, OnDestroy {
     this.fix = this.customColumn.filter(item => item.default && !item.required);
     this.notFix = this.customColumn.filter(item => !item.default && !item.required);
 
-    this._appTemplateService.AppTypeListUpdated$.pipe(takeUntil(this.destroy$)).subscribe(() => this.loadAppTypeList());
+    this._appTemplateService.AppTypeListUpdated$.pipe(takeUntil(this.destroy$)).subscribe(
+      () => this.loadAppTypeList());
    }
 
   private loadAppTypeList(): void {
@@ -63,8 +64,24 @@ export class ApplicationTypeListComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteRole(userId: string): void {
-    // To be implemented
+  deleteTemplate(templateId: string): void {
+    this.model.confirm({
+      nzTitle: 'Are you sure you want to delete this template?',
+      nzOkText: 'Yes',
+      nzOkType: 'primary',
+      nzOkDanger: true,
+      nzOnOk: () => {
+        this._appTemplateService.deleteTemplate(templateId).subscribe(() => {
+            this.message.success('Template deleted successfully!');
+            this.loadAppTypeList();
+          },
+          (error: { message: any }) => {
+            this.message.remove();
+            this.message.error(`Error deleting template: ${error.message || 'Unknown error'}`);
+          });
+       },
+      nzCancelText: 'No',
+    });
   }
 
   drop(event: CdkDragDrop<CustomColumn[]>): void {

@@ -1,41 +1,27 @@
 <ng-template #approvalFormTemplate>
   <nz-tabset nzType="card">
-    <nz-tab nzTitle="Application Type Details">
+    <nz-tab nzTitle="App template Details">
       
       <form [formGroup]="validateForm" nz-form nzLayout="horizontal">
         
         <nz-form-item>
-          <nz-form-label [nzSpan]="6" nzLabelAlign="left">App template ID</nz-form-label>
+          <nz-form-label [nzSpan]="6" nzLabelAlign="left">Id</nz-form-label>
           <nz-form-control [nzSpan]="18">
-            <input
-              nz-input
-              formControlName="templateId"
-              readonly
-              class="readonly-field"
-            />
+            <input nz-input formControlName="templateId" readonly class="readonly-field" />
           </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
-          <nz-form-label [nzSpan]="6" nzLabelAlign="left">App template Name</nz-form-label>
+          <nz-form-label [nzSpan]="6" nzLabelAlign="left">Name</nz-form-label>
           <nz-form-control [nzSpan]="18">
-            <input
-              nz-input
-              formControlName="name"
-              placeholder="Enter application type name"
-            />
+            <input nz-input formControlName="name" placeholder="Enter name" />
           </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
           <nz-form-label [nzSpan]="6" nzLabelAlign="left">Description</nz-form-label>
           <nz-form-control [nzSpan]="18">
-            <textarea
-              nz-input
-              formControlName="description"
-              rows="3"
-              placeholder="Enter description"
-            ></textarea>
+            <textarea nz-input formControlName="description" rows="3" placeholder="Enter description" ></textarea>
           </nz-form-control>
         </nz-form-item>
 

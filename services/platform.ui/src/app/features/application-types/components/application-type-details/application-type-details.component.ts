@@ -91,7 +91,7 @@ export class ApplicationTypeDetailsComponent implements OnInit {
 
   private openAppTypeDetailsModal(): void {
     this.modalService.create({
-      nzTitle: 'App template details',
+      nzTitle: 'Template details',
       nzContent: this.approvalFormTemplate,
       nzFooter: [
         {
@@ -99,9 +99,9 @@ export class ApplicationTypeDetailsComponent implements OnInit {
           onClick: () => this.closeModal()
         }
       ],
-      nzWidth: 800,
+      nzWidth: 700,
       nzClosable: false,
-      nzMaskClosable: false,
+      nzMaskClosable: true,
       nzOnCancel: () => this.closeModal()
     });
   }

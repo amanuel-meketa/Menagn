@@ -13,10 +13,10 @@ export class ApplicationTypeService {
   private readonly baseUrl = 'http://localhost/approvals/approval-template';
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-  private AppTypeListUpdated = new BehaviorSubject<boolean>(false);
+  private AppTempListUpdated = new BehaviorSubject<boolean>(false);
 
   get AppTypeListUpdated$(): Observable<boolean> {
-    return this.AppTypeListUpdated.asObservable();
+    return this.AppTempListUpdated.asObservable();
   }
 
   getAppTypeList(): Observable<GetAppTypeModel[]> {
@@ -29,7 +29,13 @@ export class ApplicationTypeService {
   
   updateAppType(id: string, appData: UpdateAppTypeMode): Observable<any> {
     return this.http.put(`${this.baseUrl}/${id}`, appData).pipe(
-      tap(() => { this.AppTypeListUpdated.next(true); }) );
-  }  
+      tap(() => { this.AppTempListUpdated.next(true); }) );
+  } 
+  
+  deleteTemplate(userId: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/${userId}`).pipe(tap(() => {
+        this.AppTempListUpdated.next(true);
+      }));
+  }
 }
 

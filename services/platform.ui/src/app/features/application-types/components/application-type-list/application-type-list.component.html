@@ -21,7 +21,7 @@
           <td nzCellControl="description">{{ data.description }}</td>
           <td nzCellControl="action">
             <nz-divider nzType="vertical"></nz-divider>
-            <button nz-button nzSize="small" nzDanger>Delete</button>
+            <button nz-button nzSize="small" (click)="deleteTemplate(data.templateId)" nzDanger>Delete</button>
           </td>
         </tr>
       }
