@@ -18,7 +18,7 @@ import { AppTemplateCreateComponent } from '../app-template-create/app-template-
   selector: 'app-app-template-list',
   standalone: true,
   imports: [ NzButtonModule, NzDividerModule, NzGridModule, NzIconModule, NzModalModule, NzTableModule,CdkDrag,
-             CdkDropList, AppTemplateCreateComponent, RouterModule ],
+             CdkDropList, AppTemplateCreateComponent, RouterModule, AppTemplateCreateComponent ],
   templateUrl: './app-template-list.component.html',
   styleUrl: './app-template-list.component.css'
 })

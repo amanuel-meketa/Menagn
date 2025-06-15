@@ -1,0 +1,148 @@
+/* stage-definition-list.component.scss */
+.approval-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+  height: 100%;
+
+  .ant-card-body {
+    padding: 0;
+  }
+}
+
+.card-header {
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+
+  .header-icon {
+    font-size: 20px;
+    color: #1890ff;
+    margin-right: 12px;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+  }
+}
+
+.loading-state {
+  padding: 40px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.approval-tree {
+  padding: 16px;
+
+  .ant-tree-treenode {
+    padding: 4px 0;
+  }
+}
+
+.approval-node {
+  display: flex;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+
+  &.active {
+    background: #e6f7ff;
+  }
+
+  .stage-item, .template-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .stage-item {
+    .stage-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+  }
+
+  .template-item {
+    justify-content: space-between;
+    
+    .template-actions {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .stage-icon-container, .template-icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 12px;
+  }
+
+  .stage-icon-container {
+    background: #f0f5ff;
+  }
+
+  .template-icon-container {
+    background: #e6fffb;
+  }
+
+  .stage-icon {
+    font-size: 16px;
+    color: #1890ff;
+  }
+
+  .template-icon {
+    font-size: 16px;
+    color: #13c2c2;
+  }
+
+  .stage-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stage-name, .template-name {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  nz-tag {
+    margin-top: 4px;
+    font-size: 12px;
+  }
+
+  .details-btn, .delete-btn {
+    color: #8c8c8c;
+    transition: color 0.3s;
+    margin-left: 8px;
+  }
+
+  .details-btn:hover {
+    color: #1890ff;
+  }
+
+  .delete-btn:hover {
+    color: #ff4d4f;
+  }
+}
+
+.approval-context-menu {
+  border-radius: 8px;
+  box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12),
+              0 6px 16px 0 rgba(0, 0, 0, 0.08),
+              0 9px 28px 8px rgba(0, 0, 0, 0.05);
+
+  [nz-icon] {
+    margin-right: 8px;
+  }
+}

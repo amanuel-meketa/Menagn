@@ -37,23 +37,39 @@
           </li>
         </ul>
       </li>
-      <li nz-submenu nzTitle="Application List" nzIcon="appstore">
+      <li nz-submenu nzTitle="Approvals" nzIcon="appstore">
         <ul>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/app-template-list">
               <span nz-icon nzType="appstore-add"></span>
-              <span>App List</span>
+              <span>App Templates</span>
             </a>
           </li>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="#">
               <span nz-icon nzType="branch"></span>
-              <span>Process List</span>
+              <span>Templates Instance</span>
             </a>
           </li>
         </ul>
       </li>
-      <li nz-submenu nzTitle="Configuration Settings" nzIcon="setting">
+      <li nz-submenu nzTitle="Stage Definitions" nzIcon="appstore">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/stage-definition-list">
+              <span nz-icon nzType="appstore-add"></span>
+              <span>Stage Definitions</span>
+            </a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="#">
+              <span nz-icon nzType="branch"></span>
+              <span>Stage Instances</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Configuration" nzIcon="setting">
         <ul>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="#">

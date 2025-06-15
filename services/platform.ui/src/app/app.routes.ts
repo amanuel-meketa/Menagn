@@ -19,6 +19,7 @@ import { ApplicationTypeDetailsComponent } from './features/app-template/compone
 import { ApplicationTypeUpdateComponent } from './features/app-template/components/app-template-update/app-template-update.component';
 import { AppTemplateListComponent } from './features/app-template/components/app-template-list/app-template-list.component';
 import { AppTemplateCreateComponent } from './features/app-template/components/app-template-create/app-template-create.component';
+import { StageDefinitionListComponent } from './features/stage-definition/components/stage-definition-list/stage-definition-list.component';
 
 export const routes: Routes = 
 [
@@ -44,6 +45,8 @@ export const routes: Routes =
       { path: 'app-template-create', component: AppTemplateCreateComponent},
       { path: 'app-template-details/:templateId', component: ApplicationTypeDetailsComponent},
       { path: 'app-template-update', component: ApplicationTypeUpdateComponent},
+
+      { path: 'stage-definition-list', component: StageDefinitionListComponent},
     ]
   },
 ];

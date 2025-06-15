@@ -1,0 +1,77 @@
+<!-- stage-definition-list.component.html -->
+<nz-card class="approval-card">
+    <div class="card-header">
+      <span nz-icon nzType="apartment" nzTheme="outline" class="header-icon"></span>
+      <h3>Approval Stages </h3>
+    </div>
+  
+    @if (isLoading) {
+      <div class="loading-state">
+        <nz-spin nzSize="large"></nz-spin>
+      </div>
+    } @else if (treeData.length === 0) {
+      <nz-empty nzNotFoundContent="No approval templates configured"></nz-empty>
+    } @else {
+      <nz-tree
+        class="approval-tree"
+        [nzData]="treeData"
+        [nzExpandedKeys]="expandedKeys"
+        [nzSelectedKeys]="selectedKeys"
+        (nzClick)="onNodeClick($event)"
+        [nzTreeTemplate]="treeTemplate"
+      ></nz-tree>
+    }
+  </nz-card>
+  
+  <ng-template #treeTemplate let-node let-origin="origin">
+    <div class="approval-node" [class.active]="selectedKeys.includes(node.key)">
+      @if (node.isLeaf) {
+        <div class="stage-item" (contextmenu)="contextMenu($event, menu)">
+          <div class="stage-icon-container">
+            <span nz-icon [nzType]="origin.icon" nzTheme="outline" class="stage-icon"></span>
+          </div>
+          <div class="stage-content">
+            <div class="stage-info">
+              <div class="stage-name">{{ node.title }}</div>
+              <nz-tag [nzColor]="'processing'">Step {{ origin.stageData.sequenceOrder }}</nz-tag>
+            </div>
+            <button 
+              nz-button 
+              nzType="text" 
+              nzShape="circle" 
+              nz-tooltip="View details"
+              class="details-btn"
+              (click)="showStageDetails(origin.stageData); $event.stopPropagation()"
+            >
+              <span nz-icon [nzType]="icons.details" nzTheme="outline"></span>
+            </button>
+          </div>
+        </div>
+      } @else {
+        <div class="template-item">
+          <div class="template-icon-container">
+            <span nz-icon [nzType]="origin.icon" nzTheme="fill" class="template-icon"></span>
+          </div>
+          <div class="template-name">{{ node.title }}</div>
+        </div>
+      }
+    </div>
+  </ng-template>
+  
+  <nz-dropdown-menu #menu="nzDropdownMenu" class="approval-context-menu">
+    <ul nz-menu>
+      <li nz-menu-item (click)="router.navigate([activatedNode?.origin['routerLink']])">
+        <span nz-icon nzType="right-circle"></span>
+        Open Stage
+      </li>
+      <li nz-menu-item>
+        <span nz-icon nzType="edit"></span>
+        Edit Configuration
+      </li>
+      <nz-divider nzType="horizontal"></nz-divider>
+      <li nz-menu-item nzDanger>
+        <span nz-icon nzType="delete"></span>
+        Remove Stage
+      </li>
+    </ul>
+  </nz-dropdown-menu>
