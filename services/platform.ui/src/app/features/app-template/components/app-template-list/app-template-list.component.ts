@@ -22,6 +22,7 @@ import { AppTemplateCreateComponent } from '../app-template-create/app-template-
   templateUrl: './app-template-list.component.html',
   styleUrl: './app-template-list.component.css'
 })
+
 export class AppTemplateListComponent implements OnInit, OnDestroy {
   private readonly _appTemplateService = inject(AppTemplateService);
   private readonly cdr = inject(ChangeDetectorRef);

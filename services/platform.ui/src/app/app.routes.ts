@@ -20,6 +20,7 @@ import { ApplicationTypeUpdateComponent } from './features/app-template/componen
 import { AppTemplateListComponent } from './features/app-template/components/app-template-list/app-template-list.component';
 import { AppTemplateCreateComponent } from './features/app-template/components/app-template-create/app-template-create.component';
 import { StageDefinitionListComponent } from './features/stage-definition/components/stage-definition-list/stage-definition-list.component';
+import { StageDefinitionDetailsComponent } from './features/stage-definition/components/stage-definition-details/stage-definition-details.component';
 
 export const routes: Routes = 
 [
@@ -47,6 +48,7 @@ export const routes: Routes =
       { path: 'app-template-update', component: ApplicationTypeUpdateComponent},
 
       { path: 'stage-definition-list', component: StageDefinitionListComponent},
+      { path: 'stage-definition-details/:key', component: StageDefinitionDetailsComponent},
     ]
   },
 ];

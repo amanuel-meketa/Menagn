@@ -2,7 +2,7 @@
 <nz-card class="approval-card">
     <div class="card-header">
       <span nz-icon nzType="apartment" nzTheme="outline" class="header-icon"></span>
-      <h3>Approval Stages </h3>
+      <h3>Approval Template Stages </h3>
     </div>
   
     @if (isLoading) {
@@ -12,14 +12,9 @@
     } @else if (treeData.length === 0) {
       <nz-empty nzNotFoundContent="No approval templates configured"></nz-empty>
     } @else {
-      <nz-tree
-        class="approval-tree"
-        [nzData]="treeData"
-        [nzExpandedKeys]="expandedKeys"
-        [nzSelectedKeys]="selectedKeys"
-        (nzClick)="onNodeClick($event)"
-        [nzTreeTemplate]="treeTemplate"
-      ></nz-tree>
+      <nz-tree class="approval-tree" [nzData]="treeData" [nzExpandedKeys]="expandedKeys" [nzSelectedKeys]="selectedKeys"
+               (nzClick)="onNodeClick($event)" [nzTreeTemplate]="treeTemplate">
+      </nz-tree>
     }
   </nz-card>
   
@@ -35,16 +30,10 @@
               <div class="stage-name">{{ node.title }}</div>
               <nz-tag [nzColor]="'processing'">Step {{ origin.stageData.sequenceOrder }}</nz-tag>
             </div>
-            <button 
-              nz-button 
-              nzType="text" 
-              nzShape="circle" 
-              nz-tooltip="View details"
-              class="details-btn"
-              (click)="showStageDetails(origin.stageData); $event.stopPropagation()"
-            >
+            <button nz-button nzType="text" nzShape="circle" nz-tooltip="View details" class="details-btn" 
+                    [routerLink]="['/stage-definition-details', node.key]">
               <span nz-icon [nzType]="icons.details" nzTheme="outline"></span>
-            </button>
+           </button>
           </div>
         </div>
       } @else {

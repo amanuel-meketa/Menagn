@@ -23,4 +23,8 @@ export class StageDefinitionService {
     return this.http.get<GetStageDefiModel[]>(`${this.baseUrl}`, { headers: this.jsonHeaders });
   }
 
+  getStageDefiDetails(stageId: string): Observable<GetStageDefiModel> {
+    return this.http.get<GetStageDefiModel>(`${this.baseUrl}/${stageId}`);
+  }
+  
 }

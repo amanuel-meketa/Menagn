@@ -1,5 +1,4 @@
-// stage-definition-list.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { NzTreeNodeOptions, NzTreeModule, NzFormatEmitEvent } from 'ng-zorro-antd/tree';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
@@ -10,7 +9,7 @@ import { StageDefinitionService } from '../../services/stage-definition.service'
 import { CommonModule } from '@angular/common';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
@@ -20,11 +19,8 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 @Component({
   selector: 'app-stage-definition-list',
   standalone: true,
-  imports: [
-    NzTreeModule, NzIconModule, NzDropDownModule, NzMenuModule,
-    CommonModule, NzCardModule, NzTagModule, NzSpinModule,
-    NzEmptyModule, NzDividerModule, NzButtonModule, NzToolTipModule
-  ],
+  imports: [ NzTreeModule, NzIconModule, NzDropDownModule, NzMenuModule, CommonModule, NzCardModule, NzTagModule, 
+             NzSpinModule,NzEmptyModule, NzDividerModule, NzButtonModule, NzToolTipModule, RouterModule ],
   templateUrl: './stage-definition-list.component.html',
   styleUrls: ['./stage-definition-list.component.scss']
 })
@@ -35,7 +31,6 @@ export class StageDefinitionListComponent implements OnInit {
   isLoading = true;
   activatedNode: any;
 
-  // Icons configuration
   icons = {
     template: 'safety-certificate',
     defaultStage: 'control',
@@ -45,11 +40,9 @@ export class StageDefinitionListComponent implements OnInit {
     details: 'info-circle'
   };
 
-  constructor(
-    private _stageDefiService: StageDefinitionService,
-    private nzContextMenuService: NzContextMenuService,
-    public router: Router
-  ) {}
+   readonly router = inject(Router);
+   readonly nzContextMenuService = inject(NzContextMenuService);
+   readonly _stageDefiService = inject(StageDefinitionService);
 
   ngOnInit(): void {
     this.loadStageDefinitions();

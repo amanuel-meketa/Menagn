@@ -1,0 +1,39 @@
+<ng-template #stageFormTemplate>
+    <nz-tabset nzType="card">
+      <nz-tab nzTitle="Stage Details">
+        
+        <form [formGroup]="validateForm" nz-form nzLayout="horizontal">
+          
+          <nz-form-item>
+            <nz-form-label [nzSpan]="6" nzLabelAlign="left">Id</nz-form-label>
+            <nz-form-control [nzSpan]="18">
+              <input nz-input formControlName="stageDefId" readonly class="readonly-field" />
+            </nz-form-control>
+          </nz-form-item>
+  
+          <nz-form-item>
+            <nz-form-label [nzSpan]="6" nzLabelAlign="left">Name</nz-form-label>
+            <nz-form-control [nzSpan]="18">
+              <input nz-input formControlName="stageName" placeholder="Enter stage name" />
+            </nz-form-control>
+          </nz-form-item>
+  
+          <nz-form-item>
+            <nz-form-label [nzSpan]="6" nzLabelAlign="left">Description</nz-form-label>
+            <nz-form-control [nzSpan]="18">
+              <textarea nz-input formControlName="description" rows="3" placeholder="Enter description" ></textarea>
+            </nz-form-control>
+          </nz-form-item>
+  
+          <nz-form-item>
+            <nz-form-control [nzSpan]="24" class="text-right">
+              <button nz-button nzType="primary" (click)="updateAppType()">Save</button>
+            </nz-form-control>
+          </nz-form-item>
+  
+        </form>
+  
+      </nz-tab>
+    </nz-tabset>
+  </ng-template>
+  
