@@ -1,5 +1,4 @@
 export interface ApprovalRequest {
     templateId: string;
-    userId: string;
+    userId: string
   }
-  
