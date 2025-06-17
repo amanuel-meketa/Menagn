@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { ApprovalRequest } from '../../../models/Approval-Instance/ApprovalRequest';
+import { ApprovalRequest } from '../../../models/Approval-Instances/ApprovalRequest';
 
 @Injectable({
   providedIn: 'root'
