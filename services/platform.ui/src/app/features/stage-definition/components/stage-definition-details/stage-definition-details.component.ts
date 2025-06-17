@@ -10,6 +10,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { GetStageDefiModel } from '../../../../models/Stage-Definition/GetStageDefiModel';
 import { StageDefinitionService } from '../../services/stage-definition.service';
+import { UpdateStageDefiModel } from '../../../../models/Stage-Definition/UpdateStageDefiModel';
+import { StageDefinitionSharedService } from '../../services/stage-definition-shared.service';
 
 @Component({
   selector: 'app-stage-definition-details',
@@ -26,8 +28,9 @@ export class StageDefinitionDetailsComponent  implements OnInit {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly message = inject(NzMessageService);
   private readonly router = inject(Router);
-
   private readonly _stageDefiService = inject(StageDefinitionService);
+  private readonly _stageDefiSharedService = inject(StageDefinitionSharedService);
+
   stageDefinitionId!: any;
 
   validateForm = this.fb.group({
@@ -64,7 +67,32 @@ export class StageDefinitionDetailsComponent  implements OnInit {
     });
   }
     
-  updateAppType(): void {
+  updateStageDefin(): void {
+    if (this.validateForm.invalid) {
+      this.message.error('Form is invalid');
+      return;
+    }
+
+    const formData = this.validateForm.getRawValue();
+
+    const updatedAppType: GetStageDefiModel = {
+      stageDefId: formData.stageDefId,
+      stageName: formData.stageName,
+      description: formData.description || '',
+      templateId: '',
+      sequenceOrder: 0,
+      assignmentType: '',
+      assignmentKey: '',
+      status: '',
+      isCritical: ''
+    };
+
+    this._stageDefiSharedService.setStageDefin(updatedAppType);
+    this.closeModal();
+
+    this.router.navigate(['/stage-definition-update']).catch(err => {
+      this.message.error(`Navigation error: ${err}`);
+    });
   }
 
   private openAppTypeDetailsModal(): void {

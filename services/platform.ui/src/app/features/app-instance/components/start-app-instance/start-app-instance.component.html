@@ -1,0 +1,29 @@
+<button nz-button nzType="primary" (click)="openTemplateRegisterModal()">
+  <i nz-icon nzType="play-circle"></i>
+  Start
+</button>
+  
+  <ng-template #startApprovalTemplate>
+    <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Template Id</nz-form-label>
+        <nz-form-control [nzSpan]="18">
+          <input nz-input formControlName="templateId" placeholder="Template ID" readonly />
+        </nz-form-control>
+      </nz-form-item>      
+      
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">User ID</nz-form-label>
+        <nz-form-control [nzSpan]="18">
+          <textarea formControlName="userId" nz-input rows="2" placeholder="User ID"></textarea>
+        </nz-form-control>
+      </nz-form-item>      
+  
+      <div class="modal-footer" style="text-align: right; margin-top: 24px;">
+        <button nz-button nzType="primary" [disabled]="!validateForm.valid" htmlType="submit">
+          Submit
+        </button>
+      </div>
+    </form>
+  </ng-template>
+  

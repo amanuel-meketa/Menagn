@@ -13,12 +13,13 @@ import { CustomColumn } from '../../../../shared/model/custom-column';
 import { Subject, takeUntil } from 'rxjs';
 import { AppTemplateService } from '../../services/app-template.service';
 import { AppTemplateCreateComponent } from '../app-template-create/app-template-create.component';
+import { StartAppInstanceComponent } from '../../../app-instance/components/start-app-instance/start-app-instance.component';
 
 @Component({
   selector: 'app-app-template-list',
   standalone: true,
   imports: [ NzButtonModule, NzDividerModule, NzGridModule, NzIconModule, NzModalModule, NzTableModule,CdkDrag,
-             CdkDropList, AppTemplateCreateComponent, RouterModule, AppTemplateCreateComponent ],
+             CdkDropList, AppTemplateCreateComponent, RouterModule, AppTemplateCreateComponent, StartAppInstanceComponent ],
   templateUrl: './app-template-list.component.html',
   styleUrl: './app-template-list.component.css'
 })
@@ -30,7 +31,7 @@ export class AppTemplateListComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
   private readonly model = inject(NzModalService);
   listOfData: GetAppTypeModel[] = [];
-
+ 
   customColumn: CustomColumn[] = [
     { name: 'Name', value: 'name', default: true, required: true, position: 'left', width: 100, fixWidth: true },
     { name: 'Description', value: 'description', default: true, width: 400 },

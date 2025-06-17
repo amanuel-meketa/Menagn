@@ -1,8 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { GetStageDefiModel } from '../../../models/Stage-Definition/GetStageDefiModel';
+import { UpdateStageDefiModel } from '../../../models/Stage-Definition/UpdateStageDefiModel';
 
 @Injectable({
   providedIn: 'root'
@@ -27,4 +28,7 @@ export class StageDefinitionService {
     return this.http.get<GetStageDefiModel>(`${this.baseUrl}/${stageId}`);
   }
   
+  updateStageDefi(id: string, stageData: UpdateStageDefiModel): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${id}`, stageData).pipe( tap(() => { this.StageDefiListUpdated.next(true); }) );
+  } 
 }

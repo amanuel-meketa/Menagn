@@ -10,6 +10,7 @@
       <tr>
         <th nzCellControl="name">Application Type Name</th>
         <th nzCellControl="description">Description</th>
+        <th nzCellControl="start">Start</th>
         <th nzCellControl="action">Action</th>
       </tr>
     </thead>
@@ -20,9 +21,15 @@
             <a [routerLink]="['/app-template-details', data.templateId]" class="username-link">{{ data.name }}</a>
           </td>        
           <td nzCellControl="description">{{ data.description }}</td>
-          <td nzCellControl="action">
+          <td nzCellControl="start">
+            <app-start-app-instance [templateId]="data.templateId"></app-start-app-instance> 
+          </td>
+          <td nzCellControl="action" style="display: flex; gap: 8px; align-items: center;">
             <nz-divider nzType="vertical"></nz-divider>
-            <button nz-button nzSize="small" (click)="deleteTemplate(data.templateId)" nzDanger>Delete</button>
+          
+            <button nz-button nzSize="small" (click)="deleteTemplate(data.templateId)" nzDanger>
+              Delete
+            </button>
           </td>
         </tr>
       }

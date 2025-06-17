@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 import { AppTypesharedService } from '../../services/app-template-shared.service';
-
 import { UpdateAppTypeMode } from '../../../../models/Application-Type/UpdateAppTypeMode';
 import { GetAppTypeModel } from '../../../../models/Application-Type/GetAppTypeModel';
 import { AppTemplateService } from '../../services/app-template.service';
