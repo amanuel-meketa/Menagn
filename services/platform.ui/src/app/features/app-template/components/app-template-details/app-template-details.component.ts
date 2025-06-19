@@ -7,7 +7,6 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
-
 import { AppTypesharedService } from '../../services/app-template-shared.service';
 import { GetAppTypeModel } from '../../../../models/Application-Type/GetAppTypeModel';
 import { UpdateAppTypeMode } from '../../../../models/Application-Type/UpdateAppTypeMode';
@@ -99,12 +98,12 @@ export class ApplicationTypeDetailsComponent implements OnInit {
           onClick: () => this.closeModal()
         }
       ],
-      nzWidth: 700,
+      nzWidth: 850,
       nzClosable: false,
       nzMaskClosable: true,
       nzOnCancel: () => this.closeModal()
-    });
-  }
+    });    
+  }  
 
   private closeModal(): void {
     this.modalService.closeAll();

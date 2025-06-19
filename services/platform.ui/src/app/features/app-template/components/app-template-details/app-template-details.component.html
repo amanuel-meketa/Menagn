@@ -1,6 +1,6 @@
 <ng-template #approvalFormTemplate>
   <nz-tabset nzType="card">
-    <nz-tab nzTitle="App template Details">
+    <nz-tab nzTitle="Template Details">
       
       <form [formGroup]="validateForm" nz-form nzLayout="horizontal">
         
@@ -32,7 +32,9 @@
         </nz-form-item>
 
       </form>
-
     </nz-tab>
+    <nz-tab [nzTitle]="'Template Stages'">
+      <!-- <app-reset-password [userId]="userId"></app-reset-password> -->
+    </nz-tab>  
   </nz-tabset>
 </ng-template>

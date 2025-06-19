@@ -23,12 +23,12 @@ import { StageDefinitionListComponent } from './features/stage-definition/compon
 import { StageDefinitionDetailsComponent } from './features/stage-definition/components/stage-definition-details/stage-definition-details.component';
 import { StageDefinitionUpdateComponent } from './features/stage-definition/components/stage-definition-update/stage-definition-update.component';
 import { StartAppInstanceComponent } from './features/app-instance/components/start-app-instance/start-app-instance.component';
+import { InstanceListComponent } from './features/app-instance/components/instance-list/instance-list.component';
 
 export const routes: Routes = 
 [
   { path: 'auth-callback', component: AuthCallbackComponent, pathMatch: 'full' },
-  { path: '', component: LayoutComponent, children: 
-    [
+  { path: '', component: LayoutComponent, children: [
       { path: 'dashboard', component: DashboardComponent, canActivate:[authGuard]},
       { path: 'register', component: UserRegisterComponent },
       { path: 'list', component: UserListComponent, canActivate:[authGuard]},
@@ -53,8 +53,8 @@ export const routes: Routes =
       { path: 'stage-definition-details/:key', component: StageDefinitionDetailsComponent},
       { path: 'stage-definition-update', component: StageDefinitionUpdateComponent},
       
-      { path: 'start-instance/:templateId', component: StartAppInstanceComponent}
-     
+      { path: 'start-instance/:templateId', component: StartAppInstanceComponent},
+      { path: 'instance-list', component: InstanceListComponent},
     ]
   },
 ];

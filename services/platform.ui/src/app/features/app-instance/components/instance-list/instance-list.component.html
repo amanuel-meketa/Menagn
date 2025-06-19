@@ -1,0 +1,88 @@
+<div nz-row [nzGutter]="16">
+  <!-- Top Summary Card -->
+  <div nz-col [nzSpan]="24">
+    <nz-card nzBordered [nzBodyStyle]="{ padding: '16px 24px' }" style="margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+      <div class="summary-wrapper">
+        <div class="summary-stats">
+          <div><span class="label">Total:</span> <strong>{{ instances.length }}</strong></div>
+          <div><span class="label">Pending:</span> <strong>{{ countByStatus('Pending') }}</strong></div>
+          <div><span class="label">Approved:</span> <strong>{{ countByStatus('Approved') }}</strong></div>
+          <div><span class="label">Rejected:</span> <strong>{{ countByStatus('Rejected') }}</strong></div>
+        </div>
+        <div class="last-updated">Last updated: {{ lastUpdated | date: 'short' }}</div>
+      </div>
+    </nz-card>
+  </div>
+
+  <!-- Filter Bar -->
+  <div nz-col [nzSpan]="24">
+    <div class="filter-bar">
+      <div class="filter-left">
+        <h3 class="section-title">Approval Instances</h3>
+      </div>
+      <div class="filter-right">
+        <nz-select
+        nzShowSearch
+        nzAllowClear
+        [(ngModel)]="selectedValue"
+        nzPlaceHolder="Select Template"
+        class="filter-select"
+      >
+        <nz-option
+          *ngFor="let tmpl of templates"
+          [nzLabel]="tmpl.label"
+          [nzValue]="tmpl.value"
+        >
+          <span nz-icon nzType="file" style="margin-right: 8px;"></span>
+          {{ tmpl.label }}
+        </nz-option>
+      </nz-select>
+
+        <nz-select
+          nzAllowClear
+          [(ngModel)]="statusFilter"
+          nzPlaceHolder="Filter by Status"
+          class="filter-select"
+        >
+          <nz-option nzLabel="Pending" nzValue="Pending"></nz-option>
+          <nz-option nzLabel="Approved" nzValue="Approved"></nz-option>
+          <nz-option nzLabel="Rejected" nzValue="Rejected"></nz-option>
+        </nz-select>
+
+        <button nz-button nzType="default" (click)="clearFilter()">Clear</button>
+      </div>
+    </div>
+
+    <p class="filter-summary">{{ filterSummary }}</p>
+  </div>
+
+  <!-- List of Instances -->
+  <div nz-col [nzSpan]="24">
+      <nz-list
+        nzItemLayout="vertical"
+        nzBordered
+        [nzLoading]="isLoading"
+      >
+        <nz-list-item
+          *ngFor="let inst of filteredInstances()"
+          style="cursor: pointer;"
+        >
+          <nz-list-item-meta
+            [nzTitle]="inst.templateId"
+            [nzDescription]="'Requested by ' + inst.createdBy + ' | ' + (inst.createdAt | date: 'mediumDate')"
+            [nzAvatar]="avatarTpl"
+          >
+          </nz-list-item-meta>
+        </nz-list-item>
+
+        <ng-template #avatarTpl>
+          <nz-avatar
+            nzIcon="file-done"
+            nzSize="large"
+            style="background-color: #1890ff;"
+          ></nz-avatar>
+        </ng-template>
+      </nz-list>
+ 
+  </div>
+</div>
