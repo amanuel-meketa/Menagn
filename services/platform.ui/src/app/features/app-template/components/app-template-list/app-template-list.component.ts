@@ -1,25 +1,23 @@
-import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ChangeDetectorRef, Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
-import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { GetAppTypeModel } from '../../../../models/Application-Type/GetAppTypeModel';
 import { CustomColumn } from '../../../../shared/model/custom-column';
 import { Subject, takeUntil } from 'rxjs';
 import { AppTemplateService } from '../../services/app-template.service';
 import { AppTemplateCreateComponent } from '../app-template-create/app-template-create.component';
-import { StartAppInstanceComponent } from '../../../app-instance/components/start-app-instance/start-app-instance.component';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-app-template-list',
   standalone: true,
-  imports: [ NzButtonModule, NzDividerModule, NzGridModule, NzIconModule, NzModalModule, NzTableModule,CdkDrag,
-             CdkDropList, AppTemplateCreateComponent, RouterModule, AppTemplateCreateComponent, StartAppInstanceComponent ],
+  imports: [ NzButtonModule, NzGridModule, NzIconModule, NzModalModule, NzCardModule, CommonModule, RouterModule, 
+             AppTemplateCreateComponent ],
   templateUrl: './app-template-list.component.html',
   styleUrl: './app-template-list.component.css'
 })
@@ -84,47 +82,6 @@ export class AppTemplateListComponent implements OnInit, OnDestroy {
        },
       nzCancelText: 'No',
     });
-  }
-
-  drop(event: CdkDragDrop<CustomColumn[]>): void {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
-    }
-
-    this.fix = this.fix.map(item => ({ ...item, default: true }));
-    this.notFix = this.notFix.map(item => ({ ...item, default: false }));
-
-    this.cdr.markForCheck();
-  }
-
-  deleteCustom(value: CustomColumn, index: number): void {
-    value.default = false;
-    this.notFix = [...this.notFix, value];
-    this.fix.splice(index, 1);
-    this.cdr.markForCheck();
-  }
-
-  addCustom(value: CustomColumn, index: number): void {
-    value.default = true;
-    this.fix = [...this.fix, value];
-    this.notFix.splice(index, 1);
-    this.cdr.markForCheck();
-  }
-
-  showModal(): void {
-    this.isVisible = true;
-  }
-
-  handleOk(): void {
-    this.customColumn = [...this.title, ...this.fix, ...this.notFix, ...this.footer];
-    this.isVisible = false;
-    this.cdr.markForCheck();
-  }
-
-  handleCancel(): void {
-    this.isVisible = false;
   }
 
   ngOnDestroy(): void {
