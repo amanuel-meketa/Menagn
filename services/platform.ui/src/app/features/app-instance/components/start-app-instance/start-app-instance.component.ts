@@ -3,16 +3,15 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { AppInstanceService } from '../../services/app-instance.service';
 import { ApprovalRequest } from '../../../../models/Approval-Instances/ApprovalRequest';
 
 @Component({
   selector: 'app-start-app-instance',
   standalone: true,
-  imports: [ NzButtonModule, NzModalModule, ReactiveFormsModule, NzFormModule, NzInputModule ],
+  imports: [ NzButtonModule, ReactiveFormsModule, NzFormModule ],
   templateUrl: './start-app-instance.component.html',
   styleUrl: './start-app-instance.component.css'
 })

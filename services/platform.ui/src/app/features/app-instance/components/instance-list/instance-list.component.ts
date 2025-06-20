@@ -5,17 +5,8 @@ import { NzListModule } from 'ng-zorro-antd/list';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
-import { NzMenuModule } from 'ng-zorro-antd/menu';
-import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
-import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
-import { NzCollapseModule } from 'ng-zorro-antd/collapse';
-import { NzStepsModule } from 'ng-zorro-antd/steps';
-import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzGridModule } from 'ng-zorro-antd/grid';
-import { NzTypographyModule } from 'ng-zorro-antd/typography';
-import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzCardModule } from 'ng-zorro-antd/card';
 
 import { AppInstanceService } from '../../services/app-instance.service';
@@ -23,30 +14,11 @@ import { AppInstanceService } from '../../services/app-instance.service';
 @Component({
   selector: 'app-instance-list',
   standalone: true,
-  imports: [
-    CommonModule,
-    NzCardModule,
-    FormsModule,
-    NzListModule,
-    NzIconModule,
-    NzSelectModule,
-    NzAvatarModule,
-    NzMenuModule,
-    NzPageHeaderModule,
-    NzSpaceModule,
-    NzTagModule,
-    NzDescriptionsModule,
-    NzCollapseModule,
-    NzStepsModule,
-    NzButtonModule,
-    NzGridModule,
-    NzTypographyModule,
-    NzBadgeModule
-  ],
+  imports: [ CommonModule, NzCardModule, FormsModule, NzListModule, NzIconModule, NzSelectModule, NzAvatarModule,
+             NzTagModule, NzGridModule],
   templateUrl: './instance-list.component.html',
   styleUrls: ['./instance-list.component.css']
 })
-
 
 export class InstanceListComponent implements OnInit {
   private appInstanceService = inject(AppInstanceService);
@@ -137,6 +109,4 @@ export class InstanceListComponent implements OnInit {
         return 'info-circle';
     }
   }
-  
-  
 }
