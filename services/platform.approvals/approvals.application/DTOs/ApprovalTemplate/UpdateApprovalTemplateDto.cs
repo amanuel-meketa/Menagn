@@ -2,5 +2,8 @@
 
 namespace approvals.application.DTOs.ApplicationType
 {
-    public class UpdatAppemplateDto : AppTemplateDto {}
+    public class UpdatAppemplateDto : AppTemplateDto 
+    {
+        public bool? IsActive { get; set; }
+    }
 }
