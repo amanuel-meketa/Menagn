@@ -22,21 +22,17 @@
       </div>
       <div class="filter-right">
         <nz-select
-        nzShowSearch
-        nzAllowClear
-        [(ngModel)]="selectedValue"
-        nzPlaceHolder="Select Template"
-        class="filter-select"
-      >
-        <nz-option
-          *ngFor="let tmpl of templates"
-          [nzLabel]="tmpl.label"
-          [nzValue]="tmpl.value"
+          nzShowSearch
+          nzAllowClear
+          [(ngModel)]="selectedValue"
+          nzPlaceHolder="Select Template"
+          class="filter-select"
         >
-          <span nz-icon nzType="file" style="margin-right: 8px;"></span>
-          {{ tmpl.label }}
-        </nz-option>
-      </nz-select>
+          <nz-option *ngFor="let tmpl of templates" [nzLabel]="tmpl.label" [nzValue]="tmpl.value">
+            <span nz-icon nzType="file" style="margin-right: 8px;"></span>
+            {{ tmpl.label }}
+          </nz-option>
+        </nz-select>
 
         <nz-select
           nzAllowClear
@@ -58,31 +54,36 @@
 
   <!-- List of Instances -->
   <div nz-col [nzSpan]="24">
-      <nz-list
-        nzItemLayout="vertical"
-        nzBordered
-        [nzLoading]="isLoading"
-      >
-        <nz-list-item
-          *ngFor="let inst of filteredInstances()"
-          style="cursor: pointer;"
+    <nz-list
+      nzItemLayout="vertical"
+      nzBordered
+      [nzLoading]="isLoading"
+    >
+      <nz-list-item *ngFor="let inst of filteredInstances()" style="cursor: pointer;">
+        <nz-list-item-meta
+          [nzTitle]="inst.templateId"
+          [nzDescription]="'Requested by ' + inst.createdBy + ' | ' + (inst.createdAt | date: 'mediumDate')"
+          [nzAvatar]="avatarTpl"
         >
-          <nz-list-item-meta
-            [nzTitle]="inst.templateId"
-            [nzDescription]="'Requested by ' + inst.createdBy + ' | ' + (inst.createdAt | date: 'mediumDate')"
-            [nzAvatar]="avatarTpl"
-          >
-          </nz-list-item-meta>
-        </nz-list-item>
+        </nz-list-item-meta>
 
-        <ng-template #avatarTpl>
-          <nz-avatar
-            nzIcon="file-done"
-            nzSize="large"
-            style="background-color: #1890ff;"
-          ></nz-avatar>
-        </ng-template>
-      </nz-list>
- 
+        <!-- Status Tag -->
+        <nz-tag
+          [nzColor]="getStatusColor(inst.overallStatus)"
+          style="font-weight: 1000; margin-top: 20px;"
+        >
+          <span nz-icon [nzType]="getStatusIcon(inst.overallStatus)" style="margin-right: 6px;"></span>
+          {{ inst.overallStatus }}
+        </nz-tag>
+      </nz-list-item>
+
+      <!-- Define avatar template -->
+      <ng-template #avatarTpl>
+        <nz-avatar
+          nzIcon="file-done"
+          nzSize="large"
+          style="background-color: #1890ff;"></nz-avatar>
+      </ng-template>
+    </nz-list>
   </div>
 </div>

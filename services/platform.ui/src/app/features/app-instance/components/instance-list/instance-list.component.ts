@@ -111,5 +111,32 @@ export class InstanceListComponent implements OnInit {
     if (this.statusFilter) parts.push(`Status: ${this.statusFilter}`);
     return parts.length > 0 ? 'Filtering by ' + parts.join(', ') : 'Showing all instances';
   }
-
+  
+  getStatusColor(status: string): string {
+    switch (status) {
+      case 'Pending':
+        return 'orange';
+      case 'Approved':
+        return 'green';
+      case 'Rejected':
+        return 'red';
+      default:
+        return 'blue';
+    }
+  }
+  
+  getStatusIcon(status: string): string {
+    switch (status) {
+      case 'Pending':
+        return 'clock-circle';
+      case 'Approved':
+        return 'check-circle';
+      case 'Rejected':
+        return 'close-circle';
+      default:
+        return 'info-circle';
+    }
+  }
+  
+  
 }
