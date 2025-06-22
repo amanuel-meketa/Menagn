@@ -1,5 +1,4 @@
-﻿using approvals.application.DTOs.ApplicationType;
-using approvals.application.DTOs.ApprovalInstance;
+﻿using approvals.application.DTOs.ApprovalInstance;
 using Microsoft.AspNetCore.Mvc;
 
 namespace approvals.api.Controllers
@@ -47,6 +46,12 @@ namespace approvals.api.Controllers
         {
             await _appInstanceservice.DeleteAsync(id);
             return NoContent();
+        }
+
+        [HttpGet("{template-id}/instances")]
+        public async Task<ActionResult<IEnumerable<GetApprovalInstanceDto>>> GetByTemplateIdAsync(Guid templateId)
+        {
+            return Ok(await _appInstanceservice.GetByTemplateIdAsync(templateId));
         }
     }
 }

@@ -8,6 +8,6 @@ namespace approvals.application.DTOs.ApplicationType
         public string? Name { get; set; }
         public string? Description { get; set; }
         public bool? IsActive { get; set; }
-        public List<GetStageDefinitionDto> StageDefinitions { get; set; } = new();
+        public IEnumerable<GetStageDefinitionDto> StageDefinitions { get; set; }
     }
 }

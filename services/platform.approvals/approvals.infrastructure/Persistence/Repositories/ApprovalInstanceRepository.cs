@@ -19,6 +19,11 @@ namespace approvals.infrastructure.Persistence.Repositories
            return  await _dbContext.ApprovalInstances.Include(t => t.StageInstances).FirstOrDefaultAsync(t => t.InstanceId == id);
         }
 
+        public async Task<IEnumerable<ApprovalInstance?>> GetByTemplateIdAsync(Guid templateId)
+        {
+            return await _dbContext.ApprovalInstances.Where(t => t.TemplateId == templateId).ToListAsync();
+        }
+
         public async Task<ApprovalInstance> CreateApprovalInstanceAsync(Guid templateId, Guid createdBy, List<StageDefinition> stageDefinitions)
         {
             var instance = new ApprovalInstance

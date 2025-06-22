@@ -90,6 +90,10 @@ public class ApprovalInstanceService : IApprovalInstanceService
         await _unitOfWork.CommitAsync();
 
         return instance.InstanceId;
+    }
 
+    Task<IEnumerable<ApprovalInstance?>> IApprovalInstanceService.GetByTemplateIdAsync(Guid templateId)
+    {
+        return _approvalInstanceRepository.GetByTemplateIdAsync(templateId);
     }
 }

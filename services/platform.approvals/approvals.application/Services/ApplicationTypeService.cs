@@ -7,14 +7,12 @@ using AutoMapper;
 public class ApprovalTemplateService : IApprovalTemplateService
 {
     private readonly IApprovalRepository _repository;
-    private readonly IApprovalInstanceRepository _instance;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public ApprovalTemplateService(IApprovalRepository repository, IApprovalInstanceRepository instance, IUnitOfWork unitOfWork, IMapper mapper)
+    public ApprovalTemplateService(IApprovalRepository repository, IUnitOfWork unitOfWork, IMapper mapper)
     {
         _repository = repository;
-        _instance = instance;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
@@ -46,7 +44,6 @@ public class ApprovalTemplateService : IApprovalTemplateService
         if (entity == null) return Guid.Empty;
 
         _mapper.Map(dto, entity);
-
         await _repository.UpdateAsync(entity);
         await _unitOfWork.CommitAsync();
         return id;

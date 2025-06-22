@@ -17,15 +17,13 @@ namespace approvals.api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetStageDefinitionDto>>> GetAll()
         {
-            var list = await _stageDefinService.GetAllAsync();
-            return Ok(list);
+            return Ok(await _stageDefinService.GetAllAsync());
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<GetStageDefinitionDto>> Get(Guid id)
         {
-            var item = await _stageDefinService.GetByIdAsync(id);
-            return Ok(item); 
+            return Ok(await _stageDefinService.GetByIdAsync(id)); 
         }
 
         [HttpPost]
@@ -55,11 +53,10 @@ namespace approvals.api.Controllers
             return await _stageDefinService.ApproveStageAsync(request.InstanceId, request.ApproverId, request.Comment);
         }
 
-        [HttpGet("{templateId}/stages" )]
+        [HttpGet("{template-id}/stages")]
         public async Task<ActionResult<IEnumerable<GetStageDefinitionDto>>> GetStagesByTempIdAsync(Guid templateId)
         {
-            var stages = await _stageDefinService.GetStagesByTempIdAsync(templateId);
-            return Ok(stages);
+            return Ok(await _stageDefinService.GetStagesByTempIdAsync(templateId));
         }
     }
 }
