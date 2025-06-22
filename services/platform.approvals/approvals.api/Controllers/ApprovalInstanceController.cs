@@ -49,9 +49,9 @@ namespace approvals.api.Controllers
         }
 
         [HttpGet("{template-id}/instances")]
-        public async Task<ActionResult<IEnumerable<GetApprovalInstanceDto>>> GetByTemplateIdAsync(Guid templateId)
+        public async Task<ActionResult<IEnumerable<GetApprovalInstanceDto>>> GetByTemplateIdAsync(Guid emplate-id)
         {
-            return Ok(await _appInstanceservice.GetByTemplateIdAsync(templateId));
+            return Ok(await _appInstanceservice.GetByTemplateIdAsync(emplate-id));
         }
     }
 }

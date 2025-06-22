@@ -54,9 +54,9 @@ namespace approvals.api.Controllers
         }
 
         [HttpGet("{template-id}/stages")]
-        public async Task<ActionResult<IEnumerable<GetStageDefinitionDto>>> GetStagesByTempIdAsync(Guid templateId)
+        public async Task<ActionResult<IEnumerable<GetStageDefinitionDto>>> GetStagesByTempIdAsync(Guid emplate-id)
         {
-            return Ok(await _stageDefinService.GetStagesByTempIdAsync(templateId));
+            return Ok(await _stageDefinService.GetStagesByTempIdAsync(emplate-id));
         }
     }
 }
