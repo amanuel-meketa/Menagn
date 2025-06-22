@@ -8,4 +8,5 @@ public interface IStageDefinitionService
     Task<Guid> UpdateAsync(Guid id, UpdateStageDefinitionDto dto);
     Task<bool> DeleteAsync(Guid id);
     Task<Guid> ApproveStageAsync(Guid instanceId, Guid approverId, string comment);
+    Task<IEnumerable<GetStageDefinitionDto?>> GetStagesByTempIdAsync(Guid templateId);
 }

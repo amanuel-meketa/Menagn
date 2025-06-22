@@ -91,4 +91,10 @@ public class StageDefinitionService : IStageDefinitionService
         await _unitOfWork.CommitAsync();
         return instanceUpdate.InstanceId;
     }
+
+    public async Task<IEnumerable<GetStageDefinitionDto?>> GetStagesByTempIdAsync(Guid tempId)
+    {
+        var result =  await _repository.GetStagesByTempIdAsync(tempId);
+        return _mapper.Map<IEnumerable<GetStageDefinitionDto?>>(result);
+    }
 }

@@ -1,5 +1,4 @@
-﻿using approvals.application.DTOs.ApplicationType;
-using approvals.application.DTOs.ApprovalInstance;
+﻿using approvals.application.DTOs.ApprovalInstance;
 
 namespace approvals.application.DTOs.StageDefinition
 {
@@ -8,10 +7,8 @@ namespace approvals.application.DTOs.StageDefinition
 
         public Guid ApprovalInstanceId { get; set; }
         public GetApprovalInstanceDto ApprovalInstance { get; set; } = null!;
-
         public Guid StageDefId { get; set; }
         public List<GetStageDefinitionDto> StageDefinition { get; set; } = null!;
-
         public string StageName { get; set; } = string.Empty;
         public int SequenceOrder { get; set; }
         public string? Status { get; set; }

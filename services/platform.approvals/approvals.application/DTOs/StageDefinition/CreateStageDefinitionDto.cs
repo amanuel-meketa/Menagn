@@ -1,6 +1,4 @@
-﻿using approvals.application.DTOs.Common;
-
-namespace approvals.application.DTOs.StageDefinition
+﻿namespace approvals.application.DTOs.StageDefinition
 {
     public class CreateStageDefinitionDto 
     {

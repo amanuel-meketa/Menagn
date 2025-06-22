@@ -1,6 +1,4 @@
-﻿using approvals.application.DTOs.ApplicationType;
-using approvals.application.DTOs.ApprovalInstance;
-using approvals.application.DTOs.StageDefinition;
+﻿using approvals.application.DTOs.ApprovalInstance;
 using approvals.application.Interfaces;
 using approvals.application.Interfaces.Repository;
 using approvals.domain.Entities;
@@ -63,8 +61,6 @@ public class ApprovalInstanceService : IApprovalInstanceService
     {
         // 1. Get the template with stage definitions - with AsNoTracking already done in repo
         var templateDto = await _approvalTemplateService.GetByIdAsync(templateId);
-
-        // Map to domain, no tracked StageDefinitions
         var template = _mapper.Map<ApprovalTemplate>(templateDto);
 
         // 2. Create new ApprovalInstance with StageInstances referencing StageDefinitions by Id only

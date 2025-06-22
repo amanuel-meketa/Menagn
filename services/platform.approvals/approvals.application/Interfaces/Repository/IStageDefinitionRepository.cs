@@ -3,5 +3,8 @@ using approvals.shared.Repositories;
 
 namespace approvals.application.Interfaces.Repository
 {
-    public interface IStageDefinitionRepository : IGenericRepository<StageDefinition> {}
+    public interface IStageDefinitionRepository : IGenericRepository<StageDefinition> 
+    {
+        Task<IEnumerable<StageDefinition?>> GetStagesByTempIdAsync(Guid tempId);
+    }
 }
