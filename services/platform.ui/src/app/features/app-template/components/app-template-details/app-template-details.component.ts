@@ -9,7 +9,6 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { AppTypesharedService } from '../../services/app-template-shared.service';
 import { GetAppTypeModel } from '../../../../models/Application-Type/GetAppTypeModel';
-import { UpdateAppTypeMode } from '../../../../models/Application-Type/UpdateAppTypeMode';
 import { RoleAssignedUsersComponent } from '../../../role/components/role-assigned-users/role-assigned-users.component';
 import { AppTemplateService } from '../../services/app-template.service';
 

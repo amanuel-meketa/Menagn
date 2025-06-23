@@ -1,7 +1,5 @@
 import { Component, inject, Input } from '@angular/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
-import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzStepsModule } from 'ng-zorro-antd/steps';
 import { NzTagModule } from 'ng-zorro-antd/tag';
@@ -14,7 +12,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 @Component({
   selector: 'app-template-stages',
   standalone: true,
-  imports: [ NzButtonModule, NzIconModule, NzToolTipModule, NzModalModule, NzDividerModule, NzStepsModule, NzDescriptionsModule, NzTagModule, CommonModule ],
+  imports: [ NzButtonModule, NzIconModule, NzToolTipModule, NzModalModule, NzStepsModule, NzTagModule, CommonModule ],
   templateUrl: './template-stages.component.html',
   styleUrl: './template-stages.component.css'
 })
