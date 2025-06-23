@@ -31,4 +31,10 @@ export class StageDefinitionService {
   updateStageDefi(id: string, stageData: UpdateStageDefiModel): Observable<any> {
     return this.http.put(`${this.baseUrl}/${id}`, stageData).pipe( tap(() => { this.StageDefiListUpdated.next(true); }) );
   } 
+
+  getStagesByTempId(tempId: string): Observable<GetStageDefiModel[]> {
+    return this.http.get<GetStageDefiModel[]>(`${this.baseUrl}/${tempId}/stages`, {
+      headers: this.jsonHeaders
+    });
+  } 
 }

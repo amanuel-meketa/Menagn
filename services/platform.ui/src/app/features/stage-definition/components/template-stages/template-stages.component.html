@@ -1,0 +1,127 @@
+<button nz-button nzType="default" (click)="openModal()" style="min-width: 120px;">
+    <span>Stages</span>
+  </button>
+  
+  <nz-modal
+    nzDraggable
+    nzCentered
+    [(nzVisible)]="isVisible"
+    nzTitle="Stage Definition Flow"
+    (nzOnCancel)="handleCancel()"
+    [nzStyle]="{ width: '1000px', maxHeight: '700px' }"
+    [nzBodyStyle]="{ padding: '32px 40px', maxHeight: '600px', overflow: 'hidden' }"
+    nzCancelText="Close"
+  >
+    <ng-container *nzModalContent>
+      <div
+        style="
+          display: flex;
+          gap: 40px;
+          height: 100%;
+          min-height: 560px;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        "
+      >
+        <!-- Left: Vertical Steps -->
+        <div
+          style="
+            flex: 1;
+            max-height: 50%;
+            overflow-y: auto;
+            border-right: 1px solid #d9d9d9;
+            padding-right: 20px;
+            box-sizing: border-box;
+            background-color: #fff;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+          "
+        >
+          <nz-steps
+            nzDirection="vertical"
+            [nzCurrent]="index"
+            (nzIndexChange)="onIndexChange($event)"
+            *ngIf="stages.length > 0"
+            style="font-size: 15px;"
+            nzSize="small"
+          >
+            <nz-step
+              *ngFor="let stage of stages; let i = index"
+              [nzTitle]="stage.stageName"
+              [nzDescription]="stage.description"
+              [nzDisabled]="false"
+              [nzStatus]="i === index ? 'process' : 'wait'"
+            ></nz-step>
+          </nz-steps>
+          <p
+            *ngIf="stages.length === 0"
+            style="color: #999; font-style: italic; padding: 20px; text-align: center;"
+          >
+            No stages available.
+          </p>
+        </div>
+  
+        <!-- Right: Stage Definition Details -->
+        <div
+          style="
+            flex: 1.2;
+            padding: 24px 32px;
+            border-radius: 8px;
+            background-color: #fafafa;
+            box-shadow: 0 3px 8px rgb(0 0 0 / 0.12);
+            overflow-y: auto;
+            max-height: 50%;
+            box-sizing: border-box;
+          "
+        >
+          <h3
+            style="
+              margin-bottom: 28px;
+              font-weight: 500;
+              font-size: 22px;
+              color: #222222;
+              border-bottom: 2px solid #1890ff;
+              padding-bottom: 8px;
+            "
+          >
+            Stage Details:
+            <span style="color: #1890ff;">{{ selectedStage.stageName || 'N/A' }}</span>
+          </h3>
+  
+          <nz-descriptions
+            [nzColumn]="1"
+            nzBordered
+            *ngIf="selectedStage.stageDefId"
+            style="font-size: 15px; color: #444;"
+          >
+            
+           
+            <nz-descriptions-item nzTitle="Assignment Key">
+              {{ selectedStage.assignmentKey }}
+            </nz-descriptions-item>
+           
+            <nz-descriptions-item nzTitle="Status">
+              <nz-tag
+                [nzColor]="getStatusColor()"
+                style="font-weight: 500; font-size: 14px; padding: 3px 12px;"
+                >{{ getStatus() }}</nz-tag
+              >
+            </nz-descriptions-item>
+          </nz-descriptions>
+  
+          <p
+            *ngIf="!selectedStage.stageDefId"
+            style="
+              color: #888;
+              font-style: italic;
+              margin-top: 32px;
+              text-align: center;
+              font-size: 15px;
+            "
+          >
+            Select a stage to see details.
+          </p>
+        </div>
+      </div>
+    </ng-container>
+  </nz-modal>
+  

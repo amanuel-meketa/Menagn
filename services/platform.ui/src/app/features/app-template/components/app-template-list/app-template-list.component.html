@@ -5,13 +5,10 @@
 <div style="display: flex; gap: 24px; flex-wrap: wrap;">
   <ng-container *ngFor="let data of listOfData">
     
-    <!-- Action Templates -->
-    <ng-template #stages>
-      <button nz-button nzType="link" nzSize="small">
-        <span nz-icon nzType="apartment" style="margin-right: 4px;"></span> Stages
-      </button>
+    <ng-template #stages let-templateId>
+      <app-template-stages [templateId]="data.templateId"></app-template-stages>
     </ng-template>
-
+    
     <ng-template #edit>
       <button nz-button nzType="link" nzSize="small">
         <span nz-icon nzType="edit" style="margin-right: 4px;"></span> Form 

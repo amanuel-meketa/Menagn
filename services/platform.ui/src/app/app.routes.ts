@@ -24,6 +24,7 @@ import { StageDefinitionDetailsComponent } from './features/stage-definition/com
 import { StageDefinitionUpdateComponent } from './features/stage-definition/components/stage-definition-update/stage-definition-update.component';
 import { StartAppInstanceComponent } from './features/app-instance/components/start-app-instance/start-app-instance.component';
 import { InstanceListComponent } from './features/app-instance/components/instance-list/instance-list.component';
+import { TemplateStagesComponent } from './features/stage-definition/components/template-stages/template-stages.component';
 
 export const routes: Routes = 
 [
@@ -52,6 +53,7 @@ export const routes: Routes =
       { path: 'stage-definition-list', component: StageDefinitionListComponent},
       { path: 'stage-definition-details/:key', component: StageDefinitionDetailsComponent},
       { path: 'stage-definition-update', component: StageDefinitionUpdateComponent},
+      { path: 'template-stages/templateId:', component: TemplateStagesComponent},
       
       { path: 'start-instance/:templateId', component: StartAppInstanceComponent},
       { path: 'instance-list', component: InstanceListComponent},

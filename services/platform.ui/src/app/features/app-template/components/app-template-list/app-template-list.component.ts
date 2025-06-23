@@ -14,12 +14,13 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { CommonModule } from '@angular/common';
 import { AppInstanceService } from '../../../app-instance/services/app-instance.service';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { TemplateStagesComponent } from '../../../stage-definition/components/template-stages/template-stages.component';
 
 @Component({
   selector: 'app-app-template-list',
   standalone: true,
   imports: [ NzButtonModule, NzGridModule, NzIconModule, NzModalModule, NzCardModule, CommonModule, RouterModule, 
-             AppTemplateCreateComponent, NzTagModule ],
+             AppTemplateCreateComponent, NzTagModule, TemplateStagesComponent ],
   templateUrl: './app-template-list.component.html',
   styleUrl: './app-template-list.component.css'
 })
@@ -103,6 +104,12 @@ export class AppTemplateListComponent implements OnInit, OnDestroy {
     });
   }
   
+  selectedTemplateId: string | null = null;
+  openStageModal(templateId: string) {
+    this.selectedTemplateId = templateId;
+    this.isVisible = true;
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
