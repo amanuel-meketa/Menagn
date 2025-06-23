@@ -1,4 +1,3 @@
-/* Set modal size and scrollable body */
 .custom-modal .ant-modal {
     width: 800px !important;
     max-height: 600px !important;
@@ -8,5 +7,12 @@
     height: 500px !important;
     overflow: auto !important;
     padding: 16px;
+  }
+  nz-step {
+    transition: background 0.3s ease;
+  }
+  
+  nz-tag {
+    border-radius: 4px;
   }
   

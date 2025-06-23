@@ -5,7 +5,7 @@
 <div style="display: flex; gap: 24px; flex-wrap: wrap;">
   <ng-container *ngFor="let data of listOfData">
     
-    <ng-template #stages let-templateId>
+    <ng-template #stages>
       <app-template-stages [templateId]="data.templateId"></app-template-stages>
     </ng-template>
     
