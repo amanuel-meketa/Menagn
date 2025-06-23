@@ -36,7 +36,8 @@ export class ApplicationTypeDetailsComponent implements OnInit {
   validateForm = this.fb.group({
     templateId: ['', Validators.required],
     name: ['', Validators.required],
-    description: ['']
+    description: [''],
+    isActive: true
   });
 
   @ViewChild('approvalFormTemplate', { static: true }) approvalFormTemplate!: TemplateRef<any>;
@@ -74,10 +75,11 @@ export class ApplicationTypeDetailsComponent implements OnInit {
 
     const formData = this.validateForm.getRawValue();
 
-    const updatedAppType: UpdateAppTypeMode = {
+    const updatedAppType: GetAppTypeModel = {
       templateId: formData.templateId,
       name: formData.name,
-      description: formData.description || ''
+      description: formData.description || '',
+      isActive: formData.isActive
     };
 
     this.appTypeSharedService.setAppType(updatedAppType);

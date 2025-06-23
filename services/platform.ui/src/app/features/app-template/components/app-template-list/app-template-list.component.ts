@@ -12,18 +12,21 @@ import { AppTemplateService } from '../../services/app-template.service';
 import { AppTemplateCreateComponent } from '../app-template-create/app-template-create.component';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { CommonModule } from '@angular/common';
+import { AppInstanceService } from '../../../app-instance/services/app-instance.service';
+import { NzTagModule } from 'ng-zorro-antd/tag';
 
 @Component({
   selector: 'app-app-template-list',
   standalone: true,
   imports: [ NzButtonModule, NzGridModule, NzIconModule, NzModalModule, NzCardModule, CommonModule, RouterModule, 
-             AppTemplateCreateComponent ],
+             AppTemplateCreateComponent, NzTagModule ],
   templateUrl: './app-template-list.component.html',
   styleUrl: './app-template-list.component.css'
 })
 
 export class AppTemplateListComponent implements OnInit, OnDestroy {
   private readonly _appTemplateService = inject(AppTemplateService);
+  private readonly _appInstanceeService = inject(AppInstanceService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly message = inject(NzMessageService);
   private readonly destroy$ = new Subject<void>();
@@ -54,15 +57,31 @@ export class AppTemplateListComponent implements OnInit, OnDestroy {
       () => this.loadAppTypeList());
    }
 
-  private loadAppTypeList(): void {
+   private loadAppTypeList(): void {
     this._appTemplateService.getAppTemplateList().subscribe({
       next: (data: GetAppTypeModel[]) => {
         this.listOfData = data;
-        this.cdr.markForCheck();
+  
+        data.forEach(template => {
+          this._appInstanceeService.getInstanceByTempId(template.templateId).subscribe(instances => {
+            const total = instances.length;
+            const active = instances.filter(i => i.overallStatus === 'Pending').length;
+  
+            // Update the corresponding template in listOfData
+            const item = this.listOfData.find(t => t.templateId === template.templateId);
+            if (item) {
+              item.totalInstances = total;
+              item.activeInstances = active;
+            }
+  
+            // Manually trigger change detection
+            this.cdr.markForCheck();
+          });
+        });
       },
       error: () => this.message.error('Failed to load application types.')
     });
-  }
+  }  
 
   deleteTemplate(templateId: string): void {
     this.model.confirm({
@@ -83,7 +102,7 @@ export class AppTemplateListComponent implements OnInit, OnDestroy {
       nzCancelText: 'No',
     });
   }
-
+  
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

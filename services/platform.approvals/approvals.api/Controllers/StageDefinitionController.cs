@@ -53,10 +53,10 @@ namespace approvals.api.Controllers
             return await _stageDefinService.ApproveStageAsync(request.InstanceId, request.ApproverId, request.Comment);
         }
 
-        [HttpGet("{template-id}/stages")]
-        public async Task<ActionResult<IEnumerable<GetStageDefinitionDto>>> GetStagesByTempIdAsync(Guid emplate-id)
+        [HttpGet("{templateId}/stages")]
+        public async Task<ActionResult<IEnumerable<GetStageDefinitionDto>>> GetStagesByTempIdAsync(Guid templateId)
         {
-            return Ok(await _stageDefinService.GetStagesByTempIdAsync(emplate-id));
+            return Ok(await _stageDefinService.GetStagesByTempIdAsync(templateId));
         }
     }
 }

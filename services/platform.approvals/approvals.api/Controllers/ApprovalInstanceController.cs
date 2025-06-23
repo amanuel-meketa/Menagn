@@ -48,10 +48,10 @@ namespace approvals.api.Controllers
             return NoContent();
         }
 
-        [HttpGet("{template-id}/instances")]
-        public async Task<ActionResult<IEnumerable<GetApprovalInstanceDto>>> GetByTemplateIdAsync(Guid emplate-id)
+        [HttpGet("{templateId}/instances")]
+        public async Task<ActionResult<IEnumerable<GetApprovalInstanceDto>>> GetByTemplateIdAsync(Guid templateId)
         {
-            return Ok(await _appInstanceservice.GetByTemplateIdAsync(emplate-id));
+            return Ok(await _appInstanceservice.GetByTemplateIdAsync(templateId));
         }
     }
 }

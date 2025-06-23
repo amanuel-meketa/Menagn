@@ -16,6 +16,12 @@ export class AppInstanceService {
     return this.http.get<InstanceList[]>(`${this.baseUrl}`, { headers: this.jsonHeaders });
   }
 
+  getInstanceByTempId(tempId: string): Observable<InstanceList[]> {
+    return this.http.get<InstanceList[]>(`${this.baseUrl}/${tempId}/instances`, {
+      headers: this.jsonHeaders
+    });
+  }  
+
   startApprovalInstance(data: ApprovalRequest): Observable<any> {
     return this.http.post(`${this.baseUrl}/start`, data, { headers: this.jsonHeaders });
   }
