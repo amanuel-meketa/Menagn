@@ -4,10 +4,12 @@ import { Observable, tap } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { GetStageDefiModel } from '../../../models/Stage-Definition/GetStageDefiModel';
 import { UpdateStageDefiModel } from '../../../models/Stage-Definition/UpdateStageDefiModel';
+import { AddStageDefiModel } from '../../../models/Stage-Definition/AddStageDefiModel';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class StageDefinitionService {
 
   private readonly http = inject(HttpClient);
@@ -37,4 +39,8 @@ export class StageDefinitionService {
       headers: this.jsonHeaders
     });
   } 
+
+  addStage(stage: AddStageDefiModel): Observable<void> {
+    return this.http.post<void>(this.baseUrl, stage, { headers: this.jsonHeaders });
+  }  
 }

@@ -15,12 +15,13 @@ import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { StageDefinitinCreateComponent } from '../stage-definitin-create/stage-definitin-create.component';
 
 @Component({
   selector: 'app-stage-definition-list',
   standalone: true,
   imports: [ NzTreeModule, NzIconModule, NzDropDownModule, NzMenuModule, CommonModule, NzCardModule, NzTagModule, 
-             NzSpinModule,NzEmptyModule, NzDividerModule, NzButtonModule, NzToolTipModule, RouterModule ],
+             NzSpinModule,NzEmptyModule, NzDividerModule, NzButtonModule, NzToolTipModule, RouterModule, StageDefinitinCreateComponent ],
   templateUrl: './stage-definition-list.component.html',
   styleUrls: ['./stage-definition-list.component.scss']
 })

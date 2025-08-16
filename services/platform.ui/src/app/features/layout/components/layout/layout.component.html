@@ -7,7 +7,7 @@
     [nzCollapsedWidth]="80" 
     [nzWidth]="250"
   >
-    <div class="logo" style="color: rgb(19, 13, 13);"><h1> Menagn </h1></div>
+    <div class="logo" style="color: rgb(19, 13, 13);"><h1> DEBELO </h1></div>
     <ul nz-menu nzTheme="light" nzMode="inline">
       <li nz-menu-item nzMatchRouter>
         <a routerLink="/dashboard">
@@ -55,6 +55,12 @@
       </li>
       <li nz-submenu nzTitle="Stage Definitions" nzIcon="appstore">
         <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/stage-definition-create">
+              <span nz-icon nzType="appstore-add"></span>
+              <span>Add Stage Definitions</span>
+            </a>
+          </li>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/stage-definition-list">
               <span nz-icon nzType="appstore-add"></span>
