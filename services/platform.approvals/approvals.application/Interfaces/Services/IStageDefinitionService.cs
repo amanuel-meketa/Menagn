@@ -2,7 +2,7 @@
 
 public interface IStageDefinitionService
 {
-    Task<Guid> CreateApplicationTypeAsync(CreateStageDefinitionDto dto);
+    Task<bool> CreateApplicationTypeAsync(CreateStageDefinitionDto[] dto);
     Task<GetStageDefinitionDto?> GetByIdAsync(Guid id);
     Task<IEnumerable<GetStageDefinitionDto>> GetAllAsync();
     Task<Guid> UpdateAsync(Guid id, UpdateStageDefinitionDto dto);

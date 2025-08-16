@@ -27,7 +27,7 @@ namespace approvals.api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Guid>> Create([FromBody] CreateStageDefinitionDto createStageDefiDto)
+        public async Task<ActionResult<Guid>> Create([FromBody] CreateStageDefinitionDto[] createStageDefiDto)
         {
             var newId = await _stageDefinService.CreateApplicationTypeAsync(createStageDefiDto);
             return CreatedAtAction(nameof(Get), new { id = newId }, null);

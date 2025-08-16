@@ -20,14 +20,17 @@ public class StageDefinitionService : IStageDefinitionService
         _mapper = mapper;
     }
 
-    public async Task<Guid> CreateApplicationTypeAsync(CreateStageDefinitionDto dto)
+    public async Task<bool> CreateApplicationTypeAsync(CreateStageDefinitionDto[] dto)
     {
-        StageDefinition entity = _mapper.Map<StageDefinition>(dto);
+        StageDefinition[] entity = _mapper.Map<StageDefinition[]>(dto);
 
-        await _repository.AddAsync(entity);
-        await _unitOfWork.CommitAsync();
-        dto.Description = entity.Description;
-        return entity.StageDefId;
+        foreach (var stageDto in entity)
+        {
+            await _repository.AddAsync(stageDto);
+            await _unitOfWork.CommitAsync();
+        }
+
+        return true;
     }
 
     public async Task<IEnumerable<GetStageDefinitionDto>> GetAllAsync()
