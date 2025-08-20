@@ -9,137 +9,71 @@
   >
     <div class="logo" style="color: rgb(19, 13, 13);"><h1> DEBELO </h1></div>
     <ul nz-menu nzTheme="light" nzMode="inline">
-      <li nz-menu-item nzMatchRouter>
-        <a routerLink="/dashboard">
-          <span nz-icon nzType="dashboard"></span>
-          <span class="menu-text">Dashboard</span>
-        </a>
-      </li>
-      <li nz-submenu nzTitle="User Management" nzIcon="team">
+      <li nz-menu-item><a routerLink="/dashboard"><span nz-icon nzType="dashboard"></span> Dashboard</a></li>
+    
+      <li nz-submenu nzTitle="My Work" nzIcon="profile">
         <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/list">
-              <span nz-icon nzType="user"></span>
-              <span class="menu-text">Users</span>
-            </a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/role-list">
-              <span nz-icon nzType="safety-certificate"></span>
-              <span class="menu-text">Roles</span>
-            </a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="#">
-              <span nz-icon nzType="group"></span>
-              <span class="menu-text">Groups</span>
-            </a>
-          </li>
+          <li nz-menu-item><a routerLink="/tasks"><span nz-icon nzType="check-circle"></span> Tasks</a></li>
+          <li nz-menu-item><a routerLink="/requests"><span nz-icon nzType="folder-open"></span> Requests</a></li>
+          <li nz-menu-item><a routerLink="/delegations"><span nz-icon nzType="swap"></span> Delegations</a></li>
+          <li nz-menu-item><a routerLink="/notifications"><span nz-icon nzType="bell"></span> Notifications</a></li>
         </ul>
       </li>
-      <li nz-submenu nzTitle="Approvals" nzIcon="appstore">
+    
+      <li nz-submenu nzTitle="Approvals" nzIcon="solution">
         <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/app-template-list">
-              <span nz-icon nzType="appstore-add"></span>
-              <span>App Templates</span>
-            </a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/instance-list">
-              <span nz-icon nzType="branch"></span>
-              <span>Templates Instance</span>
-            </a>
-          </li>
+          <li nz-menu-item><a routerLink="/app-template-list"><span nz-icon nzType="file-add"></span> Application Templates</a></li>
+          <li nz-menu-item><a routerLink="/instance-list"><span nz-icon nzType="apartment"></span> Application Instances</a></li>
+          <li nz-menu-item><a routerLink="/drafts"><span nz-icon nzType="edit"></span> Drafts</a></li>
+          <li nz-menu-item><a routerLink="/archived"><span nz-icon nzType="inbox"></span> Archived Requests</a></li>
+          <li nz-menu-item><a routerLink="/favorites"><span nz-icon nzType="star"></span> Favorites</a></li>
         </ul>
       </li>
-      <li nz-submenu nzTitle="Stage Definitions" nzIcon="appstore">
+    
+      <li nz-submenu nzTitle="Stages" nzIcon="branches">
         <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/stage-definition-create">
-              <span nz-icon nzType="appstore-add"></span>
-              <span>Add Stage Definitions</span>
-            </a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/stage-definition-list">
-              <span nz-icon nzType="appstore-add"></span>
-              <span>Stage Definitions</span>
-            </a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="#">
-              <span nz-icon nzType="branch"></span>
-              <span>Stage Instances</span>
-            </a>
-          </li>
+          <li nz-menu-item><a routerLink="/stage-definition-list"><span nz-icon nzType="project"></span> Stage Definitions</a></li>
+          <li nz-menu-item><a routerLink="/stage-instances"><span nz-icon nzType="deployment-unit"></span> Stage Instances</a></li>
+          <li nz-menu-item><a routerLink="/stage-rules"><span nz-icon nzType="control"></span> Stage Rules</a></li>
         </ul>
       </li>
-      <li nz-submenu nzTitle="Configuration" nzIcon="setting">
+    
+      <li nz-submenu nzTitle="User & Access Management" nzIcon="team">
         <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="#">
-              <span nz-icon nzType="sliders"></span>
-              <span>Settings</span>
-            </a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="#">
-              <span nz-icon nzType="form"></span>
-              <span>Form Settings</span>
-            </a>
-          </li>
+          <li nz-menu-item><a routerLink="/users"><span nz-icon nzType="user"></span> Users</a></li>
+          <li nz-menu-item><a routerLink="/roles"><span nz-icon nzType="safety-certificate"></span> Roles & Permissions</a></li>
+          <li nz-menu-item><a routerLink="/groups"><span nz-icon nzType="cluster"></span> Groups / Teams</a></li>
+          <li nz-menu-item><a routerLink="/delegation-rules"><span nz-icon nzType="swap"></span> Delegation Rules</a></li>
         </ul>
       </li>
-      <li nz-submenu nzTitle="Report" nzIcon="bar-chart">
+    
+      <li nz-submenu nzTitle="Reports & Analytics" nzIcon="bar-chart">
         <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="#">
-              <span nz-icon nzType="area-chart"></span>
-              <span>App Report</span>
-            </a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="#">
-              <span nz-icon nzType="pie-chart"></span>
-              <span>Process Report</span>
-            </a>
-          </li>
+          <li nz-menu-item><a routerLink="/app-reports"><span nz-icon nzType="area-chart"></span> Application Reports</a></li>
+          <li nz-menu-item><a routerLink="/process-reports"><span nz-icon nzType="pie-chart"></span> Process Reports</a></li>
+          <li nz-menu-item><a routerLink="/audit-logs"><span nz-icon nzType="file-search"></span> Audit Logs</a></li>
+          <li nz-menu-item><a routerLink="/compliance-reports"><span nz-icon nzType="safety"></span> Compliance Reports</a></li>
         </ul>
       </li>
-      <li nz-submenu nzTitle="Setup" nzIcon="setting">
+    
+      <li nz-submenu nzTitle="Administration" nzIcon="setting">
         <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="#">
-              <span nz-icon nzType="tool"></span>
-              <span>Tools</span>
-            </a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="#">
-              <span nz-icon nzType="database"></span>
-              <span>Database</span>
-            </a>
-          </li>
+          <li nz-menu-item><a routerLink="/system-settings"><span nz-icon nzType="setting"></span> System Settings</a></li>
+          <li nz-menu-item><a routerLink="/form-settings"><span nz-icon nzType="form"></span> Form Settings</a></li>
+          <li nz-menu-item><a routerLink="/rules"><span nz-icon nzType="branches"></span> Rules & Conditions</a></li>
+          <li nz-menu-item><a routerLink="/integrations"><span nz-icon nzType="api"></span> Integrations</a></li>
+          <li nz-menu-item><a routerLink="/database-tools"><span nz-icon nzType="database"></span> Database Tools</a></li>
+          <li nz-menu-item><a routerLink="/cloud-settings"><span nz-icon nzType="cloud"></span> Cloud & Deployment</a></li>
         </ul>
       </li>
-      <li nz-submenu nzTitle="Setting" nzIcon="appstore">
+    
+      <li nz-submenu nzTitle="Template Store" nzIcon="shopping-cart">
         <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="#">
-              <span nz-icon nzType="setting"></span>
-              <span>General Settings</span>
-            </a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="#">
-              <span nz-icon nzType="cloud"></span>
-              <span>Cloud Settings</span>
-            </a>
-          </li>
+          <li nz-menu-item><a routerLink="/store"><span nz-icon nzType="shopping"></span> Prebuilt Templates</a></li>
         </ul>
       </li>
     </ul>
+    
   </nz-sider>
   <nz-layout >
    
@@ -162,7 +96,7 @@
       <nz-dropdown-menu #menu2="nzDropdownMenu">
         <ul nz-menu>
           <li nz-menu-item (click)="onPasswordReset()">
-            <i nz-icon nzType="lock" nzTheme="outline"></i>ß
+            <i nz-icon nzType="lock" nzTheme="outline"></i>
             <span>Password Reset</span>
           </li>
           <li nz-menu-item (click)="onUserProfile()">
@@ -190,3 +124,4 @@
     </nz-footer>
   </nz-layout>
 </nz-layout>
+
