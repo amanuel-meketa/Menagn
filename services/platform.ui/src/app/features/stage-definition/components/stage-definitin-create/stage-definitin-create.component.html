@@ -1,142 +1,125 @@
 <form nz-form [formGroup]="form" (ngSubmit)="submit()" class="modern-form">
 
-    <!-- 🔹 Template Selection -->
-    <nz-card nzBordered class="stage-card mb-4">
-      <div nz-row nzGutter="16">
-        <div nz-col nzSpan="24">
-          <nz-form-item>
-            <nz-form-label nzFor="templateId" nzRequired>
-              <span nz-icon nzType="copy"></span> Select Template
-            </nz-form-label>
-            <nz-form-control
-              nzHasFeedback
-              [nzValidateStatus]="form.get('templateId')!"
-              [nzErrorTip]="'Please select a template'"
-            >
-              <nz-select
-                id="templateId"
-                formControlName="templateId"
-                nzPlaceHolder="Choose a template"
-                nzShowSearch
-              >
-                <nz-option 
-                  *ngFor="let tpl of templates" 
-                  [nzValue]="tpl.id" 
-                  [nzLabel]="tpl.name">
-                </nz-option>
-              </nz-select>
-            </nz-form-control>
-          </nz-form-item>
-        </div>
+  <!-- top card: template selector -->
+  <nz-card nzBordered class="stage-card mb-4 header-card">
+    <div class="header-top">
+      <div class="header-left">
+        <h2 class="title">Create Stage Flow <small class="muted"></small></h2>
+        <p class="desc">Pick a template to apply, then configure stages below. Changes are local until you press “Submit All”.</p>
       </div>
-    </nz-card>
-  
-    <!-- 🔹 Steps Indicator -->
-    <nz-steps [nzCurrent]="stageGroups.length - 1" nzSize="small" class="mb-4">
-      <nz-step *ngFor="let _ of stageGroups; let idx = index" [nzTitle]="'Stage ' + (idx + 1)"></nz-step>
-    </nz-steps>
-  
-    <!-- 🔹 Stages Form -->
-    <nz-collapse [nzAccordion]="true" [nzBordered]="false" class="modern-collapse" [nzExpandIconPosition]="'end'">
-      <nz-collapse-panel 
-        *ngFor="let group of stageGroups; let i = index"
-        [nzHeader]="'Stage ' + (i + 1) + ': ' + (group.get('stageName')?.value || 'Unnamed')"
-        [nzActive]="i === 0"
-        class="modern-panel"
-      >
-        <nz-card nzBordered class="stage-card">
-          <div nz-row nzGutter="16" [formGroup]="group">
-  
-            <!-- Stage Name -->
-            <div nz-col nzXs="24" nzSm="12">
-              <nz-form-item>
-                <nz-form-label nzFor="stageName" nzRequired>
-                  <span nz-icon nzType="edit"></span> Stage Name
-                </nz-form-label>
-                <nz-form-control 
-                  nzHasFeedback 
-                  [nzValidateStatus]="group.get('stageName')!" 
-                  [nzErrorTip]="'Required'"
-                >
-                  <input nz-input id="stageName" formControlName="stageName" placeholder="Enter stage name"/>
-                </nz-form-control>
-              </nz-form-item>
+
+      <div class="header-actions">
+        <nz-form-item>
+          <nz-form-control nzHasFeedback [nzValidateStatus]="form.get('templateId')!" [nzErrorTip]="'Please select a template'">
+            <nz-select id="templateId" formControlName="templateId" nzPlaceHolder="Choose a template" nzShowSearch nzAllowClear>
+              <nz-option *ngFor="let tpl of templates" [nzValue]="tpl.id" [nzLabel]="tpl.name"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </nz-card>
+
+  <!-- stepper -->
+  <nz-steps [nzCurrent]="stageGroups.length - 1" nzSize="small" class="mb-4 compact-steps">
+    <nz-step *ngFor="let _ of stageGroups; let idx = index" [nzTitle]="'Stage ' + (idx + 1)"></nz-step>
+  </nz-steps>
+
+  <!-- stages -->
+  <nz-collapse [nzAccordion]="true" [nzBordered]="false" class="modern-collapse" [nzExpandIconPosition]="'end'">
+    <nz-collapse-panel
+      *ngFor="let group of stageGroups; let i = index; trackBy: trackByStageId"
+      [formGroup]="group"
+      [nzActive]="i === 0"
+      class="modern-panel"
+      [nzHeader]="hdrTpl"
+    >
+      <!-- header template (per-panel) -->
+      <ng-template #hdrTpl>
+        <div class="panel-header">
+          <div class="left">
+            <div class="stage-pill">#{{ i + 1 }}</div>
+            <div class="title-and-sub">
+              <div class="panel-title">{{ group.get('stageName')?.value || 'Unnamed stage' }}</div>
+              <div class="panel-sub">{{ assignmentBadgeText(group) }}</div>
             </div>
-  
-            <!-- Description -->
-            <div nz-col nzSpan="24">
-              <nz-form-item>
-                <nz-form-label nzFor="description">Description</nz-form-label>
-                <nz-form-control>
-                  <textarea 
-                    nz-input 
-                    id="description" 
-                    formControlName="description" 
-                    rows="2" 
-                    placeholder="Optional description"
-                  ></textarea>
-                </nz-form-control>
-              </nz-form-item>
-            </div>
-  
-            <!-- Assignment Type -->
-            <div nz-col nzXs="24" nzSm="12">
-              <nz-form-item>
-                <nz-form-label nzFor="assignmentType" nzRequired>
-                  <span nz-icon nzType="user"></span> Assignment Type
-                </nz-form-label>
-                <nz-form-control 
-                  nzHasFeedback 
-                  [nzValidateStatus]="group.get('assignmentType')!" 
-                  [nzErrorTip]="'Required'"
-                >
-                  <nz-select id="assignmentType" formControlName="assignmentType" nzPlaceHolder="Select type" nzShowSearch>
-                    <nz-option nzValue="User" nzLabel="User"></nz-option>
-                    <nz-option nzValue="Role" nzLabel="Role"></nz-option>
-                  </nz-select>
-                </nz-form-control>
-              </nz-form-item>
-            </div>
-  
-            <!-- Assignment Key -->
-            <div nz-col nzXs="24" nzSm="12">
-              <nz-form-item>
-                <nz-form-label nzFor="assignmentKey" nzRequired>
-                  <span nz-icon nzType="key"></span> Assignment Key
-                </nz-form-label>
-                <nz-form-control 
-                  nzHasFeedback 
-                  [nzValidateStatus]="group.get('assignmentKey')!" 
-                  [nzErrorTip]="'Required'"
-                >
-                  <input nz-input id="assignmentKey" formControlName="assignmentKey" placeholder="e.g. finance-team"/>
-                </nz-form-control>
-              </nz-form-item>
-            </div>
-  
           </div>
-  
-          <!-- Remove Button -->
-          <div class="btn-row mt-2" *ngIf="stages.length > 1">
-            <button nz-button nzType="text" nzDanger (click)="removeStage(i)">
-              <span nz-icon nzType="delete"></span> Remove Stage
-            </button>
+        </div>
+      </ng-template>
+
+      <nz-card nzBordered class="stage-card body-card">
+        <div nz-row nzGutter="16" [formGroup]="group">
+
+          <div nz-col nzXs="24" nzSm="12">
+            <nz-form-item>
+              <nz-form-label nzFor="stageName" nzRequired>Stage name</nz-form-label>
+              <nz-form-control nzHasFeedback [nzValidateStatus]="group.get('stageName')!" [nzErrorTip]="'Required'">
+                <input nz-input formControlName="stageName" placeholder="e.g. Finance approval" />
+              </nz-form-control>
+            </nz-form-item>
           </div>
-        </nz-card>
-      </nz-collapse-panel>
-    </nz-collapse>
-  
-    <!-- 🔹 Sticky Actions -->
-    <nz-affix [nzOffsetBottom]="16">
-      <div class="form-actions">
-        <button nz-button nzType="dashed" (click)="addStage()">
+
+          <div nz-col nzXs="24" nzSm="12">
+            <nz-form-item>
+              <nz-form-label nzFor="assignmentType" nzRequired>Assignment type</nz-form-label>
+              <nz-form-control nzHasFeedback [nzValidateStatus]="group.get('assignmentType')!">
+                <nz-select formControlName="assignmentType" nzPlaceHolder="Select type">
+                  <nz-option nzValue="User" nzLabel="User"></nz-option>
+                  <nz-option nzValue="Role" nzLabel="Role"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col nzXs="24">
+            <nz-form-item>
+              <nz-form-label nzFor="description">Description</nz-form-label>
+              <nz-form-control>
+                <textarea nz-input formControlName="description" rows="2" placeholder="Optional short note about this stage"></textarea>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col nzXs="24" nzSm="12">
+            <nz-form-item>
+              <nz-form-label nzFor="assignmentKey" nzRequired>Assignment key</nz-form-label>
+              <nz-form-control nzHasFeedback [nzValidateStatus]="group.get('assignmentKey')!">
+                <input nz-input formControlName="assignmentKey" placeholder="e.g. finance-team or user-id" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+        </div>
+
+        <div class="panel-actions">
+          <button nz-button nzType="text" nzDanger htmlType="button" (click)="onRemove($event, i)">
+            <span nz-icon nzType="delete"></span> Remove
+          </button>
+          <div class="spacer"></div>
+          <div class="small-note">Tip: use <strong>Role</strong> for groups and <strong>User</strong> for individual approvers.</div>
+        </div>
+      </nz-card>
+    </nz-collapse-panel>
+  </nz-collapse>
+
+  <!-- sticky footer actions -->
+  <nz-affix [nzOffsetBottom]="16">
+    <div class="form-actions footer-card">
+      <div class="left">
+        <button nz-button nzType="dashed" htmlType="button" (click)="onAdd($event)">
           <span nz-icon nzType="plus"></span> Add Stage
         </button>
+        <button nz-button nzType="default" htmlType="button" (click)="form.reset()">
+          Reset
+        </button>
+      </div>
+
+      <div class="right">
         <button nz-button nzType="primary" htmlType="submit" [disabled]="form.invalid">
           <span nz-icon nzType="check-circle"></span> Submit All
         </button>
       </div>
-    </nz-affix>
-  
-  </form>
-  
+    </div>
+  </nz-affix>
+
+</form>

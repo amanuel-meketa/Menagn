@@ -2,7 +2,6 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
 
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
@@ -21,10 +20,10 @@ import { AddStageDefiModel } from '../../../../models/Stage-Definition/AddStageD
 @Component({
   selector: 'app-stage-definitin-create',
   standalone: true,
-  imports: [ CommonModule, ReactiveFormsModule, NzFormModule, NzInputModule, NzSelectModule, NzCardModule,NzButtonModule,
-             NzAffixModule, NzCollapseModule, NzStepsModule ],
+  imports: [ CommonModule, ReactiveFormsModule, NzFormModule, NzInputModule, NzSelectModule, NzCardModule,
+             NzButtonModule,NzAffixModule, NzCollapseModule, NzStepsModule],
   templateUrl: './stage-definitin-create.component.html',
-  styleUrl: './stage-definitin-create.component.css'
+  styleUrls: ['./stage-definitin-create.component.css']
 })
 export class StageDefinitinCreateComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
@@ -45,30 +44,50 @@ export class StageDefinitinCreateComponent implements OnInit {
     this.addStage();
   }
 
-  get stages(): FormArray<FormGroup> {
-    return this.form.get('stages') as FormArray<FormGroup>;
+  // typed getters for template usage
+  get stages(): FormArray {
+    return this.form.get('stages') as FormArray;
   }
-
   get stageGroups(): FormGroup[] {
     return this.stages.controls as FormGroup[];
   }
 
+  // stable id generator (fallback-safe)
+  private makeId(): string {
+    if (typeof crypto !== 'undefined' && typeof (crypto as any).randomUUID === 'function') {
+      return (crypto as any).randomUUID();
+    }
+    return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 9)}`;
+  }
+
   addStage(): void {
-    const index = this.stages.length + 1;
-    this.stages.push(this.fb.group({
-      stageName: ['', Validators.required],
-      description: [''],
-      sequenceOrder: [index, Validators.required],
-      assignmentType: ['', Validators.required],
-      assignmentKey: ['', Validators.required]
-    }));
+    this.stages.push(
+      this.fb.group({
+        id: [this.makeId()],
+        stageName: ['', Validators.required],
+        description: [''],
+        assignmentType: ['', Validators.required],
+        assignmentKey: ['', Validators.required]
+      })
+    );
   }
 
   removeStage(index: number): void {
     this.stages.removeAt(index);
-    this.stages.controls.forEach((group, i) =>
-      group.get('sequenceOrder')!.setValue(i + 1)
-    );
+  }
+
+  // wrappers to prevent accidental submit (extra safety)
+  onAdd(event: Event): void {
+    event.preventDefault();
+    this.addStage();
+  }
+  onRemove(event: Event, idx: number): void {
+    event.preventDefault();
+    this.removeStage(idx);
+  }
+
+  trackByStageId(_index: number, group: FormGroup): string {
+    return group.get('id')?.value ?? String(_index);
   }
 
   loadTemplates(): void {
@@ -76,45 +95,54 @@ export class StageDefinitinCreateComponent implements OnInit {
       next: (data) => {
         this.templates = data.map(t => ({ id: t.templateId, name: t.name }));
       },
-      error: (err) => {
-        console.error('Failed to load templates', err);
-        this.message.error('Could not load templates');
-      }
+      error: () => this.message.error('Could not load templates')
     });
+  }
+
+  // header helpers to keep template tidy and easily testable
+  headerTitle(group: FormGroup, idx: number): string {
+    const name = group.get('stageName')?.value || 'Unnamed';
+    return `Stage ${idx + 1} • ${name}`;
+  }
+
+  assignmentBadgeText(group: FormGroup): string {
+    const type = group.get('assignmentType')?.value;
+    const key = group.get('assignmentKey')?.value;
+    if (!type) { return 'Unassigned'; }
+    return key ? `${type}: ${key}` : type;
   }
 
   submit(): void {
     if (this.form.invalid) {
-      this.message.error('Please fill all required fields');
+      this.message.error('Please fix validation errors before submitting.');
+      this.form.markAllAsTouched();
       return;
     }
 
-    const payload = this.form.getRawValue();
-    if (!payload.templateId) {
+    const templateId = this.form.get('templateId')!.value;
+    if (!templateId) {
       this.message.error('Please select a template');
       return;
     }
 
-    forkJoin(
-      (payload.stages as AddStageDefiModel[]).map(stage =>
-        this.stageService.addStage({ ...stage, templateId: payload.templateId ?? '' })
-      )
-    ).subscribe({
-      next: response => this.handleSuccess(response),
-      error: error => this.handleError(error)
+    const payload: AddStageDefiModel[] = this.stageGroups.map((group, idx) => ({
+      stageName: group.get('stageName')!.value,
+      description: group.get('description')!.value,
+      assignmentType: group.get('assignmentType')!.value,
+      assignmentKey: group.get('assignmentKey')!.value,
+      SequenceOrder: Number(idx + 1),
+      templateId
+    }));
+
+    this.stageService.addStages(payload).subscribe({
+      next: () => {
+        this.message.success('Stages created successfully!');
+        this.router.navigate(['/stage-list']);
+      },
+      error: (err) => {
+        this.message.error(`Operation failed: ${err?.message ?? 'Unknown error'}`);
+        console.error(err);
+      }
     });
-  }
-
-  private handleSuccess(response: any): void {
-    this.message.success('Stages created successfully!');
-    console.log('Stages Created:', response);
-    this.router.navigate(['/stage-list']);
-    this.form.reset();
-  }
-
-  private handleError(error: any): void {
-    const msg = error?.message || 'Unknown error occurred';
-    this.message.error(`Operation failed: ${msg}`);
-    console.error('Operation failed:', error);
   }
 }

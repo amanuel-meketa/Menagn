@@ -39,8 +39,9 @@ export class StageDefinitionService {
       headers: this.jsonHeaders
     });
   } 
-
-  addStage(stage: AddStageDefiModel): Observable<void> {
-    return this.http.post<void>(this.baseUrl, stage, { headers: this.jsonHeaders });
-  }  
+  
+  addStages(stages: AddStageDefiModel[]): Observable<void> {
+    return this.http.post<void>(this.baseUrl, stages, { headers: this.jsonHeaders });
+  }
+  
 }
