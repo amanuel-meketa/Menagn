@@ -1,0 +1,59 @@
+.template-toolbar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.template-card {
+  border-radius: 12px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    button.start-btn {
+      background-color: #722ed1;
+      color: #fff;
+    }
+  }
+}
+
+.template-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.template-name {
+  font-weight: 600;
+  font-size: 16px;
+  text-decoration: none;
+  color: #1d1d1f;
+  &:hover { color: #722ed1; }
+}
+
+.template-description {
+  color: rgba(0,0,0,0.65);
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.template-tags {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.start-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 20px;
+}

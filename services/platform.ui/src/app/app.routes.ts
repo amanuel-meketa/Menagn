@@ -26,6 +26,7 @@ import { StartAppInstanceComponent } from './features/app-instance/components/st
 import { InstanceListComponent } from './features/app-instance/components/instance-list/instance-list.component';
 import { TemplateStagesComponent } from './features/stage-definition/components/template-stages/template-stages.component';
 import { StageDefinitinCreateComponent } from './features/stage-definition/components/stage-definitin-create/stage-definitin-create.component';
+import { ActiveTemplatesComponent } from './features/app-template/components/app-active-templates/app-active-templates.component';
 
 export const routes: Routes = 
 [
@@ -50,6 +51,7 @@ export const routes: Routes =
       { path: 'app-template-create', component: AppTemplateCreateComponent},
       { path: 'app-template-details/:templateId', component: ApplicationTypeDetailsComponent},
       { path: 'app-template-update', component: ApplicationTypeUpdateComponent},
+      { path: 'app-active-templates', component: ActiveTemplatesComponent},
 
       { path: 'stage-definition-list', component: StageDefinitionListComponent},
       { path: 'stage-definition-create', component: StageDefinitinCreateComponent},

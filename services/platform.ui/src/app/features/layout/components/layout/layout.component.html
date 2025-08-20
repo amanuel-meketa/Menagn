@@ -1,18 +1,12 @@
 <nz-layout>
-  <nz-sider
-    nzCollapsible
-    [(nzCollapsed)]="isCollapsed"
-    [nzTrigger]="null"
-    nzTheme="light"
-    [nzCollapsedWidth]="80" 
-    [nzWidth]="250"
-  >
+  <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed"  [nzTrigger]="null" nzTheme="light"[nzCollapsedWidth]="80" [nzWidth]="250">
     <div class="logo" style="color: rgb(19, 13, 13);"><h1> DEBELO </h1></div>
     <ul nz-menu nzTheme="light" nzMode="inline">
       <li nz-menu-item><a routerLink="/dashboard"><span nz-icon nzType="dashboard"></span> Dashboard</a></li>
-    
+
       <li nz-submenu nzTitle="My Work" nzIcon="profile">
         <ul>
+          <li nz-menu-item><a routerLink="/app-active-templates"><span nz-icon nzType="file-add"></span> Applications</a></li>
           <li nz-menu-item><a routerLink="/tasks"><span nz-icon nzType="check-circle"></span> Tasks</a></li>
           <li nz-menu-item><a routerLink="/requests"><span nz-icon nzType="folder-open"></span> Requests</a></li>
           <li nz-menu-item><a routerLink="/delegations"><span nz-icon nzType="swap"></span> Delegations</a></li>
