@@ -15,15 +15,15 @@
           <div class="template-name">{{ template.name }}</div>
           
           <!-- Description -->
-          <p class="template-description" *ngIf="template.showFullDescription">
-            {{ template.description }}
-          </p>
+          <p class="template-description" [class.expanded]="template.showFullDescription">
+            {{ template.showFullDescription ? template.description 
+                : (template.description ? (template.description | slice:0:0) : '') }}
           
-          <span *ngIf="template.description && template.description.length > 0"
-                class="read-more"
-                (click)="template.showFullDescription = !template.showFullDescription">
-            {{ template.showFullDescription ? ' Show Less' : ' Read Description' }}
-          </span>
+            <span *ngIf="template.description && template.description.length > 0" class="read-more"
+                  (click)="template.showFullDescription = !template.showFullDescription">
+              {{ template.showFullDescription ? ' Show Less' : ' Read Description' }}
+            </span>
+          </p>          
           
         </div>
       </div>

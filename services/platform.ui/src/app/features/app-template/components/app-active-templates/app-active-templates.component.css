@@ -80,12 +80,13 @@
 }
 
 .read-more {
-  margin-left: 4px;
+  margin-top: 6px;
+  display: inline-block;
   color: #1890ff;
   cursor: pointer;
   font-weight: 500;
-  font-size: 13px;
 }
+
 
 .template-footer {
   display: flex;
