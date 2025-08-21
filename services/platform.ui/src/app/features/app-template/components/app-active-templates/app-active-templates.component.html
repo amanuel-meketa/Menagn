@@ -14,7 +14,8 @@
         <div class="template-info">
           <div class="template-name">{{ template.name }}</div>
           
-          <p class="template-description">
+          <!-- Description -->
+          <p class="template-description" [class.expanded]="template.showFullDescription">
             {{ template.showFullDescription 
                 ? template.description 
                 : (template.description ? (template.description | slice:0:80) : '') }}
@@ -22,7 +23,7 @@
             <span *ngIf="template.description && template.description.length > 80"
                   class="read-more"
                   (click)="template.showFullDescription = !template.showFullDescription">
-              {{ template.showFullDescription ? 'Show Less' : '... Read More' }}
+              {{ template.showFullDescription ? ' Show Less' : '... Read More' }}
             </span>
           </p>
         </div>
@@ -33,7 +34,7 @@
         <button nz-button nzType="primary" class="start-btn" 
                 (click)="openStartInstance(template.templateId)">
           <i nz-icon nzType="play-circle"></i>
-          Start Instance
+          Start Request
         </button>
       </div>
     </nz-card>
