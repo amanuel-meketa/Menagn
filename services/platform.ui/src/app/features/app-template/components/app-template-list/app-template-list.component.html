@@ -1,60 +1,60 @@
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+<div class="template-header">
   <app-app-template-create></app-app-template-create>
 </div>
 
-<div style="display: flex; gap: 24px; flex-wrap: wrap;">
+<div class="template-list">
   <ng-container *ngFor="let data of listOfData">
     
+    <!-- Card Actions -->
     <ng-template #stages>
       <app-template-stages [templateId]="data.templateId"></app-template-stages>
     </ng-template>
     
     <ng-template #edit>
       <button nz-button nzType="link" nzSize="small">
-        <span nz-icon nzType="edit" style="margin-right: 4px;"></span> Form 
+        <span nz-icon nzType="edit" class="mr-4"></span> Form 
       </button>
     </ng-template>
 
     <ng-template #delete>
       <button nz-button nzType="link" nzDanger nzSize="small" (click)="deleteTemplate(data.templateId)">
-        <span nz-icon nzType="delete"></span> delete
+        <span nz-icon nzType="delete"></span> Delete
       </button>
     </ng-template>
 
-    <!-- Description Template -->
+    <!-- Description -->
     <ng-template #description>
-      <div style="display: flex; flex-direction: column; font-size: 14px; color: #595959; margin-top: 8px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span><span nz-icon nzType="play-circle" style="color: #52c41a; margin-right: 6px;"></span><strong>Active Instances:</strong></span>
-          <span style="font-weight: 500;">{{ data.activeInstances || 0 }}</span>
+      <div class="template-stats">
+        <div class="stat-row">
+          <span><span nz-icon nzType="play-circle" class="stat-icon active"></span><strong>Active Instances:</strong></span>
+          <span class="stat-value">{{ data.activeInstances || 0 }}</span>
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span><span nz-icon nzType="profile" style="color: #1890ff; margin-right: 6px;"></span><strong>Total Instances:</strong></span>
-          <span style="font-weight: 500;">{{ data.totalInstances || 0 }}</span>
+        <div class="stat-row">
+          <span><span nz-icon nzType="profile" class="stat-icon total"></span><strong>Total Instances:</strong></span>
+          <span class="stat-value">{{ data.totalInstances || 0 }}</span>
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
-          <nz-tag
-            [nzColor]="data.isActive ? 'green' : 'default'" style="font-size: 12px; font-weight: 500;">
+        <div class="stat-row">
+          <nz-tag [nzColor]="data.isActive ? 'green' : 'default'" class="status-tag">
             {{ data.isActive ? 'Active' : 'Inactive' }}
           </nz-tag>
         </div>
       </div>
     </ng-template>
 
-    <!-- Title Template -->
+    <!-- Title -->
     <ng-template #title>
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <span nz-icon nzType="cluster" style="color: #722ed1;"></span>
-        <a [routerLink]="['/app-template-details', data.templateId]" style="font-weight: 600; font-size: 16px;">
+      <div class="template-title">
+        <span nz-icon nzType="cluster" class="title-icon"></span>
+        <a [routerLink]="['/app-template-details', data.templateId]" class="template-link">
           {{ data.name }}
         </a>
       </div>
     </ng-template>
 
-    <nz-card
-      style="width: 550px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-radius: 12px;"
-      [nzActions]="[stages, edit, delete]"
-      [nzBodyStyle]="{ padding: '16px 24px' }">
+    <!-- Card -->
+    <nz-card class="template-card"
+             [nzActions]="[stages, edit, delete]"
+             [nzBodyStyle]="{ padding: '16px 24px' }">
       <nz-card-meta [nzTitle]="title" [nzDescription]="description"></nz-card-meta>
     </nz-card>
   </ng-container>

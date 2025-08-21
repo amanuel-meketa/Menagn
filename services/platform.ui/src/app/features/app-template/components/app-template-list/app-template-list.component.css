@@ -1,16 +1,110 @@
+/* Header */
+.template-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 10;
+  padding: 8px 0;
+}
 
+/* Template list container */
+.template-list {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
 
-  .example-box span {
-    cursor: pointer;
+/* Card styling */
+.template-card {
+  width: 550px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* Title */
+.template-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.title-icon {
+  color: #722ed1;
+}
+
+.template-link {
+  font-weight: 600;
+  font-size: 16px;
+  text-decoration: none;
+  color: #1d1d1f;
+
+  &:hover {
+    color: #722ed1;
+  }
+}
+
+/* Stats section */
+.template-stats {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  color: #595959;
+  margin-top: 8px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.stat-icon {
+  margin-right: 6px;
+
+  &.active {
+    color: #52c41a;
+  }
+
+  &.total {
+    color: #1890ff;
+  }
+}
+
+.stat-value {
+  font-weight: 500;
+}
+
+.status-tag {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .template-card {
+    width: 100%;
   }
 
   .template-link {
-    color: #1890ff; 
-    cursor: pointer;
-    text-decoration: underline;
+    font-size: 14px;
   }
-  
-  .template-link:hover {
-    color: #40a9ff;
+
+  .stat-row {
+    font-size: 13px;
   }
-  
+}
