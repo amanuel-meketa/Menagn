@@ -1,48 +1,46 @@
 <div class="template-container">
-  <!-- Toolbar -->
+  <!-- Toolbar with search -->
   <div class="template-toolbar">
     <nz-input-group nzSuffixIcon="search" class="search-bar">
-      <input
-        nz-input
-        placeholder="Search templates..."
-        [(ngModel)]="searchQuery"
-      />
+      <input nz-input placeholder="Search templates..." [(ngModel)]="searchQuery" />
     </nz-input-group>
   </div>
 
-  <!-- Template list -->
+  <!-- Template Grid -->
   <div class="template-list">
-    <nz-card *ngFor="let template of filteredTemplates()" class="template-list-item">
-      <div class="template-item-content">
-        <!-- Title -->
-        <div class="template-title">
-          <span nz-icon nzType="cluster" style="color:#722ed1;"></span>
-          <span class="template-name">{{ template.name }}</span>
+    <nz-card *ngFor="let template of filteredTemplates()" class="template-card" nzHoverable>
+      <div class="template-header">
+        <span nz-icon nzType="cluster" class="template-icon"></span>
+        <div class="template-info">
+          <div class="template-name">{{ template.name }}</div>
+          
+          <p class="template-description">
+            {{ template.showFullDescription 
+                ? template.description 
+                : (template.description ? (template.description | slice:0:80) : '') }}
+            
+            <span *ngIf="template.description && template.description.length > 80"
+                  class="read-more"
+                  (click)="template.showFullDescription = !template.showFullDescription">
+              {{ template.showFullDescription ? 'Show Less' : '... Read More' }}
+            </span>
+          </p>
         </div>
-
-        <!-- Description -->
-        <p class="template-description">
-          {{ template.showFullDescription ? template.description : (template.description | slice:0:50) }}
-          <span *ngIf="template.description && template.description.length > 50"
-                class="read-more"
-                (click)="template.showFullDescription = !template.showFullDescription">
-            {{ template.showFullDescription ? ' Show Less' : '... Read More' }}
-          </span>
-        </p>
       </div>
 
       <!-- Actions -->
-      <div class="template-actions">
-        <button nz-button nzType="primary" class="start-btn" (click)="startInstance(template)">
-          <span nz-icon nzType="play-circle"></span>
+      <div class="template-footer">
+        <button nz-button nzType="primary" class="start-btn" 
+                (click)="openStartInstance(template.templateId)">
+          <i nz-icon nzType="play-circle"></i>
           Start Instance
         </button>
       </div>
     </nz-card>
   </div>
 
-  <!-- No data -->
+  <!-- Empty state -->
   <div *ngIf="filteredTemplates().length === 0" class="no-templates">
-    No templates found.
+    <nz-empty [nzNotFoundContent]="'No templates found'"></nz-empty>
   </div>
 </div>
