@@ -41,9 +41,9 @@
 
 .template-header {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 8px;
+  align-items: flex-start; /* keep icon aligned with top of name */
+  gap: 8px;
+  margin-bottom: 4px;
 }
 
 .template-icon {
@@ -59,22 +59,24 @@
 
 .template-name {
   font-weight: 600;
-  font-size: 16px;
-  color: #1f1f1f;
-  margin-bottom: 6px;
-  white-space: nowrap;
+  font-size: 15px;
+  color: #000101; /* primary color */
+  margin: 0 0 6px 0; /* add bottom margin to create gap with description */
+  white-space: normal; /* allow wrapping */
+  word-break: break-word; /* break long words */
+}
+ß
+.template-description {
+  font-size: 13px;
+  color: #595959;
+  line-height: 1.5;
+  margin: 0; /* description already has gap from name via .template-name margin */
   overflow: hidden;
-  text-overflow: ellipsis;
+  transition: max-height 0.3s ease;
 }
 
-.template-description {
-  font-size: 14px;
-  color: #595959;
-  line-height: 1.4;
-  margin: 0;
-  max-height: 42px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.template-description.expanded {
+  max-height: none;
 }
 
 .read-more {
