@@ -1,8 +1,15 @@
+<nz-breadcrumb style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+  <nz-breadcrumb-item>
+    <a (click)="goBack()" style="text-decoration: underline;">Active Templates</a>
+  </nz-breadcrumb-item>
+  <nz-breadcrumb-item>Start Instance</nz-breadcrumb-item>
+</nz-breadcrumb>
+
 <div class="page-wrap">
   <!-- Page Header -->
   <div class="header flex items-center justify-between mb-6">
-    <button nz-button nzType="default" nzGhost routerLink="/app-active-templates" class="flex items-center gap-2">
-      <span nz-icon nzType="arrow-left"></span> Back
+    <button nz-button nzType="default" nzGhost (click)="goBack()" class="flex items-center gap-2">
+      <i nz-icon nzType="arrow-left"></i> Back
     </button>
     <h2 class="title text-2xl font-bold">Start Instance</h2>
   </div>
@@ -10,6 +17,8 @@
   <!-- Form Card -->
   <nz-card nzBordered class="shadow-lg rounded-2xl p-6 bg-white">
     <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()" nzLayout="vertical">
+      <!-- Hidden userId -->
+      <input type="hidden" formControlName="userId" />
 
       <!-- Template -->
       <nz-form-item>
@@ -21,7 +30,7 @@
         </nz-form-control>
       </nz-form-item>
 
-      <!-- Current User -->
+      <!-- Current User (display only) -->
       <nz-form-item>
         <nz-form-label nzFor="userId">Current User</nz-form-label>
         <nz-form-control>
@@ -31,22 +40,10 @@
         </nz-form-control>
       </nz-form-item>
 
-      <!-- Divider -->
-      <nz-divider></nz-divider>
-
       <!-- Actions -->
       <div class="flex justify-end gap-3 mt-6">
-        <button nz-button nzType="default" routerLink="/app-template-list" class="flex items-center gap-2">
-          <span nz-icon nzType="close-circle"></span>
-          Cancel
-        </button>
-        <button
-          nz-button nzType="primary"
-          [disabled]="validateForm.invalid || starting"
-          [nzLoading]="starting"
-          class="flex items-center gap-2">
-          <span nz-icon nzType="play-circle"></span>
-          Send Request
+        <button nz-button nzType="primary" [disabled]="validateForm.invalid || starting" [nzLoading]="starting" class="flex items-center gap-2">
+          <i nz-icon nzType="play-circle"></i> Send Request
         </button>
       </div>
     </form>
