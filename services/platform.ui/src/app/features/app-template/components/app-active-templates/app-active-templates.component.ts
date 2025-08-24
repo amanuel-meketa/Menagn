@@ -1,4 +1,3 @@
-// active-templates.component.ts
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -7,18 +6,19 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { Subject, takeUntil } from 'rxjs';
 import { GetAppTypeModel } from '../../../../models/Application-Type/GetAppTypeModel';
 import { AppTemplateService } from '../../services/app-template.service';
-import { StartAppInstanceComponent } from '../../../app-instance/components/start-app-instance/start-app-instance.component';
-import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-active-templates',
   standalone: true,
-  imports: [ CommonModule, FormsModule, NzButtonModule, NzCardModule, NzInputModule, NzIconModule, NzModalModule,
-             NzEmptyModule, StartAppInstanceComponent ],
+  imports: [
+    CommonModule, FormsModule, NzButtonModule, NzCardModule,
+    NzInputModule, NzIconModule, NzEmptyModule
+  ],
   templateUrl: './app-active-templates.component.html',
   styleUrl: './app-active-templates.component.css'
 })
@@ -27,7 +27,7 @@ export class ActiveTemplatesComponent implements OnInit, OnDestroy {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly message = inject(NzMessageService);
   private readonly destroy$ = new Subject<void>();
-  private readonly modal = inject(NzModalService);
+  private readonly router = inject(Router);
   
   listOfData: (GetAppTypeModel & { showFullDescription?: boolean })[] = [];
   searchQuery = '';
@@ -43,7 +43,6 @@ export class ActiveTemplatesComponent implements OnInit, OnDestroy {
   private loadAppTypeList(): void {
     this._appTemplateService.getAppTemplateList().subscribe({
       next: (data: GetAppTypeModel[]) => {
-        console.log('Loaded templates:', data); // << check this
         this.listOfData = data.map(t => ({ ...t, showFullDescription: false }));
         this.cdr.detectChanges();
       },
@@ -51,7 +50,6 @@ export class ActiveTemplatesComponent implements OnInit, OnDestroy {
     });
   }
   
-
   filteredTemplates(): (GetAppTypeModel & { showFullDescription?: boolean })[] {
     if (!this.searchQuery) return this.listOfData;
     return this.listOfData.filter(t =>
@@ -59,17 +57,9 @@ export class ActiveTemplatesComponent implements OnInit, OnDestroy {
     );
   }
 
-  /** Open Start Instance modal for selected template */
-  openStartInstance(templateId: string): void {
-    this.modal.create({
-      nzTitle: 'Start Template Instance',
-      nzContent: StartAppInstanceComponent,
-      nzFooter: null,
-      nzWidth: 600,
-      nzMaskClosable: false,
-      ...( { nzComponentParams: { templateId } } as any )
-    });
-    
+  /** Navigate to StartAppInstanceComponent */
+  startApp(template: GetAppTypeModel): void {
+    this.router.navigate(['/start-instance', template.templateId]);
   }
 
   ngOnDestroy(): void {

@@ -1,0 +1,50 @@
+.page-wrap {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.title {
+  margin-bottom: 1.5rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.header-form {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.ant-advanced-search-form {
+  padding: 24px;
+  background: #fbfbfb;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.search-area {
+  text-align: right;
+  margin-top: 12px;
+}
+
+.collapse {
+  margin-left: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.actions {
+  text-align: right;
+  margin-top: 20px;
+}
+
+.loading {
+  padding: 2rem;
+  text-align: center;
+  color: #6b7280;
+}

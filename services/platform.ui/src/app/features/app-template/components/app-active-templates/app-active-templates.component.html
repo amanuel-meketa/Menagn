@@ -13,26 +13,22 @@
         <span nz-icon nzType="cluster" class="template-icon"></span>
         <div class="template-info">
           <div class="template-name">{{ template.name }}</div>
-          
+
           <!-- Description -->
           <p class="template-description" [class.expanded]="template.showFullDescription">
-            {{ template.showFullDescription ? template.description 
-                : (template.description ? (template.description | slice:0:0) : '') }}
-          
+            {{ template.showFullDescription ? template.description : '' }}
+
             <span *ngIf="template.description && template.description.length > 0" class="read-more"
                   (click)="template.showFullDescription = !template.showFullDescription">
               {{ template.showFullDescription ? ' Show Less' : ' Read Description' }}
             </span>
-          </p>          
-          
+          </p>
         </div>
       </div>
 
       <!-- Actions -->
       <div class="template-footer">
-        <button nz-button nzType="primary" class="start-btn" 
-                (click)="openStartInstance(template.templateId)">
-          <i nz-icon nzType="play-circle"></i>
+        <button nz-button nzType="primary" (click)="startApp(template)">
           Start Request
         </button>
       </div>

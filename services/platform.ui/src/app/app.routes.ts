@@ -59,7 +59,7 @@ export const routes: Routes =
       { path: 'stage-definition-update', component: StageDefinitionUpdateComponent},
       { path: 'template-stages/templateId:', component: TemplateStagesComponent},
       
-      { path: 'start-instance/:templateId', component: StartAppInstanceComponent},
+      { path: 'start-instance/:id', component: StartAppInstanceComponent},
       { path: 'instance-list', component: InstanceListComponent},
       
     ]

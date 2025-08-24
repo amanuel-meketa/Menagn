@@ -1,29 +1,54 @@
-<button nz-button nzType="primary" (click)="openTemplateRegisterModal()">
-  <i nz-icon nzType="play-circle"></i>
-  Start
-</button>
-  
-  <ng-template #startApprovalTemplate>
-    <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+<div class="page-wrap">
+  <!-- Page Header -->
+  <div class="header flex items-center justify-between mb-6">
+    <button nz-button nzType="default" nzGhost routerLink="/app-active-templates" class="flex items-center gap-2">
+      <span nz-icon nzType="arrow-left"></span> Back
+    </button>
+    <h2 class="title text-2xl font-bold">Start Instance</h2>
+  </div>
+
+  <!-- Form Card -->
+  <nz-card nzBordered class="shadow-lg rounded-2xl p-6 bg-white">
+    <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()" nzLayout="vertical">
+
+      <!-- Template -->
       <nz-form-item>
-        <nz-form-label [nzSpan]="6">Template Id</nz-form-label>
-        <nz-form-control [nzSpan]="18">
-          <input nz-input formControlName="templateId" placeholder="Template ID" readonly />
+        <nz-form-label nzFor="templateId">Template</nz-form-label>
+        <nz-form-control>
+          <nz-input-group nzPrefixIcon="appstore">
+            <input nz-input id="templateId" formControlName="templateId" readonly class="bg-gray-100 font-semibold" />
+          </nz-input-group>
         </nz-form-control>
-      </nz-form-item>      
-      
+      </nz-form-item>
+
+      <!-- Current User -->
       <nz-form-item>
-        <nz-form-label [nzSpan]="6">User ID</nz-form-label>
-        <nz-form-control [nzSpan]="18">
-          <textarea formControlName="userId" nz-input rows="2" placeholder="User ID"></textarea>
+        <nz-form-label nzFor="userId">Current User</nz-form-label>
+        <nz-form-control>
+          <nz-input-group nzPrefixIcon="user">
+            <input nz-input id="userId" formControlName="userId"  class="bg-gray-100 font-semibold" />
+          </nz-input-group>
         </nz-form-control>
-      </nz-form-item>      
-  
-      <div class="modal-footer" style="text-align: right; margin-top: 24px;">
-        <button nz-button nzType="primary" [disabled]="!validateForm.valid" htmlType="submit">
-          Submit
+      </nz-form-item>
+
+      <!-- Divider -->
+      <nz-divider></nz-divider>
+
+      <!-- Actions -->
+      <div class="flex justify-end gap-3 mt-6">
+        <button nz-button nzType="default" routerLink="/app-template-list" class="flex items-center gap-2">
+          <span nz-icon nzType="close-circle"></span>
+          Cancel
+        </button>
+        <button
+          nz-button nzType="primary"
+          [disabled]="validateForm.invalid || starting"
+          [nzLoading]="starting"
+          class="flex items-center gap-2">
+          <span nz-icon nzType="play-circle"></span>
+          Send Request
         </button>
       </div>
     </form>
-  </ng-template>
-  
+  </nz-card>
+</div>

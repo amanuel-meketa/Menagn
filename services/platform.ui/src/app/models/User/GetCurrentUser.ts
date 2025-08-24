@@ -1,4 +1,5 @@
 export interface GetCurrentUser {
-  nameIdentifier: string;
-  emailAddress: string;
+  userId: string;
+  email?: string;
+  username?: string;
 }
