@@ -13,4 +13,9 @@ public class StageDefinitionRepository(AppDbContext dbContext) : GenericReposito
     {
        return await _dbContext.StageDefinitions.AsNoTracking().Where(stage => stage.TemplateId == templateId).ToListAsync();
     }
+
+    public async Task<IEnumerable<StageDefinition>> GetAssignedTasksAsync(Guid userId)
+    {
+        return await _dbContext.StageDefinitions.Where(x => x.AssignmentKey == userId.ToString()).ToListAsync();
+    }
 }

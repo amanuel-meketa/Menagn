@@ -1,4 +1,5 @@
-﻿using approvals.domain.Entities;
+﻿using approvals.application.DTOs.ApprovalInstance;
+using approvals.domain.Entities;
 using approvals.shared.Repositories;
 
 namespace approvals.application.Interfaces.Repository

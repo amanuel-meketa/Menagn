@@ -1,4 +1,5 @@
-﻿using approvals.application.DTOs.StageDefinition;
+﻿using approvals.application.DTOs.ApprovalInstance;
+using approvals.application.DTOs.StageDefinition;
 
 public interface IStageDefinitionService
 {
@@ -9,4 +10,5 @@ public interface IStageDefinitionService
     Task<bool> DeleteAsync(Guid id);
     Task<Guid> ApproveStageAsync(Guid instanceId, Guid approverId, string comment);
     Task<IEnumerable<GetStageDefinitionDto?>> GetStagesByTempIdAsync(Guid templateId);
+    Task<IEnumerable<GetStageDefinitionDto>> GetAssignedTasksAsync(Guid userId);
 }

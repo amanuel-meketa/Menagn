@@ -100,4 +100,10 @@ public class StageDefinitionService : IStageDefinitionService
         var result =  await _repository.GetStagesByTempIdAsync(tempId);
         return _mapper.Map<IEnumerable<GetStageDefinitionDto?>>(result);
     }
+
+    public async Task<IEnumerable<GetStageDefinitionDto>> GetAssignedTasksAsync(Guid userId)
+    {
+        var result = await _repository.GetAssignedTasksAsync(userId);
+        return _mapper.Map<IEnumerable<GetStageDefinitionDto>>(result);
+    }
 }

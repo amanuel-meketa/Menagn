@@ -1,4 +1,5 @@
-﻿using approvals.application.Interfaces.Repository;
+﻿using approvals.application.DTOs.ApprovalInstance;
+using approvals.application.Interfaces.Repository;
 using approvals.domain.Entities;
 using approvals.infrastructure.Persistence.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
