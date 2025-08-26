@@ -49,5 +49,10 @@ namespace approvals.infrastructure.Persistence.Repositories
 
             return instance;
         }
+
+        public async Task<IEnumerable<ApprovalInstance?>> GetMyAppInstances(Guid userId)
+        {
+            return await _dbContext.ApprovalInstances.Where(x => x.CreatedBy == userId).OrderByDescending(x => x.CreatedAt).ToListAsync();
+        }
     }
 }

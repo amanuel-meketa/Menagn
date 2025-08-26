@@ -96,4 +96,10 @@ public class ApprovalInstanceService : IApprovalInstanceService
     {
         return _approvalInstanceRepository.GetByTemplateIdAsync(templateId);
     }
+
+    public async Task<IEnumerable<GetApprovalInstanceDto?>> GetMyAppInstances(Guid userId)
+    {
+        var result = await _approvalInstanceRepository.GetMyAppInstances(userId);
+        return _mapper.Map<IEnumerable<GetApprovalInstanceDto>>(result);
+    }
 }

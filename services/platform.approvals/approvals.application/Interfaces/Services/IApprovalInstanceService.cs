@@ -8,4 +8,5 @@ public interface IApprovalInstanceService
     Task<bool> DeleteAsync(Guid id);
     Task<Guid> StartAppInstanceAsync(Guid TemplateId, Guid createdBy);
     Task<IEnumerable<ApprovalInstance?>> GetByTemplateIdAsync(Guid templateId);
+    Task<IEnumerable<GetApprovalInstanceDto?>> GetMyAppInstances(Guid userId);
 }

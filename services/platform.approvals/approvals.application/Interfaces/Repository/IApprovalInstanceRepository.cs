@@ -7,5 +7,6 @@ namespace approvals.application.Interfaces.Repository
     {
         Task<ApprovalInstance> CreateApprovalInstanceAsync(Guid TemplateId, Guid createdBy, List<StageDefinition> stageDefinitions);
         Task<IEnumerable<ApprovalInstance?>> GetByTemplateIdAsync(Guid templateId);
+        Task<IEnumerable<ApprovalInstance?>> GetMyAppInstances(Guid userId);
     }
 }
