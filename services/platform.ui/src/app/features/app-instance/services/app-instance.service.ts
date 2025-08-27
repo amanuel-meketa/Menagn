@@ -3,7 +3,6 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { ApprovalRequest } from '../../../models/Approval-Instances/ApprovalRequest';
 import { InstanceList } from '../../../models/Approval-Instances/InstanceList';
-export type Guid = string;
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +24,7 @@ export class AppInstanceService {
     return this.http.post(`${this.baseUrl}/start`, data, { headers: this.jsonHeaders });
   }
   
-  getMyInstances(userId: Guid): Observable<InstanceList[]> {
+  getMyInstances(userId: string): Observable<InstanceList[]> {
     return this.http.get<InstanceList[]>(`${this.baseUrl}/user/${userId}/instances`, {
       headers: this.jsonHeaders
     });
