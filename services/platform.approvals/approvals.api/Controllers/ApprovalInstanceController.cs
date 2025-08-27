@@ -54,7 +54,7 @@ namespace approvals.api.Controllers
             return Ok(await _appInstanceservice.GetByTemplateIdAsync(templateId));
         }
 
-        [HttpGet("user/{userId:guid}/instances")]
+        [HttpGet("user/{userId}/instances")]
         public async Task<ActionResult<IEnumerable<GetApprovalInstanceDto>>> GetMyInstancesAsync(Guid userId)
         {
             return Ok(await _appInstanceservice.GetMyAppInstances(userId));

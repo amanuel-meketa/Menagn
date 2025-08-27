@@ -27,9 +27,9 @@ import { InstanceListComponent } from './features/app-instance/components/instan
 import { TemplateStagesComponent } from './features/stage-definition/components/template-stages/template-stages.component';
 import { StageDefinitinCreateComponent } from './features/stage-definition/components/stage-definitin-create/stage-definitin-create.component';
 import { ActiveTemplatesComponent } from './features/app-template/components/app-active-templates/app-active-templates.component';
+import { MyAppInstancesComponent } from './features/app-instance/components/my-app-instances/my-app-instances.component';
 
-export const routes: Routes = 
-[
+export const routes: Routes = [
   { path: 'auth-callback', component: AuthCallbackComponent, pathMatch: 'full' },
   { path: '', component: LayoutComponent, children: [
       { path: 'dashboard', component: DashboardComponent, canActivate:[authGuard]},
@@ -61,7 +61,6 @@ export const routes: Routes =
       
       { path: 'start-instance/:id', component: StartAppInstanceComponent},
       { path: 'instance-list', component: InstanceListComponent},
-      
-    ]
-  },
+      { path: 'requests', component: MyAppInstancesComponent},
+    ]},
 ];
