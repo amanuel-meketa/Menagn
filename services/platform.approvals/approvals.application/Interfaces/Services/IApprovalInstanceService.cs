@@ -1,5 +1,4 @@
 ﻿using approvals.application.DTOs.ApprovalInstance;
-using approvals.domain.Entities;
 public interface IApprovalInstanceService 
 {
     Task<GetApprovalInstanceDto?> GetByIdAsync(Guid id);
@@ -7,6 +6,6 @@ public interface IApprovalInstanceService
     Task<Guid> UpdateAsync(Guid id, UpdateApprovaleInstanceDto dto);
     Task<bool> DeleteAsync(Guid id);
     Task<Guid> StartAppInstanceAsync(Guid TemplateId, Guid createdBy);
-    Task<IEnumerable<ApprovalInstance?>> GetByTemplateIdAsync(Guid templateId);
-    Task<IEnumerable<GetApprovalInstanceDto?>> GetMyAppInstances(Guid userId);
+    Task<IEnumerable<GetApprovalInstanceDto?>> GetByTemplateIdAsync(Guid templateId);
+    Task<IEnumerable<GetMyApprovalInstanceDto?>> GetMyAppInstances(Guid userId);
 }

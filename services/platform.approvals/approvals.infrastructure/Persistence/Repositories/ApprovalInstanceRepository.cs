@@ -47,13 +47,13 @@ namespace approvals.infrastructure.Persistence.Repositories
             };
 
             await _dbContext.ApprovalInstances.AddAsync(instance);
-
             return instance;
         }
 
         public async Task<IEnumerable<ApprovalInstance?>> GetMyAppInstances(Guid userId)
         {
-            return await _dbContext.ApprovalInstances.Where(x => x.CreatedBy == userId).OrderByDescending(x => x.CreatedAt).ToListAsync();
+            return await _dbContext.ApprovalInstances.Include(x => x.Template).Include(x => x.StageInstances)
+                .Where(x => x.CreatedBy == userId).OrderByDescending(x => x.CreatedAt).AsNoTracking().ToListAsync();
         }
     }
 }

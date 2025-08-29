@@ -18,6 +18,8 @@ namespace approvals.application.Profiles
             CreateMap<ApprovalInstance, CreateApprovaleInstanceDto>().ReverseMap();
             CreateMap<ApprovalInstance, UpdateApprovaleInstanceDto>().ReverseMap();
             CreateMap<GetApprovalInstanceDto, UpdateApprovaleInstanceDto>().ReverseMap();
+            CreateMap<ApprovalInstance, GetMyApprovalInstanceDto>().ReverseMap()
+            .ForMember(dest => dest.Template, opt => opt.MapFrom(src => src.TemplateName));
 
             CreateMap<StageDefinition, GetStageDefinitionDto>().ReverseMap();
             CreateMap<StageDefinition, CreateStageDefinitionDto>().ReverseMap();
