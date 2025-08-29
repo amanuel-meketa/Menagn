@@ -6,11 +6,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace approvals.infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initialDB : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "ApprovalTemplates",
+                columns: table => new
+                {
+                    TemplateId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApprovalTemplates", x => x.TemplateId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "ApprovalInstances",
                 columns: table => new
@@ -26,20 +40,12 @@ namespace approvals.infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ApprovalInstances", x => x.InstanceId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ApprovalTemplates",
-                columns: table => new
-                {
-                    TemplateId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ApprovalTemplates", x => x.TemplateId);
+                    table.ForeignKey(
+                        name: "FK_ApprovalInstances_ApprovalTemplates_TemplateId",
+                        column: x => x.TemplateId,
+                        principalTable: "ApprovalTemplates",
+                        principalColumn: "TemplateId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -96,6 +102,11 @@ namespace approvals.infrastructure.Migrations
                         principalColumn: "StageDefId",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApprovalInstances_TemplateId",
+                table: "ApprovalInstances",
+                column: "TemplateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StageDefinitions_TemplateId",

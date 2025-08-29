@@ -49,6 +49,8 @@ namespace approvals.infrastructure.Migrations
 
                     b.HasKey("InstanceId");
 
+                    b.HasIndex("TemplateId");
+
                     b.ToTable("ApprovalInstances");
                 });
 
@@ -151,6 +153,17 @@ namespace approvals.infrastructure.Migrations
                     b.HasIndex("StageDefId");
 
                     b.ToTable("StageInstances");
+                });
+
+            modelBuilder.Entity("approvals.domain.Entities.ApprovalInstance", b =>
+                {
+                    b.HasOne("approvals.domain.Entities.ApprovalTemplate", "Template")
+                        .WithMany()
+                        .HasForeignKey("TemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Template");
                 });
 
             modelBuilder.Entity("approvals.domain.Entities.StageDefinition", b =>

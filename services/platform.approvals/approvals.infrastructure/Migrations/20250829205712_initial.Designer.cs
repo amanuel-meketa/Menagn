@@ -12,8 +12,8 @@ using approvals.infrastructure.Persistence;
 namespace approvals.infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250622213855_initialDB")]
-    partial class initialDB
+    [Migration("20250829205712_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,6 +51,8 @@ namespace approvals.infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("InstanceId");
+
+                    b.HasIndex("TemplateId");
 
                     b.ToTable("ApprovalInstances");
                 });
@@ -154,6 +156,17 @@ namespace approvals.infrastructure.Migrations
                     b.HasIndex("StageDefId");
 
                     b.ToTable("StageInstances");
+                });
+
+            modelBuilder.Entity("approvals.domain.Entities.ApprovalInstance", b =>
+                {
+                    b.HasOne("approvals.domain.Entities.ApprovalTemplate", "Template")
+                        .WithMany()
+                        .HasForeignKey("TemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Template");
                 });
 
             modelBuilder.Entity("approvals.domain.Entities.StageDefinition", b =>
