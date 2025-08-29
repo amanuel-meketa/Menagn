@@ -40,9 +40,9 @@
           <div class="card-title-row">
             <div class="card-title" title="{{ getTemplateName(instance.templateId) }}">
               <span nz-tooltip [nzTooltipTitle]="getTemplateName(instance.templateId)">
-                {{ getTemplateName(instance.templateId) }}
+                {{ getTemplateName(instance.templateName) }}
               </span>
-              <small class="muted"> • {{ instance.instanceId }}</small>
+             
             </div>
   
             <div class="card-actions">
@@ -56,9 +56,8 @@
           </div>
   
           <div class="card-sub">
-            <span class="muted">By {{ instance.createdBy }}</span>
             <span class="meta-dot">•</span>
-            <span class="muted">Stage {{ instance.currentStageOrder }} / {{ instance.stageInstances || 0 }}</span>
+            <span class="muted">Stage {{ instance.currentStageOrder }}</span>
           </div>
         </div>
       </div>
