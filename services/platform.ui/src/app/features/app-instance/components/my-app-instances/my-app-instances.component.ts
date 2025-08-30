@@ -5,9 +5,6 @@ import { finalize } from 'rxjs/operators';
 
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
-import { NzBadgeModule } from 'ng-zorro-antd/badge';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -15,8 +12,6 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { NzAvatarModule } from 'ng-zorro-antd/avatar';
-import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 
 import { AppInstanceService } from '../../services/app-instance.service';
@@ -26,11 +21,10 @@ import { AuthService } from '../../../../shared/services/auth-service.service';
 @Component({
   selector: 'app-my-app-instances',
   standalone: true,
-  imports: [ CommonModule, FormsModule, NzCardModule, NzBreadCrumbModule, NzBadgeModule, NzIconModule, NzInputModule,
-             NzSelectModule, NzModalModule, NzButtonModule, NzTagModule, NzPaginationModule, NzSkeletonModule,
-             NzToolTipModule, NzAvatarModule, NzSpaceModule, NzDividerModule ],
+  imports: [ CommonModule, FormsModule, NzCardModule, NzBreadCrumbModule, NzSelectModule, NzModalModule,
+             NzButtonModule, NzTagModule, NzPaginationModule, NzSkeletonModule, NzToolTipModule, NzDividerModule ],
   templateUrl: './my-app-instances.component.html',
-  styleUrls: ['./my-app-instances.component.css']
+  styleUrl: './my-app-instances.component.css'
 })
 
 export class MyAppInstancesComponent implements OnInit {
@@ -51,9 +45,9 @@ export class MyAppInstancesComponent implements OnInit {
   selectedInstance: InstanceList | null = null;
 
   ngOnInit() {
-    const currentUser = this._authService.getCurrentUserInfoFromToken();
-    if (currentUser?.id) {
-      this.loadInstances(currentUser.id);
+     const userId = this._authService.getCurrentUserInfoFromToken();
+     if (userId?.id) {
+        this.loadInstances(userId.id);
     } else {
       console.warn('No user found in token');
     }
@@ -61,9 +55,7 @@ export class MyAppInstancesComponent implements OnInit {
 
   loadInstances(userId: string) {
     this.loading = true;
-    this.appInstanceService.getMyInstances(userId)
-      .pipe(finalize(() => this.loading = false))
-      .subscribe({
+    this.appInstanceService.getMyInstances(userId).pipe(finalize(() => this.loading = false)).subscribe({
         next: (data) => {
           // ensure dates are Date objects for sorting / checks
           this.instances = (data || []).map(i => ({ ...i }));

@@ -17,7 +17,7 @@ export class AppInstanceService {
   }
 
   getInstanceByTempId(tempId: string): Observable<InstanceList[]> {
-    return this.http.get<InstanceList[]>(`${this.baseUrl}template/${tempId}/instances`, { headers: this.jsonHeaders });
+    return this.http.get<InstanceList[]>(`${this.baseUrl}/template/${tempId}/instances`, { headers: this.jsonHeaders });
   }  
 
   startApprovalInstance(data: ApprovalRequest): Observable<any> {
@@ -25,8 +25,6 @@ export class AppInstanceService {
   }
   
   getMyInstances(userId: string): Observable<InstanceList[]> {
-    return this.http.get<InstanceList[]>(`${this.baseUrl}/user/${userId}/instances`, {
-      headers: this.jsonHeaders
-    });
+    return this.http.get<InstanceList[]>(`${this.baseUrl}/user/${userId}/instances`, { headers: this.jsonHeaders });
   }
 }

@@ -64,6 +64,7 @@ export class AuthService {
       email: payload.email,
       username: payload.username
     };
+    
   } catch (err) {
     console.error('Error parsing token:', err);
     return null;
