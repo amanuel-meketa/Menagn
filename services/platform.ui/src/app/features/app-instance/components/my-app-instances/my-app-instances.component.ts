@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 
-/* NG-ZORRO modules */
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
@@ -22,34 +21,21 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 
 import { AppInstanceService } from '../../services/app-instance.service';
 import { InstanceList } from '../../../../models/Approval-Instances/InstanceList';
+import { AuthService } from '../../../../shared/services/auth-service.service';
 
 @Component({
   selector: 'app-my-app-instances',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    NzCardModule,
-    NzBreadCrumbModule,
-    NzBadgeModule,
-    NzIconModule,
-    NzInputModule,
-    NzSelectModule,
-    NzModalModule,
-    NzButtonModule,
-    NzTagModule,
-    NzPaginationModule,
-    NzSkeletonModule,
-    NzToolTipModule,
-    NzAvatarModule,
-    NzSpaceModule,
-    NzDividerModule
-  ],
+  imports: [ CommonModule, FormsModule, NzCardModule, NzBreadCrumbModule, NzBadgeModule, NzIconModule, NzInputModule,
+             NzSelectModule, NzModalModule, NzButtonModule, NzTagModule, NzPaginationModule, NzSkeletonModule,
+             NzToolTipModule, NzAvatarModule, NzSpaceModule, NzDividerModule ],
   templateUrl: './my-app-instances.component.html',
   styleUrls: ['./my-app-instances.component.css']
 })
+
 export class MyAppInstancesComponent implements OnInit {
   private appInstanceService = inject(AppInstanceService);
+  private _authService = inject(AuthService);
 
   // UI state
   searchTerm = '';
@@ -65,8 +51,12 @@ export class MyAppInstancesComponent implements OnInit {
   selectedInstance: InstanceList | null = null;
 
   ngOnInit() {
-    const userId = '52b89ab2-b54b-4464-b517-38f82fa10dbd'; 
-    this.loadInstances(userId);
+    const currentUser = this._authService.getCurrentUserInfoFromToken();
+    if (currentUser?.id) {
+      this.loadInstances(currentUser.id);
+    } else {
+      console.warn('No user found in token');
+    }
   }
 
   loadInstances(userId: string) {
