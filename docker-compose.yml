@@ -80,6 +80,8 @@ services:
     depends_on:
       - postgres
     restart: always
+    volumes:
+      - ./infrastructure/keycloak/themes/debelo:/opt/keycloak/themes/debelo:ro
     networks:
       - menagn-network
 
