@@ -1,0 +1,30 @@
+/* Make the whole page light and remove any background images */
+body,
+body.kcBodyClass,
+.login-pf body,            /* legacy */
+.pf-v5-c-login {           /* keycloak.v2 / PF v5 */
+  background: #f7f9fc !important;
+  background-image: none !important;
+}
+
+/* Main login area transparent (no gradient/picture behind) */
+.pf-v5-c-login__container,
+.pf-v5-c-page__main,
+.pf-v5-c-login__main {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* Keep the login card crisp/white */
+#kc-content,
+#kc-content-wrapper,
+.pf-v5-c-login__main .pf-v5-c-card {
+  background: #ffffff !important;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+/* Optional: tone down page title color */
+#kc-page-title {
+  color: #1f2937 !important;
+}

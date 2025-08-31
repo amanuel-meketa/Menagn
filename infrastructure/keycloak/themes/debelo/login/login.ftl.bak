@@ -1,0 +1,6 @@
+<#-- include styles declared in theme.properties -->
+<#if properties.styles?has_content>
+  <#list properties.styles?split('\\s+') as style>
+    <link href="${url.resourcesPath}/${style}" rel="stylesheet"/>
+  </#list>
+</#if>
