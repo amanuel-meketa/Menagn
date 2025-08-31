@@ -67,7 +67,7 @@ services:
   keycloak:
     container_name: platform.keycloak
     image: quay.io/keycloak/keycloak:26.1.0
-    command: ["start", "--http-enabled=true", "--hostname-strict=false"]
+    command: ["start", "--http-enabled=true", "--hostname-strict=false", "--import-realm"]
     environment:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://platform-database:5432/Keycloak
@@ -82,6 +82,7 @@ services:
     restart: always
     volumes:
       - ./infrastructure/keycloak/themes/debelo:/opt/keycloak/themes/debelo:ro
+      - ./configeration/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
     networks:
       - menagn-network
 
