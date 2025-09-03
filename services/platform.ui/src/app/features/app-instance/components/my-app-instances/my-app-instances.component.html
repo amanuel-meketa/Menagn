@@ -1,126 +1,111 @@
-<!-- Top controls -->
-<div class="controls-row" role="region" aria-label="Instances controls">
-    <div class="controls-left">
-      <h2 class="page-title">My Approval Requests</h2>
-    </div>
-  
-    <div class="controls-right" role="search" aria-label="Search and filters">
-      <div class="search-wrap">
-        <i nz-icon nzType="search" class="search-icon" aria-hidden="true"></i>
-        <input nz-input placeholder="Search by template or instance id" [(ngModel)]="searchTerm"
-               aria-label="Search instances" class="search-input" />
-      </div>
-  
-      <nz-select [(ngModel)]="statusFilter" nzAllowClear nzPlaceHolder="Status" class="filter-select" aria-label="Filter by status">
-        <nz-option nzLabel="Pending" nzValue="pending"></nz-option>
-        <nz-option nzLabel="Approved" nzValue="Approved"></nz-option>
-        <nz-option nzLabel="Rejected" nzValue="Rejected"></nz-option>
+<!-- HEADER -->
+<header class="instance-header">
+  <div class="header-left">
+    <h2 class="page-title">My Application Instances</h2>
+    <p class="page-sub">Overview of instances you submitted.</p>
+  </div>
+</header>
+
+<!-- FILTER BAR -->
+<section class="instance-filter-bar">
+  <div class="filter-row">
+    <label class="filter-item">
+      <i nz-icon nzType="search" class="filter-icon"></i>
+      <input nz-input placeholder="Search template name or id" [(ngModel)]="templateFilter" (ngModelChange)="onFilterChange()"class="filter-input" />
+    </label>
+
+    <label class="filter-item no-grow">
+      <i nz-icon nzType="calendar" class="filter-icon"></i>
+      <nz-range-picker [(ngModel)]="dateRange" (ngModelChange)="onFilterChange()" class="filter-input range-picker"></nz-range-picker>
+    </label>
+
+    <label class="filter-item no-grow">
+      <i nz-icon nzType="tag" class="filter-icon"></i>
+      <nz-select [(ngModel)]="statusFilter" (ngModelChange)="onFilterChange()" class="filter-select" nzAllowClear nzPlaceHolder="Status">
+        <nz-option nzValue="Pending" nzLabel="Pending"></nz-option>
+        <nz-option nzValue="Approved" nzLabel="Approved"></nz-option>
+        <nz-option nzValue="Rejected" nzLabel="Rejected"></nz-option>
       </nz-select>
-  
+    </label>
+
+    <div class="filter-actions">
+      <button nz-button nzType="default" (click)="clearFilters()">Clear</button>
     </div>
   </div>
-  
-  <nz-divider></nz-divider>
-  
-  <!-- Instances grid -->
-  <div *ngIf="!loading && filteredInstances.length > 0; else emptyOrLoading" class="instances-grid" role="list">
-    <nz-card *ngFor="let instance of filteredInstances"
-             [nzHoverable]="true"
-             class="instance-card"
-             [ngClass]="{'new-instance': isNew(instance)}"
-             (click)="openInstance(instance)"
-             role="listitem"
-             tabindex="0"
-             (keydown.enter)="openInstance(instance)"
-             (keydown.space)="$event.preventDefault(); openInstance(instance)">
-       
-      <div class="card-top">
-       
-        <div class="card-main">
-          <div class="card-title-row">
-            <div class="card-title" title="{{ getTemplateName(instance.templateId) }}">
-              <span nz-tooltip [nzTooltipTitle]="getTemplateName(instance.templateId)">
-                {{ getTemplateName(instance.templateName) }}
-              </span>
-             
+</section>
+
+<!-- GRID LIST -->
+<main class="instance-list" aria-live="polite">
+  <ng-container *ngIf="pagedList.length > 0; else emptyState">
+    <ng-container *ngFor="let instance of pagedList; let i = index">
+
+      <!-- Card actions as templates -->
+      <ng-template #stages>
+        <button nz-button nzType="text" nzSize="small" class="action-icon" 
+        (click)="openStageModal(instance.templateId || '')" title="Stages">
+          <i nz-icon nzType="cluster" class="action-icon-svg"></i>
+        </button>
+      </ng-template>
+
+      <ng-template #open>
+        <button nz-button nzType="text" nzSize="small" class="action-icon" (click)="openInstance(instance)" title="View">
+          <i nz-icon nzType="eye" class="action-icon-svg"></i>
+        </button>
+      </ng-template>
+
+      <nz-card class="instance-card" [nzActions]="[stages, open]" [nzBodyStyle]="{ padding: '18px 20px' }">
+        <!-- Card meta -->
+        <nz-card-meta
+        [nzTitle]="instance.templateName || instance.templateId || '—'"
+        [nzDescription]="instance.createdAt ? (instance.createdAt | date:'mediumDate') : '—'">
+      </nz-card-meta>
+      
+        <!-- Additional stats -->
+        <div class="meta-stats">
+          <div class="stat-row small">
+            <div class="stat-left">
+              <span class="stat-label">Current Stage</span>
             </div>
-  
-            <div class="card-actions">
-              <nz-tag [nzColor]="getStatusColor(instance.overallStatus)">
-                {{ instance.overallStatus | titlecase }}
-              </nz-tag>
-              <button nz-button nzType="text" nzSize="small" aria-label="View details" (click)="$event.stopPropagation(); openInstance(instance)">
-                <i nz-icon nzType="eye"></i>
-              </button>
-            </div>
+            <div class="stat-right">{{ instance.currentStageOrder }}</div>
           </div>
-  
-          <div class="card-sub">
-            <span class="meta-dot">•</span>
-            <span class="muted">Stage {{ instance.currentStageOrder }}</span>
+
+          <div class="stat-row small align-end">
+            <div class="stat-right"> Status </div>
+            <nz-tag [nzColor]="getStatusColor(instance.overallStatus)" class="status-tag">
+              <div class="stat-right">{{ instance.overallStatus }}</div>
+            </nz-tag>            
           </div>
         </div>
-      </div>
-  
-      <div class="card-footer">
-        <div class="dates">
-          <i nz-icon nzType="calendar" class="meta-icon"></i>
-          <span>{{ instance.createdAt | date:'mediumDate' }}</span>
-        </div>
-        <div class="dates" *ngIf="instance.completedAt">
-          <i nz-icon nzType="check-circle" class="meta-icon"></i>
-          <span>{{ instance.completedAt | date:'mediumDate' }}</span>
-        </div>
-      </div>
-    </nz-card>
-  </div>
-  
-  <!-- Empty or loading -->
-  <ng-template #emptyOrLoading>
-    <div *ngIf="!loading" class="empty-block">
-      <i nz-icon nzType="inbox" class="empty-icon"></i>
-      <div class="empty-text">You have no approval instances yet.</div>
-      <div class="empty-sub">Start a new request from the Templates page or check your drafts.</div>
-    </div>
-  
-    <div *ngIf="loading" class="instances-grid">
-      <nz-card *ngFor="let n of [1,2,3,4]" class="instance-card skeleton-card" aria-hidden="true">
-        <nz-skeleton [nzActive]="true" [nzTitle]="true" [nzParagraph]="{ rows: 2 }"></nz-skeleton>
       </nz-card>
+
+    </ng-container>
+  </ng-container>
+
+  <ng-template #emptyState>
+    <div class="empty-state">
+      <i nz-icon nzType="inbox" class="empty-icon"></i>
+      <p class="empty-title">No instances found</p>
+      <p class="empty-sub">Try clearing filters or create a new instance.</p>
     </div>
   </ng-template>
-  
-  <!-- Pagination -->
-  <div class="pagination-wrap">
-    <nz-pagination [nzPageIndex]="pageIndex" [nzPageSize]="pageSize" [nzTotal]="instances.length"
-                   (nzPageIndexChange)="onPageChange($event)" [nzShowSizeChanger]="false"></nz-pagination>
-  </div>
-  
-  <!-- Details modal -->
-  <nz-modal [(nzVisible)]="modalVisible" [nzTitle]="selectedInstance ? getTemplateName(selectedInstance.templateId) : ''"
-            (nzOnCancel)="handleCancel()" [nzFooter]="null">
-    <ng-container *ngIf="selectedInstance">
-      <div class="modal-meta">
-        <div><strong>Instance ID:</strong> {{ selectedInstance.instanceId }}</div>
-        <div><strong>Status:</strong> {{ selectedInstance.overallStatus | titlecase }}</div>
-        <div><strong>Created At:</strong> {{ selectedInstance.createdAt | date:'medium' }}</div>
-        <div><strong>Completed At:</strong> {{ selectedInstance.completedAt ? (selectedInstance.completedAt | date:'medium') : '-' }}</div>
-      </div>
-  
-      <nz-divider></nz-divider>
-  
-      <div *ngIf="selectedInstance.stageInstances?.length; else noStages">
-        <strong>Stages</strong>
-        <ul class="stage-list">
-          <li *ngFor="let s of selectedInstance.stageInstances">
-            <strong>{{ s.name || s.stageId }}</strong> — <span class="muted">{{ s.status }}</span>
-          </li>
-        </ul>
-      </div>
-  
-      <ng-template #noStages>
-        <div class="muted">No stages available for this instance.</div>
-      </ng-template>
-    </ng-container>
-  </nz-modal>
-  
+</main>
+
+<!-- PAGINATION (totalTpl included) -->
+<ng-template #totalTpl let-total let-range="range">
+  Showing {{ range[0] }} - {{ range[1] }} of {{ total }}
+</ng-template>
+
+<footer class="instance-pagination" *ngIf="filteredList.length > 0">
+
+  <nz-pagination
+    [nzPageIndex]="pageIndex"
+    (nzPageIndexChange)="onPageIndexChange($event)"
+    [nzPageSize]="pageSize"
+    (nzPageSizeChange)="onPageSizeChange($event)"
+    [nzTotal]="filteredList.length"
+    [nzPageSizeOptions]="pageSizeOptions"
+    [nzShowSizeChanger]="true"
+    [nzShowQuickJumper]="true"
+    [nzShowTotal]="totalTpl">
+  </nz-pagination>
+</footer>

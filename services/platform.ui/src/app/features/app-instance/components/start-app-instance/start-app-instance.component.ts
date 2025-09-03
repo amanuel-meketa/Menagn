@@ -18,16 +18,8 @@ import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 @Component({
   selector: 'start-app-instance',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    NzFormModule,
-    NzCardModule,
-    NzButtonModule,
-    NzDividerModule,
-    NzIconModule,
-    NzInputModule, NzBreadCrumbModule
-  ],
+  imports: [ CommonModule, ReactiveFormsModule, NzFormModule, NzCardModule, NzButtonModule, NzDividerModule, NzIconModule,
+             NzInputModule, NzBreadCrumbModule ],
   templateUrl: './start-app-instance.component.html',
   styleUrls: ['./start-app-instance.component.css']
 })

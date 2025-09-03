@@ -1,6 +1,6 @@
 export interface InstanceList {
   instanceId: string;
-  templateId: string;
+  templateId?: string;
   templateName: string;
   createdBy: string;
   currentStageOrder: number;
