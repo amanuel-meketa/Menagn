@@ -1,0 +1,107 @@
+<!-- Stage Button -->
+<button nz-button nzType="link" (click)="openModal()" nzSize="small" aria-label="Open stages">
+    <i nz-icon nzType="apartment" style="margin-right: 6px;"></i> Stages
+  </button>
+  
+  <!-- Modal -->
+  <nz-modal
+    nzDraggable
+    nzCentered
+    [(nzVisible)]="isVisible"
+    nzTitle="Stage Progress"
+    (nzOnCancel)="handleCancel()"
+    [nzStyle]="{ width: '960px', maxHeight: '800px' }"
+    [nzBodyStyle]="{ padding: '24px', maxHeight: '700px', overflowY: 'auto' }"
+    nzCancelText="Close"
+    [nzFooter]="null"
+    role="dialog"
+  >
+    <ng-container *nzModalContent>
+      <div class="sp-modal-root">
+  
+        <!-- Top: Current Stage & Progress -->
+        <div class="sp-top-row polished-header">
+          <div class="sp-left">
+            <i nz-icon nzType="dashboard" nzTheme="outline" class="dashboard-icon"></i>
+            <div class="stage-info">
+              <div class="sp-title">Current Stage</div>
+              <div class="sp-stage-name-header">{{ currentStageName }}</div>
+              <div class="stage-summary">
+                <span>Stage {{ currentStageOrder || index + 1 }} of {{ stages.length || '–' }}</span>
+              </div>
+            </div>
+          </div>
+  
+          <div class="sp-nav-buttons">
+            <button nz-button nzType="default" nzSize="small" (click)="prev()" [disabled]="index === 0">Prev</button>
+            <button nz-button nzType="primary" nzSize="small" (click)="next()" [disabled]="index >= stages.length - 1">Next</button>
+          </div>
+        </div>
+  
+        <!-- Loading / Error -->
+        <nz-skeleton *ngIf="loading" [nzActive]="true" [nzTitle]="true" [nzParagraph]="{ rows: 3 }"></nz-skeleton>
+        <div *ngIf="error && !loading" class="sp-error-box">{{ error }}</div>
+  
+        <!-- Steps Timeline -->
+        <div class="sp-steps-wrap" *ngIf="stages.length > 0">
+          <nz-steps
+            [nzCurrent]="index"
+            (nzIndexChange)="onIndexChange($event)"
+            nzDirection="vertical"
+            nzSize="small"
+            class="custom-steps"
+          >
+            <nz-step
+              *ngFor="let stage of stages; let i = index"
+              [nzTitle]="stage.stageName"
+              [nzDescription]="stage.assignmentKey"
+              [nzStatus]="mapStatusToNzStep(stage)"
+              [ngClass]="{
+                'highlighted-step': selectedStage && stage.stageDefId === selectedStage.stageDefId,
+                'instance-current': currentStageOrder === (i + 1)
+              }"
+            >
+              <ng-template nzTitle>
+                {{ stage.stageName }}
+                <span *ngIf="currentStageOrder === (i + 1)" class="current-label">CURRENT</span>
+              </ng-template>
+            </nz-step>
+          </nz-steps>
+        </div>
+  
+        <p *ngIf="stages.length === 0 && !loading" class="sp-no-stage">
+          No stages available for this template.
+        </p>
+  
+        <!-- Current Stage Detail Card -->
+        <div *ngIf="selectedStage?.stageDefId; else noStage" class="sp-detail-card polished-card">
+          <div class="sp-detail-grid">
+  
+            <!-- Left: Stage Info -->
+            <div class="sp-detail-left">
+              <h3 class="sp-step-name">{{ selectedStage.stageName }}</h3>
+              <div class="sp-description">{{ selectedStage.description }}</div>
+              <div class="sp-meta">Sequence: {{ selectedStage.sequenceOrder }}</div>
+            </div>
+  
+            <!-- Right: Assignee & Status -->
+            <div class="sp-detail-right">
+              <div class="sp-assignee-label">Assignee</div>
+              <div class="sp-assignee">{{ selectedStage.assignmentKey || '—' }}</div>
+              <nz-tag [nzColor]="getStatusColorForStage(selectedStage)">
+                {{ mapStatusToNzStep(selectedStage) === 'process' ? 'In Progress' : (selectedStage.status || 'Unknown') }}
+              </nz-tag>
+              <div class="sp-timestamp">{{ formatDate(selectedStage.updatedAt ?? selectedStage.createdOn ?? null) }}</div>
+            </div>
+  
+          </div>
+        </div>
+  
+        <ng-template #noStage>
+          <div class="sp-no-stage">No stage selected.</div>
+        </ng-template>
+  
+      </div>
+    </ng-container>
+  </nz-modal>
+  

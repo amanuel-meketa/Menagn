@@ -41,10 +41,11 @@
 
       <!-- Card actions as templates -->
       <ng-template #stages>
-        <button nz-button nzType="text" nzSize="small" class="action-icon" 
-        (click)="openStageModal(instance.templateId || '')" title="Stages">
-          <i nz-icon nzType="cluster" class="action-icon-svg"></i>
-        </button>
+        <app-stage-progress
+        [templateId]="instance.templateId"
+        [currentStageOrder]="instance.currentStageOrder">
+      </app-stage-progress>
+      
       </ng-template>
 
       <ng-template #open>

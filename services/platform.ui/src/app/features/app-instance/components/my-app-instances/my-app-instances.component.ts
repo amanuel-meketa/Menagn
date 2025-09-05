@@ -20,15 +20,17 @@ import { AppInstanceService } from '../../services/app-instance.service';
 import { InstanceList } from '../../../../models/Approval-Instances/InstanceList';
 import { AuthService } from '../../../../shared/services/auth-service.service';
 import { AppTemplateService } from '../../../app-template/services/app-template.service';
+import { StageProgressComponent } from '../../../stage-definition/components/stage-progress/stage-progress.component';
 
 @Component({
   selector: 'app-my-app-instances',
   standalone: true,
   imports: [ CommonModule, FormsModule, NzInputModule, NzDatePickerModule, NzSelectModule, NzPaginationModule, NzButtonModule,
-             NzIconModule, NzModalModule, NzCardModule, RouterModule, NzTagModule ],
+             NzIconModule, NzModalModule, NzCardModule, RouterModule, NzTagModule, StageProgressComponent ],
   templateUrl: './my-app-instances.component.html',
   styleUrl: './my-app-instances.component.css'
 })
+
 export class MyAppInstancesComponent implements OnInit, OnDestroy {
   private readonly _appTemplateService = inject(AppTemplateService);
   private readonly _appInstanceService = inject(AppInstanceService);
@@ -41,9 +43,6 @@ export class MyAppInstancesComponent implements OnInit, OnDestroy {
 
   // raw data loaded from API
   listOfData: InstanceList[] = [];
-
-  // UI state / modal
-  selectedTemplateId: string | null = null;
   isVisible = false;
 
   // FILTERS
@@ -152,6 +151,7 @@ export class MyAppInstancesComponent implements OnInit, OnDestroy {
     this.onFilterChange();
   }
 
+  selectedTemplateId: string | null = null;
   openStageModal(templateId: string) {
     this.selectedTemplateId = templateId;
     this.isVisible = true;

@@ -1,0 +1,204 @@
+/* Root */
+.sp-modal-root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* Top Row: Progress + Navigation */
+.sp-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.sp-left { display: flex; align-items: center; gap: 12px; }
+.sp-left i { font-size: 28px; color: #1890ff; }
+.sp-title { font-weight: 700; font-size: 16px; color: #111; }
+.sp-stage-badge { font-weight: 600; color: #1890ff; margin-left: 4px; }
+.sp-percent-tag { margin-left: 10px; font-weight: 600; color: #096dd9; }
+
+/* Navigation Buttons */
+.sp-nav-buttons button { min-width: 72px; }
+
+/* Animated Gradient Progress Bar */
+.sp-progress-bar {
+  height: 10px;
+  border-radius: 999px;
+  background: #f0f0f0;
+  overflow: hidden;
+  margin: 12px 0 20px;
+}
+.sp-progress-bar > div {
+  height: 100%;
+  background: linear-gradient(90deg, #1890ff 0%, #40a9ff 100%);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+/* Steps Timeline */
+.sp-steps-wrap {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-left: 12px;
+  border-left: 2px solid #f0f0f0;
+}
+
+/* Highlighted Step */
+.custom-steps ::ng-deep .ant-steps-item.highlighted-step {
+  background-color: #e6f7ff;
+  border-radius: 8px;
+  padding: 10px 14px;
+  transition: background 0.3s ease;
+}
+.custom-steps ::ng-deep .ant-steps-item.highlighted-step .ant-steps-item-title {
+  color: #1890ff !important;
+  font-weight: 600;
+}
+.custom-steps ::ng-deep .ant-steps-item.highlighted-step .ant-steps-item-description {
+  color: #096dd9 !important;
+}
+
+/* Current Step Label */
+.current-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
+  background: #1890ff;
+  padding: 2px 6px;
+  border-radius: 12px;
+  margin-left: 6px;
+  vertical-align: middle;
+  transition: all 0.3s ease;
+}
+
+/* Detail Card */
+.sp-detail-card {
+  margin-top: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  padding: 24px;
+  background: #fff;
+}
+.sp-detail-grid { display: flex; gap: 24px; flex-wrap: wrap; justify-content: space-between; }
+.sp-detail-left { flex: 1 1 60%; }
+.sp-detail-right { width: 220px; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+
+/* Typography */
+.sp-step-name { margin: 0 0 8px; color: #1890ff; font-size: 18px; font-weight: 600; }
+.sp-description { color: #555; margin-bottom: 8px; }
+.sp-meta { color: #888; font-size: 13px; }
+.sp-assignee-label { font-size: 12px; color: #888; }
+.sp-assignee { font-weight: 700; font-size: 14px; color: #222; }
+.sp-timestamp { font-size: 12px; color: #999; }
+
+/* Error Box */
+.sp-error-box {
+  color: #ff4d4f;
+  padding: 12px;
+  background: #fff1f0;
+  border-radius: 6px;
+}
+
+/* No Stage Message */
+.sp-no-stage {
+  text-align: center;
+  color: #888;
+  padding: 24px 0;
+}
+
+/* Scrollbar Styling */
+.sp-steps-wrap::-webkit-scrollbar { width: 6px; }
+.sp-steps-wrap::-webkit-scrollbar-thumb { background-color: rgba(0,0,0,0.15); border-radius: 3px; }
+.sp-steps-wrap::-webkit-scrollbar-track { background: transparent; }
+
+/* Responsive */
+@media (max-width: 720px) {
+  .sp-detail-grid { flex-direction: column; }
+  .sp-detail-right { width: 100%; align-items: flex-start; }
+}
+/* Top header polished */
+.polished-header {
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.dashboard-icon {
+  font-size: 28px;
+  color: #1890ff;
+}
+
+.stage-info {
+  display: flex;
+  flex-direction: column;
+  margin-left: 12px;
+}
+
+.stage-summary {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #595959;
+}
+
+.stage-summary .sp-percent-tag {
+  margin-left: 12px;
+  font-weight: 600;
+  color: #096dd9;
+}
+
+/* Sleek progress bar */
+.sp-progress-bar.polished-bar {
+  height: 8px;
+  border-radius: 12px;
+  background: #f0f0f0;
+  overflow: hidden;
+  margin: 12px 0 20px;
+}
+
+.sp-progress-bar.polished-bar > div {
+  height: 100%;
+  background: linear-gradient(90deg, #1890ff 0%, #40a9ff 100%);
+  border-radius: 12px;
+  transition: width 0.4s ease;
+}
+
+/* Detail card polished */
+.sp-detail-card.polished-card {
+  margin-top: 18px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 22px;
+  background: #fff;
+}
+
+/* Current Stage Label */
+.current-label {
+  font-size: 10px;
+  color: white;
+  background: #1890ff;
+  padding: 2px 6px;
+  border-radius: 12px;
+  margin-left: 6px;
+  font-weight: 600;
+}
+
+/* Steps wrap polished scrollbar */
+.sp-steps-wrap {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-left: 12px;
+  border-left: 2px solid #f0f0f0;
+}
+.sp-steps-wrap::-webkit-scrollbar {
+  width: 6px;
+}
+.sp-steps-wrap::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+}
+.sp-steps-wrap::-webkit-scrollbar-track {
+  background: transparent;
+}
