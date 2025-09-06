@@ -1,0 +1,118 @@
+<!-- HEADER -->
+<header class="instance-header">
+  <div class="header-left">
+    <h2 class="page-title">My Assigned Tasks</h2>
+    <p class="page-sub">Tasks assigned to you for approval or action.</p>
+  </div>
+</header>
+
+<!-- FILTER BAR -->
+<section class="instance-filter-bar">
+  <div class="filter-row">
+    <!-- Search Filter -->
+    <label class="filter-item">
+      <i nz-icon nzType="search" class="filter-icon"></i>
+      <input nz-input placeholder="Search by stage name or description"
+             [(ngModel)]="searchFilter"
+             (ngModelChange)="onFilterChange()"
+             class="filter-input" />
+    </label>
+
+    <!-- Assignment Type Filter -->
+    <label class="filter-item no-grow">
+      <i nz-icon nzType="tag" class="filter-icon"></i>
+      <nz-select [(ngModel)]="assignmentTypeFilter"
+                 (ngModelChange)="onFilterChange()"
+                 class="filter-select"
+                 nzAllowClear
+                 nzPlaceHolder="Assignment Type">
+        <nz-option nzValue="User" nzLabel="User"></nz-option>
+        <nz-option nzValue="Role" nzLabel="Role"></nz-option>
+      </nz-select>
+    </label>
+
+    <!-- Clear Filters -->
+    <div class="filter-actions">
+      <button nz-button nzType="default" (click)="clearFilters()">Clear</button>
+    </div>
+  </div>
+</section>
+
+<!-- GRID LIST -->
+<!-- HEADER & FILTERS remain the same -->
+
+<main class="instance-list" aria-live="polite">
+  <ng-container *ngIf="pagedList.length > 0; else emptyState">
+    <ng-container *ngFor="let task of pagedList">
+      <nz-card class="instance-card" [nzBodyStyle]="{ padding: '20px' }">
+        <div class="card-header">
+          <h3 class="task-title">{{ task.stageName || '—' }}</h3>
+        </div>
+
+        <div class="meta-stats">
+          <div class="stat-row">
+            <span class="stat-label">Step Order:</span>
+            <span class="stat-value">{{ task.sequenceOrder }}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Assigned To:</span>
+            <nz-tag [nzColor]="getTagColor(task.assignmentType)" class="status-tag">
+              {{ task.assignmentType }}
+            </nz-tag>
+          </div>
+        </div>
+
+        <div class="card-actions">
+          <button nz-button nzType="default" nzSize="small"
+                  (click)="openTask(task)">
+            <i nz-icon nzType="eye" class="action-icon-svg"></i> View
+          </button>
+          <button nz-button nzType="default" nzSize="small"
+                  (click)="takeAction(task)">
+            <i nz-icon nzType="check-circle" class="action-icon-svg"></i> Take Action
+          </button>
+        </div>
+      </nz-card>
+    </ng-container>
+  </ng-container>
+
+  <ng-template #emptyState>
+    <div class="empty-state">
+      <i nz-icon nzType="inbox" class="empty-icon"></i>
+      <p class="empty-title">No tasks found</p>
+      <p class="empty-sub">You currently don’t have any assigned tasks.</p>
+    </div>
+  </ng-template>
+</main>
+
+<!-- PAGINATION remains the same -->
+
+<!-- NG-ZORRO MODAL TEMPLATE -->
+<ng-template #taskModal>
+  <div *ngIf="selectedTask">
+    <p><strong>Assignment Type:</strong> {{ selectedTask.assignmentType }}</p>
+    <p><strong>Step Order:</strong> {{ selectedTask.sequenceOrder }}</p>
+    <p><strong>Description:</strong></p>
+    <p style="white-space: pre-line;">{{ selectedTask.description || '—' }}</p>
+  </div>
+</ng-template>
+
+
+<!-- PAGINATION -->
+<ng-template #totalTpl let-total let-range="range">
+  Showing {{ range[0] }} - {{ range[1] }} of {{ total }}
+</ng-template>
+
+<footer class="instance-pagination" *ngIf="filteredList.length > 0">
+  <nz-pagination
+    [nzPageIndex]="pageIndex"
+    (nzPageIndexChange)="onPageIndexChange($event)"
+    [nzPageSize]="pageSize"
+    (nzPageSizeChange)="onPageSizeChange($event)"
+    [nzTotal]="filteredList.length"
+    [nzPageSizeOptions]="pageSizeOptions"
+    [nzShowSizeChanger]="true"
+    [nzShowQuickJumper]="true"
+    [nzShowTotal]="totalTpl">
+  </nz-pagination>
+</footer>

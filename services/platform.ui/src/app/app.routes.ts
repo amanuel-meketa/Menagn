@@ -29,6 +29,7 @@ import { StageDefinitinCreateComponent } from './features/stage-definition/compo
 import { ActiveTemplatesComponent } from './features/app-template/components/app-active-templates/app-active-templates.component';
 import { MyAppInstancesComponent } from './features/app-instance/components/my-app-instances/my-app-instances.component';
 import { StageProgressComponent } from './features/stage-definition/components/stage-progress/stage-progress.component';
+import { AssignedTaskComponent } from './features/stage-definition/components/assigned-task/assigned-task.component';
 
 export const routes: Routes = [
   { path: 'auth-callback', component: AuthCallbackComponent, pathMatch: 'full' },
@@ -60,6 +61,7 @@ export const routes: Routes = [
       { path: 'stage-definition-update', component: StageDefinitionUpdateComponent},
       { path: 'stage-progress/templateId:', component: StageProgressComponent},
       { path: 'template-stages/templateId:', component: TemplateStagesComponent},
+      { path: 'assigned-task', component: AssignedTaskComponent},
       
       { path: 'start-instance/:id', component: StartAppInstanceComponent},
       { path: 'instance-list', component: InstanceListComponent},

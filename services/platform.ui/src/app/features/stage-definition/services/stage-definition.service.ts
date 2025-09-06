@@ -44,4 +44,8 @@ export class StageDefinitionService {
     return this.http.post<void>(this.baseUrl, stages, { headers: this.jsonHeaders });
   }
   
+  assignedTasks(userId: string): Observable<GetStageDefiModel[]> { 
+    return this.http.get<GetStageDefiModel[]>( `${this.baseUrl}/user/${userId}/assigned-task`, { headers: this.jsonHeaders });
+  }
+  
 }
