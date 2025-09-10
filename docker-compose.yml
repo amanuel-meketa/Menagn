@@ -66,8 +66,8 @@ services:
 
   keycloak:
     container_name: platform.keycloak
-    image: quay.io/keycloak/keycloak:26.1.0
-    command: ["start", "--http-enabled=true", "--hostname-strict=false", "--import-realm"]
+    image: quay.io/keycloak/keycloak:26.3.3
+    command: ["start", "--http-enabled=true", "--hostname-strict=false", "--import-realm", "--hostname=host.docker.internal"]
     environment:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://platform-database:5432/Keycloak

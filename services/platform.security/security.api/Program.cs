@@ -7,6 +7,8 @@ using security.sharedUtils;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var authConfig = builder.Configuration.GetSection("Authentication");
+
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGenWithAuth(builder.Configuration);
 builder.Services.ConfigurApplicationServices();
@@ -14,12 +16,9 @@ builder.Services.AddKeycloakWebApiAuthentication(
 builder.Configuration,
     options =>
     {
+        options.Authority = authConfig["Authority"];
         options.TokenValidationParameters.ValidateIssuer = true;
-        options.TokenValidationParameters.ValidIssuers = new[]
-        {
-            "http://localhost:8180/realms/Menagn",
-            "http://platform.keycloak:8080/realms/Menagn"
-        };
+        options.TokenValidationParameters.ValidIssuers = new[] { authConfig["Authority"] };
         options.RequireHttpsMetadata = false;
     }
 );

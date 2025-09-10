@@ -3,62 +3,94 @@ using approvals.application.DTOs.ApplicationType.Validator;
 using approvals.infrastructure.Persistence;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Keycloak.AuthServices.Authentication;
+using Keycloak.AuthServices.Authorization;
+using Keycloak.AuthServices.Common;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using platform.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
+// ---- Controllers
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
+
+// ---- Keycloak Authentication (binds from "Keycloak" section by default)
+builder.Services.AddKeycloakWebApiAuthentication(builder.Configuration, options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo
+    options.RequireHttpsMetadata = false; // dev only
+});
+
+// ---- Keycloak Authorization mapping
+builder.Services.AddKeycloakAuthorization(options =>
+{
+    options.EnableRolesMapping = RolesClaimTransformationSource.ResourceAccess;
+    options.RolesResource = builder.Configuration["Keycloak:resource"];
+});
+
+// ---- Authorization Server (client used to call Keycloak Decision/Protection API)
+builder.Services.AddAuthorizationServer(options =>
+{
+    builder.Configuration.BindKeycloakOptions(options);
+    options.UseProtectedResourcePolicyProvider = true; // allow "Resource#scope" style policy names
+});
+
+// ---- Swagger + JWT UI
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(o =>
+{
+    o.SwaggerDoc("v1", new OpenApiInfo { Title = "approvals service", Version = "v1" });
+
+    o.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Title = "approvals service",
-        Version = "v1",
-        Description = "API documentation for the approvals microservice."
+        In = ParameterLocation.Header,
+        Description = "JWT Authorization header using the Bearer scheme.",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = JwtBearerDefaults.AuthenticationScheme,
+        BearerFormat = "JWT"
+    });
+
+    o.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
     });
 });
 
-// FluentValidation
+// ---- FluentValidation
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateAppTypeDtoValidator>();
 
-// Application and Infrastructure DI
+// ---- App + Infra DI
 builder.Services.ConfigurApplicationServices();
 builder.Services.AddPersistence(builder.Configuration);
 
-// CORS policy
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-    });
-});
+// ---- CORS
+builder.Services.AddCors(o => o.AddPolicy("AllowAll", p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
 var app = builder.Build();
 
-// Run migrations if inside Docker
 if (Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true")
     await app.EnsureMigrationAppliedAsync(app.Environment);
 
-// Swagger UI
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Approvals API v1");
-        options.RoutePrefix = "swagger";
-    });
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Approvals API v1"));
 }
 
-// Standard middleware order
 app.UseCors("AllowAll");
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

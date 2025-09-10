@@ -63,8 +63,8 @@ export const routes: Routes = [
       { path: 'template-stages/templateId:', component: TemplateStagesComponent},
       { path: 'assigned-task', component: AssignedTaskComponent},
       
-      { path: 'start-instance/:id', component: StartAppInstanceComponent},
-      { path: 'instance-list', component: InstanceListComponent},
-      { path: 'requests', component: MyAppInstancesComponent},
+      { path: 'start-instance/:id', component: StartAppInstanceComponent, canActivate:[authGuard]},
+      { path: 'instance-list', component: InstanceListComponent,  canActivate:[authGuard]},
+      { path: 'requests', component: MyAppInstancesComponent,  canActivate:[authGuard]},
     ]},
 ];
