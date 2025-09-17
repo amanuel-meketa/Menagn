@@ -15,6 +15,13 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
 
+  platform.bootstrapper:
+    build:
+      context: ./services
+      dockerfile: platform.bootstrapper/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development    
+
   platform.ui:
     build:
       context: ./services/platform.ui

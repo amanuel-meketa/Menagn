@@ -27,6 +27,17 @@ services:
     networks:
       - menagn-network
 
+  platform.bootstrapper:
+    container_name: service-bootstrapper
+    image: amanuelmeketa/platform.bootstrapper:latest
+    environment:
+      Keycloak__BaseUrl: "http://host.docker.internal:8180/"
+      Keycloak__Realm: "Menagn"
+      Keycloak__AdminUser: "admin"
+      Keycloak__AdminPassword: "admin"
+      Keycloak__ClientId: "menagn"
+      Keycloak__ClientSecret: "ShxxjZKYS9JMLwRyi0fBanG0InzbnbhY"     
+
   platform.ui:
     container_name: platform.ui
     image: amanuelmeketa/platform.ui:latest
