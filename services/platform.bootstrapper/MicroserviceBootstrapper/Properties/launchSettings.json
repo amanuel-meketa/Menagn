@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "MicroserviceBootstrapper": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
