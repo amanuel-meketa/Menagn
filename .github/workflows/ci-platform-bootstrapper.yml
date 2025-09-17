@@ -34,7 +34,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
-          context: services/bootstrapper
+          context: services/platform.bootstrapper
           file: services/platform.bootstrapper/Dockerfile
           push: true
           tags: |
