@@ -7,19 +7,19 @@ using System.Text.Json;
 
 namespace MicroserviceBootstrapper.Initializers
 {
-    public class KeycloakInitializer : BaseServiceInitializer
+    public class AuthenticationInitializer : BaseServiceInitializer
     {
-        private readonly KeycloakConfig _config;
+        private readonly AuthenticationConfig _config;
         private string? _accessToken;
 
-        public KeycloakInitializer(IOptions<KeycloakConfig> configOptions, Logger logger) : base(logger)
+        public AuthenticationInitializer(IOptions<AuthenticationConfig> configOptions, Logger logger) : base(logger)
         {
             _config = configOptions.Value;
         }
 
         public override async Task InitializeAsync()
         {
-            _logger.Info("Initializing Keycloak...");
+            _logger.Info("Initializing authentication...");
 
             using var client = new HttpClient { BaseAddress = new Uri(_config.BaseUrl) };
 

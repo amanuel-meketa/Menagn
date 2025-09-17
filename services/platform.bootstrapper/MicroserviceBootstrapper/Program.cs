@@ -10,27 +10,23 @@ using Microsoft.Extensions.Logging;
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration((hostingContext, config) =>
     {
-        config.SetBasePath(AppContext.BaseDirectory)
-              .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+        config.SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
               .AddEnvironmentVariables();
     })
     .ConfigureServices((hostContext, services) =>
     {
-        // Logger
-        services.AddLogging(config =>
-        {
-            config.AddConsole();
-            config.SetMinimumLevel(LogLevel.Information);
-        });
+        services.AddLogging(config =>{ config.AddConsole(); config.SetMinimumLevel(LogLevel.Information); });
         services.AddSingleton<Logger>();
 
         var configuration = hostContext.Configuration;
 
         // Bind configurations for all supported services
-        services.Configure<KeycloakConfig>(configuration.GetSection("Keycloak"));
+        services.Configure<AuthenticationConfig>(configuration.GetSection("authentication"));
+        services.Configure<AuthorizationConfig>(configuration.GetSection("authorization"));
 
         // Register all initializers here
-        services.AddTransient<IServiceInitializer, KeycloakInitializer>();
+        services.AddTransient<IServiceInitializer, AuthenticationInitializer>();
+        services.AddTransient<IServiceInitializer, AuthorizationInitializer>();
     })
     .Build();
 

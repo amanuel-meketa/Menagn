@@ -1,5 +1,4 @@
-﻿
-namespace MicroserviceBootstrapper.Models
+﻿namespace MicroserviceBootstrapper.Models.Keycloak
 {
     public class KeycloakRole
     {
