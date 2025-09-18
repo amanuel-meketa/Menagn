@@ -1,65 +1,64 @@
-version: '3.9'
-
 services:
   security.api:
     container_name: platform.security
     image: amanuelmeketa/identitypro:latest
-    platform: linux/amd64  #  # ⚠️ This line is for Mac development only — remove in production
+    platform: linux/amd64
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_HTTP_PORTS=9090
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_HTTP_PORTS: 9090
     ports:
-      - 9090:9090
+      - "9090:9090"
     networks:
       - menagn-network
 
   platform.approvals:
     container_name: platform.approvals
     image: amanuelmeketa/platform.approvals:latest
-    platform: linux/amd64  #  # ⚠️ This line is for Mac development only — remove in production
+    platform: linux/amd64
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://0.0.0.0:7070
-      - DatabaseProvider=Postgres
-      - ConnectionStrings__Postgres=Host=platform-database;Port=5432;Database=Approvals;Username=postgres;Password=postgres
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://0.0.0.0:7070
+      DatabaseProvider: Postgres
+      ConnectionStrings__Postgres: "Host=platform-database;Port=5432;Database=Approvals;Username=postgres;Password=password"
     ports:
-      - 2000:7070
+      - "2000:7070"
     networks:
       - menagn-network
-
+      
   platform.bootstrapper:
     container_name: service-bootstrapper
     image: amanuelmeketa/platform.bootstrapper:latest
-    environment:
-      Keycloak__BaseUrl: "http://host.docker.internal:8180/"
-      Keycloak__Realm: "Menagn"
-      Keycloak__AdminUser: "admin"
-      Keycloak__AdminPassword: "admin"
-      Keycloak__ClientId: "menagn"
-      Keycloak__ClientSecret: "ShxxjZKYS9JMLwRyi0fBanG0InzbnbhY"     
+    networks:
+      - menagn-network
 
   platform.ui:
     container_name: platform.ui
     image: amanuelmeketa/platform.ui:latest
-    platform: linux/amd64   # ⚠️ This line is for Mac development only — remove in production
+    platform: linux/amd64
     ports:
-      - 8000:8000
+      - "8000:8000"
     networks:
       - menagn-network
 
   postgres:
     container_name: platform-database
-    image: postgres:16.2
+    image: postgres:17
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: Keycloak
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     networks:
       - menagn-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   pgadmin:
     container_name: pgadmin
@@ -78,12 +77,12 @@ services:
   keycloak:
     container_name: platform.keycloak
     image: quay.io/keycloak/keycloak:26.3.3
-    command: ["start", "--http-enabled=true", "--hostname-strict=false", "--import-realm", "--hostname=host.docker.internal"]
+    command: ["start", "--http-enabled=true", "--hostname-strict=false", "--import-realm"]
     environment:
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://platform-database:5432/Keycloak
+      KC_DB_URL: jdbc:postgresql://platform-database:5432/postgres
       KC_DB_USERNAME: postgres
-      KC_DB_PASSWORD: postgres
+      KC_DB_PASSWORD: password
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
     ports:
@@ -91,9 +90,40 @@ services:
     depends_on:
       - postgres
     restart: always
+    networks:
+      - menagn-network
     volumes:
       - ./infrastructure/keycloak/themes/debelo:/opt/keycloak/themes/debelo:ro
       - ./configeration/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
+
+  migrate:
+    container_name: authorization.migrate
+    image: openfga/openfga:latest
+    command: migrate
+    environment:
+      OPENFGA_DATASTORE_ENGINE: postgres
+      OPENFGA_DATASTORE_URI: postgres://postgres:password@platform-database:5432/postgres?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - menagn-network
+
+  authorization-provider:
+    container_name: authorization-provider
+    image: openfga/openfga:latest
+    command: run
+    environment:
+      OPENFGA_DATASTORE_ENGINE: postgres
+      OPENFGA_DATASTORE_URI: postgres://postgres:password@platform-database:5432/postgres?sslmode=disable
+      OPENFGA_LOG_FORMAT: json
+      OPENFGA_AUTH_TOKEN: w9F#2vLq8Xy!bR3uPz6@Hj7KmQdT1sVc
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "8082:8080"  
+      - "3000:3000"
     networks:
       - menagn-network
 
@@ -101,7 +131,7 @@ services:
     container_name: nginx
     image: nginx:latest
     ports:
-      - 80:80
+      - "80:80"
     depends_on:
       - platform.ui
       - security.api
@@ -110,7 +140,7 @@ services:
     volumes:
       - ./gateway/nginx.conf:/etc/nginx/nginx.conf:ro
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      test: ["CMD", "curl -f http://localhost:80"]
       interval: 30s
       retries: 3
     restart: always

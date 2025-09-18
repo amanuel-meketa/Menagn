@@ -17,8 +17,8 @@ services:
 
   platform.bootstrapper:
     build:
-      context: ./services
-      dockerfile: platform.bootstrapper/Dockerfile
+      context: ./services/platform.bootstrapper
+      dockerfile: MicroserviceBootstrapper/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development    
 
