@@ -16,6 +16,7 @@
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.9" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.9" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
+    <PackageReference Include="OpenFga.Sdk" Version="0.5.1" />
   </ItemGroup>
   <ItemGroup>
      <None Update="appsettings.json">

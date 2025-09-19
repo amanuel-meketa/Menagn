@@ -6,6 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using OpenFga.Sdk.Client;
+using OpenFga.Sdk.Configuration;
 
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration((hostingContext, config) =>
@@ -27,6 +30,26 @@ var host = Host.CreateDefaultBuilder(args)
         // Register all initializers here
         services.AddTransient<IServiceInitializer, AuthenticationInitializer>();
         services.AddTransient<IServiceInitializer, AuthorizationInitializer>();
+        // In your Program.cs or Startup.cs
+        services.AddSingleton<OpenFgaClient>(provider =>
+        {
+            var config = provider.GetService<IOptions<AuthorizationConfig>>().Value;
+
+            var configuration = new ClientConfiguration()
+            {
+                ApiUrl = config.BaseUrl,
+                Credentials = new Credentials()
+                {
+                    Method = CredentialsMethod.ApiToken,
+                    Config = new CredentialsConfig()
+                    {
+                        ApiToken = config.ApiToken
+                    }
+                }
+            };
+
+            return new OpenFgaClient(configuration);
+        });
     })
     .Build();
 

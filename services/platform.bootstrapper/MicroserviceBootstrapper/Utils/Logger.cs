@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace MicroserviceBootstrapper.Utils
 {
     public class Logger
