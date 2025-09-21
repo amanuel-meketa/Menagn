@@ -15,12 +15,11 @@ namespace authorization.application.Services
             _logger = logger;
         }
 
-        public async Task<List<string>> GetUserRolesAsync(string userId)
+        public async Task<IReadOnlyList<string>> GetUserRolesAsync(string userId)
         {
             try
             {
-                var roles = await _openFgaService.GetUserRolesAsync(userId);
-                return roles;
+                return await _openFgaService.GetUserRolesAsync(userId);
             }
             catch (Exception ex)
             {
