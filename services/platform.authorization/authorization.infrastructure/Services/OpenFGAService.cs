@@ -1,6 +1,10 @@
 ﻿using authorization.application.Abstractions;
 using Microsoft.Extensions.Logging;
 using OpenFga.Sdk.Client;
+using OpenFga.Sdk.Client.Model;
+using OpenFga.Sdk.Configuration;
+using OpenFga.Sdk.Exceptions;
+using OpenFga.Sdk.Model;
 
 namespace authorization.infrastructure.Services
 {
@@ -14,24 +18,19 @@ namespace authorization.infrastructure.Services
             _fgaClient = fgaClient;
             _logger = logger;
         }
+
         public async Task<List<string>> GetUserRolesAsync(string userId)
         {
             var request = new ClientListObjectsRequest
             {
                 User = $"user:{userId}",
-                Relation = "has_role",
-                Type = "role"
+                Relation = "assignee",
+                Type = "role"  
             };
 
-            var response = await _fgaClient.ListObjects((OpenFga.Sdk.Client.Model.IClientListObjectsRequest)request);
+            var response = await _fgaClient.ListObjects(request);
             return response.Objects.Select(o => o.Replace("role:", "")).ToList();
         }
-    }
 
-    internal class ClientListObjectsRequest
-    {
-        public string User { get; set; }
-        public string Relation { get; set; }
-        public string Type { get; set; }
     }
 }
