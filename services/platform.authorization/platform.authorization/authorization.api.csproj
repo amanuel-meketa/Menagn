@@ -11,4 +11,10 @@
     <PackageReference Include="Scalar.AspNetCore" Version="2.8.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\authorization.application\authorization.application.csproj" />
+    <ProjectReference Include="..\authorization.infrastructure\authorization.infrastructure.csproj" />
+    <ProjectReference Include="..\authorization.shared\authorization.shared.csproj" />
+  </ItemGroup>
+
 </Project>
