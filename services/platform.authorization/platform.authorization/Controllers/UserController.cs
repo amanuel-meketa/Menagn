@@ -19,5 +19,11 @@ namespace authorization.api.Controllers
         {
             return await _authorizationService.GetUserRolesAsync(userId);
         }
+
+        [HttpPost("{userId}/role/{roleName}")]
+        public async Task GetUserRoles(string userId, string roleName)
+        {
+            await _authorizationService.AssignRoleToUserAsync(userId, roleName);
+        }
     }
 }

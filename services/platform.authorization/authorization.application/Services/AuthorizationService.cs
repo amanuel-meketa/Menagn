@@ -27,5 +27,18 @@ namespace authorization.application.Services
                 throw new DataException("Failed to get user roles", ex);
             }
         }
+
+        public async Task AssignRoleToUserAsync(string userId, string roleName, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                 await _openFgaService.AssignRoleToUserAsync(userId, roleName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to assign user roles");
+                throw new DataException("Failed to assign user roles", ex);
+            }
+        }
     }
 }

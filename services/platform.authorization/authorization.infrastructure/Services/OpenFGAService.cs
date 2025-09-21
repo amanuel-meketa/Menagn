@@ -64,4 +64,40 @@ public sealed class OpenFGAService : IOpenFGAService
             throw;
         }
     }
+
+    public async Task AssignRoleToUserAsync(string userId, string roleName, CancellationToken cancellationToken = default)
+    {
+        var tupleKey = new ClientTupleKey
+        {
+            User = $"user:{userId}",
+            Relation = "assignee",
+            Object = $"role:{roleName}"
+        };
+
+        var request = new ClientWriteRequest
+        {
+            Writes = new List<ClientTupleKey> { tupleKey }
+        };
+
+        try
+        {
+            _logger.LogDebug("Assigning role {Role} to UserId={UserId}", roleName, userId);
+
+            await _fgaClient.Write(request, null, cancellationToken);
+
+            _logger.LogInformation("Successfully assigned role {Role} to UserId={UserId}", roleName, userId);
+        }
+        catch (ApiException ex)
+        {
+            _logger.LogError(ex, "OpenFGA API error while assigning role {Role} to UserId={UserId}. Details={Message}",
+                roleName, userId, ex.Message);
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error while assigning role {Role} to UserId={UserId}", roleName, userId);
+            throw;
+        }
+    }
+
 }
