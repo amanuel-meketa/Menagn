@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using OpenFga.Sdk.Client;
 using OpenFga.Sdk.Client.Model;
 using OpenFga.Sdk.Exceptions;
+using OpenFga.Sdk.Model;
 
 namespace authorization.infrastructure.Services;
 
@@ -76,6 +77,7 @@ public sealed class OpenFGAService : IOpenFGAService
 
         var request = new ClientWriteRequest
         {
+          
             Writes = new List<ClientTupleKey> { tupleKey }
         };
 
@@ -96,6 +98,41 @@ public sealed class OpenFGAService : IOpenFGAService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unexpected error while assigning role {Role} to UserId={UserId}", roleName, userId);
+            throw;
+        }
+    }
+
+    public async Task UnassignRoleFromUserAsync(string userId, string roleName, CancellationToken cancellationToken = default)
+    {
+        var tuple = new ClientTupleKeyWithoutCondition
+        {
+            User = $"user:{userId}",
+            Relation = "assignee",
+            Object = $"role:{roleName}"
+        };
+
+        var request = new ClientWriteRequest
+        {
+            Deletes = new List<ClientTupleKeyWithoutCondition> { tuple }
+        };
+
+        try
+        {
+            _logger.LogDebug("Unassigning role {Role} from UserId={UserId}", userId, roleName);
+
+            await _fgaClient.Write(request, null, cancellationToken);
+
+            _logger.LogInformation("Successfully unassigned role {Role} from UserId={UserId}", userId, roleName);
+        }
+        catch (ApiException ex)
+        {
+            _logger.LogError(ex, "OpenFGA API error while unassigning role {Role} from UserId={UserId}. Details={Message}",
+                roleName, userId, ex.Message);
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error while unassigning role {Role} from UserId={UserId}", userId, roleName);
             throw;
         }
     }

@@ -36,8 +36,20 @@ namespace authorization.application.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to assign user roles");
-                throw new DataException("Failed to assign user roles", ex);
+                _logger.LogError(ex, "Failed to assign roles");
+                throw new DataException("Failed to assign roles", ex);
+            }
+        }
+        public async Task UnassignRoleFromUserAsync(string userId, string roleName)
+        {
+            try
+            {
+                 await _openFgaService.UnassignRoleFromUserAsync(userId, roleName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to unassign roles");
+                throw new DataException("Failed to unassign roles", ex);
             }
         }
     }

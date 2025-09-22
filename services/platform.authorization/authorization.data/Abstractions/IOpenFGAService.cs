@@ -5,5 +5,6 @@ namespace authorization.application.Abstractions
     {
         Task<IReadOnlyList<string>> GetUserRolesAsync(string userId, CancellationToken cancellationToken = default);
         Task AssignRoleToUserAsync(string userId, string roleName, CancellationToken cancellationToken = default);
+        Task UnassignRoleFromUserAsync(string userId, string roleName, CancellationToken cancellationToken = default);
     }
 }

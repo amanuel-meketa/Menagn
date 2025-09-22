@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace authorization.api.Controllers
 {
     [ApiController]
-    [Route("api/user-roles")]
+    [Route("api/users")]
     public class UserController : ControllerBase
     {
         private readonly AuthorizationService _authorizationService;
@@ -20,10 +20,18 @@ namespace authorization.api.Controllers
             return await _authorizationService.GetUserRolesAsync(userId);
         }
 
-        [HttpPost("{userId}/role/{roleName}")]
-        public async Task GetUserRoles(string userId, string roleName)
+        [HttpPost("{userId}/roles/{roleName}")]
+        public async Task<IActionResult> AssignRoleToUser(string userId, string roleName)
         {
             await _authorizationService.AssignRoleToUserAsync(userId, roleName);
+            return Ok(new { Message = $"Role '{roleName}' assigned to user '{userId}' successfully." });
+        }
+
+        [HttpDelete("{userId}/roles/{roleName}")]
+        public async Task<IActionResult> UnassignRoleFromUser(string userId, string roleName)
+        {
+            await _authorizationService.UnassignRoleFromUserAsync(userId, roleName);
+            return Ok(new { Message = $"Role '{roleName}' unassigned from user '{userId}' successfully." });
         }
     }
 }
