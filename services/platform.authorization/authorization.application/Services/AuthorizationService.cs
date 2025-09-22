@@ -1,4 +1,5 @@
 ﻿using authorization.application.Abstractions;
+using authorization.data.Models;
 using Microsoft.Extensions.Logging;
 using System.Data;
 
@@ -40,6 +41,7 @@ namespace authorization.application.Services
                 throw new DataException("Failed to assign roles", ex);
             }
         }
+
         public async Task UnassignRoleFromUserAsync(string userId, string roleName)
         {
             try
@@ -50,6 +52,19 @@ namespace authorization.application.Services
             {
                 _logger.LogError(ex, "Failed to unassign roles");
                 throw new DataException("Failed to unassign roles", ex);
+            }
+        }
+
+        public async Task AssignUserToResourceAsync(ResourceAssignment resourceAssignment)
+        {
+            try
+            {
+                 await _openFgaService.AssignUserToResourceAsync(resourceAssignment);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to assign user to resource with scopes");
+                throw new DataException("Failed to assign user to resource with scopes", ex);
             }
         }
     }

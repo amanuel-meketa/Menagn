@@ -1,4 +1,5 @@
 ﻿using authorization.application.Abstractions;
+using authorization.data.Models;
 using Microsoft.Extensions.Logging;
 using OpenFga.Sdk.Client;
 using OpenFga.Sdk.Client.Model;
@@ -65,7 +66,6 @@ public sealed class OpenFGAService : IOpenFGAService
             throw;
         }
     }
-
     public async Task AssignRoleToUserAsync(string userId, string roleName, CancellationToken cancellationToken = default)
     {
         var tupleKey = new ClientTupleKey
@@ -101,7 +101,6 @@ public sealed class OpenFGAService : IOpenFGAService
             throw;
         }
     }
-
     public async Task UnassignRoleFromUserAsync(string userId, string roleName, CancellationToken cancellationToken = default)
     {
         var tuple = new ClientTupleKeyWithoutCondition
@@ -136,5 +135,32 @@ public sealed class OpenFGAService : IOpenFGAService
             throw;
         }
     }
+    public async Task AssignUserToResourceAsync(ResourceAssignment resourceAssignment, CancellationToken cancellationToken = default)
+    {
+        var tuples = resourceAssignment.Scopes.Select(scope => new ClientTupleKey
+        {
+            User = $"user:{resourceAssignment.UserId}",
+            Relation = scope,
+            Object = "approvalInstance:all"
+        }).ToList();
 
+
+        var request = new ClientWriteRequest
+        {
+            Writes = tuples
+        };
+
+        try
+        {
+            await _fgaClient.Write(request, null, cancellationToken);
+            _logger.LogInformation("Assigned scopes {Scopes} to user {UserId} on approvalInstance {ApprovalInstanceId}",
+                string.Join(",", resourceAssignment.Scopes), resourceAssignment.UserId, resourceAssignment.Resource);
+        }
+        catch (ApiException ex)
+        {
+            _logger.LogError(ex, "OpenFGA API error while assigning scopes for user {UserId} on approvalInstance {ApprovalInstanceId}",
+                resourceAssignment.UserId, resourceAssignment.Resource);
+            throw;
+        }
+    }
 }
