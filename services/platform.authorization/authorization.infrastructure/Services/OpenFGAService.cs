@@ -131,38 +131,49 @@ public sealed class OpenFGAService : IOpenFGAService
     }
     public async Task AssignUserToResourceAsync(UserResourceAssignment userResourceAssignment, CancellationToken cancellationToken = default)
     {
-        var tuples = userResourceAssignment.Scopes.Select(scope => new ClientTupleKey
+        var tupleKeys = userResourceAssignment.Scopes.Select(scope => new ClientTupleKey
         {
             User = $"user:{userResourceAssignment.UserId}",
             Relation = scope,
-            Object = $"approvalInstance:{scope}"
+            Object = $"{userResourceAssignment.Resource}:{scope}"
+        }).ToList();
+
+        var write = tupleKeys.Select(t => new ClientTupleKey
+        {
+            User = t.User,
+            Relation = t.Relation,
+            Object = t.Object
         }).ToList();
 
         var request = new ClientWriteRequest
         {
-            Writes = tuples
+            Writes = write
         };
 
         try
         {
             await _fgaClient.Write(request, null, cancellationToken);
-            _logger.LogInformation("Assigned scopes {Scopes} to user {UserId} on approvalInstance {ApprovalInstanceId}",
-                string.Join(",", userResourceAssignment.Scopes), userResourceAssignment.UserId, userResourceAssignment.Resource);
+            _logger.LogInformation($"Assigned scopes {userResourceAssignment.Scopes} to user {userResourceAssignment.UserId} on approvalInstance {userResourceAssignment.Resource}");
+        }
+        catch (FgaApiValidationError ex) when (ex.Message.Contains("cannot write a tuple which already exists"))
+        {
+            _logger.LogWarning($"Attempted to assign existing scopes {userResourceAssignment.Scopes} to user {userResourceAssignment.UserId}. This is treated as successful.");
+            return;
         }
         catch (ApiException ex)
         {
-            _logger.LogError(ex, "OpenFGA API error while assigning scopes for user {UserId} on approvalInstance {ApprovalInstanceId}",
-                userResourceAssignment.UserId, userResourceAssignment.Resource);
+            _logger.LogError(ex, "OpenFGA API error while assigning scopes for user {UserId} on approvalInstance {ApprovalInstanceId}", userResourceAssignment.UserId, userResourceAssignment.Resource);
             throw;
         }
     }
+
     public async Task UnassignUserFromResourceAsync(UserResourceAssignment userResourceAssignment, CancellationToken cancellationToken = default)
     {
         var tupleKeys = userResourceAssignment.Scopes.Select(scope => new ClientTupleKey
         {
             User = $"user:{userResourceAssignment.UserId}",
             Relation = scope,
-            Object = $"approvalInstance:{scope}"
+            Object = $"{userResourceAssignment.Resource}:{scope}"
         }).ToList();
 
         var deletes = tupleKeys.Select(t => new ClientTupleKeyWithoutCondition
@@ -183,7 +194,7 @@ public sealed class OpenFGAService : IOpenFGAService
             await _fgaClient.Write(request, null, cancellationToken);
                   _logger.LogInformation( "Unassigned scopes {Scopes} from user {UserId} on resource {Resource}",
                    string.Join(",", userResourceAssignment.Scopes), userResourceAssignment.UserId, "approvalInstance:all"
-            );
+                  );
         }
         catch (FgaApiValidationError ex)
         {
@@ -193,12 +204,12 @@ public sealed class OpenFGAService : IOpenFGAService
                 return;
             }
 
-            _logger.LogError(ex, "OpenFGA validation error while unassigning scopes for user {UserId}", userResourceAssignment.UserId);
+            _logger.LogError(ex, "Service validation error while unassigning scopes for user {UserId}", userResourceAssignment.UserId);
             throw;
         }
         catch (ApiException ex)
         {
-            _logger.LogError(ex, "OpenFGA API error while unassigning scopes for user {UserId}", userResourceAssignment.UserId);
+            _logger.LogError(ex, "Service API error while unassigning scopes for user {UserId}", userResourceAssignment.UserId);
             throw;
         }
         catch (Exception ex)
