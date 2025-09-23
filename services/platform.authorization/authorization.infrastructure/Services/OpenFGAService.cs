@@ -135,7 +135,7 @@ public sealed class OpenFGAService : IOpenFGAService
         {
             User = $"user:{userResourceAssignment.UserId}",
             Relation = scope,
-            Object = "approvalInstance:permissions"
+            Object = $"approvalInstance:{scope}"
         }).ToList();
 
         var request = new ClientWriteRequest
@@ -162,7 +162,7 @@ public sealed class OpenFGAService : IOpenFGAService
         {
             User = $"user:{userResourceAssignment.UserId}",
             Relation = scope,
-            Object = "approvalInstance:permissions"
+            Object = $"approvalInstance:{scope}"
         }).ToList();
 
         var deletes = tupleKeys.Select(t => new ClientTupleKeyWithoutCondition
@@ -181,8 +181,8 @@ public sealed class OpenFGAService : IOpenFGAService
         try
         {
             await _fgaClient.Write(request, null, cancellationToken);
-            _logger.LogInformation( "Unassigned scopes {Scopes} from user {UserId} on resource {Resource}",
-                string.Join(",", userResourceAssignment.Scopes), userResourceAssignment.UserId, "approvalInstance:all"
+                  _logger.LogInformation( "Unassigned scopes {Scopes} from user {UserId} on resource {Resource}",
+                   string.Join(",", userResourceAssignment.Scopes), userResourceAssignment.UserId, "approvalInstance:all"
             );
         }
         catch (FgaApiValidationError ex)
