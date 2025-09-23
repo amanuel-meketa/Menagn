@@ -36,10 +36,17 @@ namespace authorization.api.Controllers
         }
 
         [HttpPost("{userId}/assigneResourceWithScopes")]
-        public async Task<IActionResult> AssignUserToResourceAsync(ResourceAssignment resourceAssignment)
+        public async Task<IActionResult> AssignUserToResourceAsync(UserResourceAssignment userResourceAssignment)
         {
-            await _authorizationService.AssignUserToResourceAsync(resourceAssignment);
-            return Ok(new { Message = $"User '{resourceAssignment.UserId}' assigned to resource '{resourceAssignment.Resource}' with scops successfully." });
+            await _authorizationService.AssignUserToResourceAsync(userResourceAssignment);
+            return Ok(new { Message = $"User '{userResourceAssignment.UserId}' assigned to resource '{userResourceAssignment.Resource}' with scops successfully." });
+        }
+
+        [HttpDelete("{userId}/unassigneResourceWithScopes")]
+        public async Task<IActionResult> UnassignUserFromResourceAsync(UserResourceAssignment userResourceAssignment)
+        {
+            await _authorizationService.UnassignUserFromResourceAsync(userResourceAssignment);
+            return Ok(new { Message = $"User '{userResourceAssignment.UserId}' unassigned to resource '{userResourceAssignment.Resource}' with scops successfully." });
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace authorization.data.Models
 {
-    public class ResourceAssignment
+    public class UserResourceAssignment
     {
         required
         public string UserId { get; set; }

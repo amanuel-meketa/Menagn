@@ -55,16 +55,29 @@ namespace authorization.application.Services
             }
         }
 
-        public async Task AssignUserToResourceAsync(ResourceAssignment resourceAssignment)
+        public async Task AssignUserToResourceAsync(UserResourceAssignment userResourceAssignment)
         {
             try
             {
-                 await _openFgaService.AssignUserToResourceAsync(resourceAssignment);
+                 await _openFgaService.AssignUserToResourceAsync(userResourceAssignment);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to assign user to resource with scopes");
                 throw new DataException("Failed to assign user to resource with scopes", ex);
+            }
+        }
+
+        public async Task UnassignUserFromResourceAsync(UserResourceAssignment userResourceAssignment)
+        {
+            try
+            {
+                 await _openFgaService.UnassignUserFromResourceAsync(userResourceAssignment);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to unassign user to resource with scopes");
+                throw new DataException("Failed to unassign user to resource with scopes", ex);
             }
         }
     }

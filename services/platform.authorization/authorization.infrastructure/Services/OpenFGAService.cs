@@ -19,12 +19,6 @@ public sealed class OpenFGAService : IOpenFGAService
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    /// <summary>
-    /// Fetch roles assigned to a given user from OpenFGA.
-    /// </summary>
-    /// <param name="userId">User identifier (without prefix).</param>
-    /// <param name="cancellationToken">Optional cancellation token.</param>
-    /// <returns>List of role names (without "role:" prefix).</returns>
     public async Task<IReadOnlyList<string>> GetUserRolesAsync(string userId, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(userId))
@@ -135,15 +129,14 @@ public sealed class OpenFGAService : IOpenFGAService
             throw;
         }
     }
-    public async Task AssignUserToResourceAsync(ResourceAssignment resourceAssignment, CancellationToken cancellationToken = default)
+    public async Task AssignUserToResourceAsync(UserResourceAssignment userResourceAssignment, CancellationToken cancellationToken = default)
     {
-        var tuples = resourceAssignment.Scopes.Select(scope => new ClientTupleKey
+        var tuples = userResourceAssignment.Scopes.Select(scope => new ClientTupleKey
         {
-            User = $"user:{resourceAssignment.UserId}",
+            User = $"user:{userResourceAssignment.UserId}",
             Relation = scope,
-            Object = "approvalInstance:all"
+            Object = "approvalInstance:permissions"
         }).ToList();
-
 
         var request = new ClientWriteRequest
         {
@@ -154,12 +147,63 @@ public sealed class OpenFGAService : IOpenFGAService
         {
             await _fgaClient.Write(request, null, cancellationToken);
             _logger.LogInformation("Assigned scopes {Scopes} to user {UserId} on approvalInstance {ApprovalInstanceId}",
-                string.Join(",", resourceAssignment.Scopes), resourceAssignment.UserId, resourceAssignment.Resource);
+                string.Join(",", userResourceAssignment.Scopes), userResourceAssignment.UserId, userResourceAssignment.Resource);
         }
         catch (ApiException ex)
         {
             _logger.LogError(ex, "OpenFGA API error while assigning scopes for user {UserId} on approvalInstance {ApprovalInstanceId}",
-                resourceAssignment.UserId, resourceAssignment.Resource);
+                userResourceAssignment.UserId, userResourceAssignment.Resource);
+            throw;
+        }
+    }
+    public async Task UnassignUserFromResourceAsync(UserResourceAssignment userResourceAssignment, CancellationToken cancellationToken = default)
+    {
+        var tupleKeys = userResourceAssignment.Scopes.Select(scope => new ClientTupleKey
+        {
+            User = $"user:{userResourceAssignment.UserId}",
+            Relation = scope,
+            Object = "approvalInstance:permissions"
+        }).ToList();
+
+        var deletes = tupleKeys.Select(t => new ClientTupleKeyWithoutCondition
+         {
+            User = t.User,
+            Relation = t.Relation,
+            Object = t.Object
+        })
+        .ToList();
+
+        var request = new ClientWriteRequest
+        {
+            Deletes = deletes
+        };
+
+        try
+        {
+            await _fgaClient.Write(request, null, cancellationToken);
+            _logger.LogInformation( "Unassigned scopes {Scopes} from user {UserId} on resource {Resource}",
+                string.Join(",", userResourceAssignment.Scopes), userResourceAssignment.UserId, "approvalInstance:all"
+            );
+        }
+        catch (FgaApiValidationError ex)
+        {
+            if (ex.Message?.Contains("tuple to be deleted did not exist", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                _logger.LogWarning("Attempted to delete tuples that do not exist. Details: {Message}", ex.Message);
+                return;
+            }
+
+            _logger.LogError(ex, "OpenFGA validation error while unassigning scopes for user {UserId}", userResourceAssignment.UserId);
+            throw;
+        }
+        catch (ApiException ex)
+        {
+            _logger.LogError(ex, "OpenFGA API error while unassigning scopes for user {UserId}", userResourceAssignment.UserId);
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error while unassigning scopes for user {UserId}", userResourceAssignment.UserId);
             throw;
         }
     }
