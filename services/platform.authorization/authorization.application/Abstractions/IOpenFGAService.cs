@@ -9,5 +9,8 @@ namespace authorization.application.Abstractions
         Task UnassignRoleFromUserAsync(string userId, string roleName, CancellationToken cancellationToken = default);
         Task AssignUserToResourceAsync(UserResourceAssignment userResourceAssignment, CancellationToken cancellationToken = default);
         Task UnassignUserFromResourceAsync(UserResourceAssignment userResourceAssignment, CancellationToken cancellationToken = default);
+        Task AssignRoleToResourceAsync(RoleResourceAssignment assignment, CancellationToken cancellationToken = default);
+        Task UnassignRoleFromResourceAsync(RoleResourceAssignment assignment, CancellationToken cancellationToken = default);
+
     }
 }

@@ -80,5 +80,31 @@ namespace authorization.application.Services
                 throw new DataException("Failed to unassign user to resource with scopes", ex);
             }
         }
+
+        public async Task AssignRoleToResourceAsync(RoleResourceAssignment assignment)
+        {
+            try
+            {
+                await _openFgaService.AssignRoleToResourceAsync(assignment);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to assign role to resource with scopes");
+                throw new DataException("Failed to assign role to resource with scopes", ex);
+            }
+        }
+        public async Task UnassignRoleFromResourceAsync(RoleResourceAssignment assignment)
+        {
+            try
+            {
+                await _openFgaService.UnassignRoleFromResourceAsync(assignment);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to unassign role to resource with scopes");
+                throw new DataException("Failed to unassign role to resource with scopes", ex);
+            }
+        }
+
     }
 }

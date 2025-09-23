@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using OpenFga.Sdk.Client;
 using OpenFga.Sdk.Client.Model;
 using OpenFga.Sdk.Exceptions;
-using OpenFga.Sdk.Model;
+using System.Data;
 
 namespace authorization.infrastructure.Services;
 
@@ -166,7 +166,6 @@ public sealed class OpenFGAService : IOpenFGAService
             throw;
         }
     }
-
     public async Task UnassignUserFromResourceAsync(UserResourceAssignment userResourceAssignment, CancellationToken cancellationToken = default)
     {
         var tupleKeys = userResourceAssignment.Scopes.Select(scope => new ClientTupleKey
@@ -218,4 +217,70 @@ public sealed class OpenFGAService : IOpenFGAService
             throw;
         }
     }
+
+    public async Task AssignRoleToResourceAsync(RoleResourceAssignment assignment, CancellationToken cancellationToken = default)
+    {
+        var tuples = assignment.Scopes.Select(scope => new ClientTupleKey
+        {
+            User = $"role:{assignment.Role}#assignee",
+            Relation = scope,
+            Object = $"{assignment.Resource}:{scope}"
+        }).ToList();
+
+        var request = new ClientWriteRequest { Writes = tuples };
+
+        try
+        {
+            await _fgaClient.Write(request, null, cancellationToken);
+
+            _logger.LogInformation($"Assigned scopes {assignment.Scopes} to role {assignment.Role} on resource {assignment.Resource}");
+        }
+        catch (FgaApiValidationError ex) when (ex.Message.Contains("already existed"))
+        {
+            _logger.LogWarning($"Role {assignment.Role} already has scopes {assignment.Scopes} on resource {assignment.Resource}. Ignoring duplicate assignment.");
+        }
+        catch (ApiException ex)
+        {
+            _logger.LogError(ex, $"API error while assigning scopes for role {assignment.Role} on resource {assignment.Resource}");
+            throw new DataException($"Failed to assign role to resource with scopes {assignment.Scopes} {ex}");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Unexpected error while assigning scopes for role {assignment.Role} on resource {assignment.Resource}");
+            throw new DataException($"Failed to assign role to resource with scopes {ex}");
+        }
+    }
+    public async Task UnassignRoleFromResourceAsync(RoleResourceAssignment assignment, CancellationToken cancellationToken = default)
+    {
+        var tuples = assignment.Scopes.Select(scope => new ClientTupleKeyWithoutCondition
+        {
+            User = $"role:{assignment.Role}#assignee",
+            Relation = scope,
+            Object = $"{assignment.Resource}:{scope}"
+        }).ToList();
+
+        var request = new ClientWriteRequest { Deletes = tuples };
+
+        try
+        {
+            await _fgaClient.Write(request, null, cancellationToken);
+
+            _logger.LogInformation($"Unassigned scopes {assignment.Scopes} from role {assignment.Role} on resource {assignment.Resource}");
+        }
+        catch (FgaApiValidationError ex) when (ex.Message.Contains("did not exist"))
+        {
+            _logger.LogWarning($"Attempted to unassign scopes {assignment.Scopes} from role {assignment.Role} on resource {assignment.Resource}, but they did not exist. Ignoring.");
+        }
+        catch (ApiException ex)
+        {
+            _logger.LogError(ex, $"API error while unassigning scopes for role {assignment.Role} on resource {assignment.Resource}");
+            throw new DataException($"Failed to unassign role from resource with scopes {assignment.Scopes}: {ex}");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Unexpected error while unassigning scopes for role {assignment.Role} on resource {assignment.Resource}");
+            throw new DataException($"Failed to unassign role from resource with scopes {assignment.Scopes}: {ex}");
+        }
+    }
+    
 }
