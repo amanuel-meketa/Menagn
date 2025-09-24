@@ -282,5 +282,38 @@ public sealed class OpenFGAService : IOpenFGAService
             throw new DataException($"Failed to unassign role from resource with scopes {assignment.Scopes}: {ex}");
         }
     }
-    
+
+    public async Task<bool> CheckAccessAsync(CheckAccessAsync checkAccess, CancellationToken cancellationToken = default)
+    {
+        var request = new ClientCheckRequest
+        {
+            User = $"user:{checkAccess.UserId}",
+            Relation = checkAccess.Relation,
+            Object = $"{checkAccess.Resource}:{checkAccess.Relation}"
+        };
+
+        try
+        {
+            var response = await _fgaClient.Check(request, null, cancellationToken);
+            response.Allowed = response.Allowed ?? false;
+
+            if ((bool)response.Allowed)
+                _logger.LogInformation($"Access ALLOWED for user {checkAccess.UserId}, relation {checkAccess.Relation}, resource {checkAccess.Resource}");
+            else
+                _logger.LogWarning($"Access DENIED for user {checkAccess.UserId}, relation {checkAccess.Relation}, resource {checkAccess.Resource}");
+          
+            return (bool)response.Allowed;
+        }
+        catch (ApiException ex)
+        {
+            _logger.LogError(ex, $"API error while checking access for user {checkAccess.UserId}, relation {checkAccess.Relation}, resource {checkAccess.Resource}");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Unexpected error while checking access for user {checkAccess.UserId}, relation {checkAccess.Relation}, resource {checkAccess.Resource}");
+            throw;
+        }
+    }
+
 }

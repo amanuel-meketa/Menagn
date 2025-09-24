@@ -93,6 +93,7 @@ namespace authorization.application.Services
                 throw new DataException("Failed to assign role to resource with scopes", ex);
             }
         }
+
         public async Task UnassignRoleFromResourceAsync(RoleResourceAssignment assignment)
         {
             try
@@ -103,6 +104,19 @@ namespace authorization.application.Services
             {
                 _logger.LogError(ex, "Failed to unassign role to resource with scopes");
                 throw new DataException("Failed to unassign role to resource with scopes", ex);
+            }
+        }
+
+        public async Task<bool> CheckAccessAsync(CheckAccessAsync checkAccess)
+        {
+            try
+            {
+               return await _openFgaService.CheckAccessAsync(checkAccess);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to check access ");
+                throw new DataException("Failed to check access", ex);
             }
         }
 

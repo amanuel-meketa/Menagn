@@ -62,5 +62,11 @@ namespace authorization.api.Controllers
             await _authorizationService.UnassignRoleFromResourceAsync(assignment);
             return Ok(new { Message = $"Role '{assignment.Role}' unassigned to resource '{assignment.Resource}' with scops successfully." });
         }
+
+        [HttpPost("check-access")]
+        public async Task<bool> CheckAccessAsync(CheckAccessAsync checkAccess)
+        {
+            return await _authorizationService.CheckAccessAsync(checkAccess);
+        }
     }
 }
