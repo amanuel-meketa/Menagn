@@ -12,6 +12,7 @@ public sealed class OpenFGAService : IOpenFGAService
 {
     private readonly OpenFgaClient _fgaClient;
     private readonly ILogger<OpenFGAService> _logger;
+    private readonly string ResourceId = "23e5ad76-d474-41d1-9371-ada775ea9899";
 
     public OpenFGAService(OpenFgaClient fgaClient, ILogger<OpenFGAService> logger)
     {
@@ -135,7 +136,7 @@ public sealed class OpenFGAService : IOpenFGAService
         {
             User = $"user:{userResourceAssignment.UserId}",
             Relation = scope,
-            Object = $"{userResourceAssignment.Resource}:{scope}"
+            Object = $"{userResourceAssignment.Resource}:{ResourceId}"
         }).ToList();
 
         var write = tupleKeys.Select(t => new ClientTupleKey
@@ -172,7 +173,7 @@ public sealed class OpenFGAService : IOpenFGAService
         {
             User = $"user:{userResourceAssignment.UserId}",
             Relation = scope,
-            Object = $"{userResourceAssignment.Resource}:{scope}"
+            Object = $"{userResourceAssignment.Resource}:{ResourceId}"
         }).ToList();
 
         var deletes = tupleKeys.Select(t => new ClientTupleKeyWithoutCondition
@@ -217,14 +218,13 @@ public sealed class OpenFGAService : IOpenFGAService
             throw;
         }
     }
-
     public async Task AssignRoleToResourceAsync(RoleResourceAssignment assignment, CancellationToken cancellationToken = default)
     {
         var tuples = assignment.Scopes.Select(scope => new ClientTupleKey
         {
             User = $"role:{assignment.Role}#assignee",
             Relation = scope,
-            Object = $"{assignment.Resource}:{scope}"
+            Object = $"{assignment.Resource}:{ResourceId}"
         }).ToList();
 
         var request = new ClientWriteRequest { Writes = tuples };
@@ -256,7 +256,7 @@ public sealed class OpenFGAService : IOpenFGAService
         {
             User = $"role:{assignment.Role}#assignee",
             Relation = scope,
-            Object = $"{assignment.Resource}:{scope}"
+            Object = $"{assignment.Resource}:{ResourceId}"
         }).ToList();
 
         var request = new ClientWriteRequest { Deletes = tuples };
@@ -282,14 +282,13 @@ public sealed class OpenFGAService : IOpenFGAService
             throw new DataException($"Failed to unassign role from resource with scopes {assignment.Scopes}: {ex}");
         }
     }
-
     public async Task<bool> CheckAccessAsync(CheckAccessAsync checkAccess, CancellationToken cancellationToken = default)
     {
         var request = new ClientCheckRequest
         {
             User = $"user:{checkAccess.UserId}",
             Relation = checkAccess.Relation,
-            Object = $"{checkAccess.Resource}:{checkAccess.Relation}"
+            Object = $"{checkAccess.Resource}:{ResourceId}"
         };
 
         try
@@ -315,5 +314,32 @@ public sealed class OpenFGAService : IOpenFGAService
             throw;
         }
     }
+    public async Task<IEnumerable<Assignment>> ListAssignmentsAsync(string resource, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var response = await _fgaClient.Read(new ClientReadRequest
+            {
+                Object = $"{resource}:{ResourceId}" 
+            }, cancellationToken: cancellationToken);
 
+            return response.Tuples.Select(t => new Assignment
+            {
+                User = t.Key.User ?? string.Empty,
+                Relation = t.Key.Relation ?? string.Empty,
+                Resource = $"{t.Key.Object}"
+            }).ToList();
+
+        }
+        catch (ApiException ex)
+        {
+            _logger.LogError(ex, $"API error while listing assignments for resource {resource}");
+            throw new DataException($"API error while listing assignments for resource {resource}: {ex}");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Unexpected error while listing assignments for resource {resource}");
+            throw new DataException($"Unexpected error while listing assignments for resource {resource}: {ex}");
+        }
+    }
 }

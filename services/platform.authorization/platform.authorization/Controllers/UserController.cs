@@ -68,5 +68,11 @@ namespace authorization.api.Controllers
         {
             return await _authorizationService.CheckAccessAsync(checkAccess);
         }
+
+        [HttpGet("{resource}/assignments")]
+        public async Task<IActionResult> GetAssignments(string resource)
+        {
+            return Ok(await _authorizationService.ListAssignmentsAsync(resource));
+        }
     }
 }

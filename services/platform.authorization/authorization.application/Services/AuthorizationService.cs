@@ -120,5 +120,18 @@ namespace authorization.application.Services
             }
         }
 
+        public async Task<IEnumerable<Assignment>> ListAssignmentsAsync(string resource)
+        {
+            try
+            {
+               return await _openFgaService.ListAssignmentsAsync(resource);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to list assignmentsAsync access");
+                throw new DataException("Failed to list assignmentsAsync access", ex);
+            }
+        }
+
     }
 }
