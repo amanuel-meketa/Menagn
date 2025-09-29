@@ -133,16 +133,16 @@ namespace authorization.application.Services
             }
         }
 
-        public async Task<IEnumerable<RelationshipTuple>> GetAllTuplesAsync()
+        public async Task<IEnumerable<AccessAssignment>> GetAllTuplesAsync()
         {
             try
             {
-               return await _openFgaService.GetAllTuplesAsync();
+                return await _openFgaService.GetAllTuplesAsync(); ;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to list all tuples");
-                throw new DataException("Failed to list all tupls", ex);
+                throw new DataException("Failed to list all tuples", ex);
             }
         }
 

@@ -1,10 +1,10 @@
 ﻿using authorization.application.Abstractions;
 using authorization.data.Models;
+using authorization.data.Models.Enums;
 using Microsoft.Extensions.Logging;
 using OpenFga.Sdk.Client;
 using OpenFga.Sdk.Client.Model;
 using OpenFga.Sdk.Exceptions;
-using OpenFga.Sdk.Model;
 using System.Data;
 
 namespace authorization.infrastructure.Services;
@@ -343,10 +343,9 @@ public sealed class OpenFGAService : IOpenFGAService
             throw new DataException($"Unexpected error while listing assignments for resource {resource}: {ex}");
         }
     }
-
-    public async Task<List<RelationshipTuple>> GetAllTuplesAsync(CancellationToken cancellationToken = default)
+    public async Task<List<AccessAssignment>> GetAllTuplesAsync(CancellationToken cancellationToken = default)
     {
-        var all = new List<RelationshipTuple>();
+        var list = new List<AccessAssignment>();
         var readRequest = new ClientReadRequest();
 
         string? continuation = null;
@@ -357,24 +356,59 @@ public sealed class OpenFGAService : IOpenFGAService
                 ContinuationToken = continuation
             };
 
-            var resp = await _fgaClient.Read(readRequest, options);
+            var resp = await _fgaClient.Read(readRequest, options, cancellationToken);
 
             if (resp?.Tuples != null)
             {
                 foreach (var t in resp.Tuples)
                 {
-                    all.Add(new RelationshipTuple(
-                        t.Key.User!,
-                        t.Key.Relation!,
-                        t.Key.Object!,
-                        t.Timestamp  
-                    ));
+                    var user = t.Key.User ?? string.Empty;
+                    var relation = t.Key.Relation ?? string.Empty;
+                    var obj = t.Key.Object ?? string.Empty;
+
+                    // Normalize actor
+                    ActorType actorType;
+                    string actorId;
+
+                    if (user.StartsWith("user:", StringComparison.OrdinalIgnoreCase))
+                    {
+                        actorType = ActorType.User;
+                        actorId = user["user:".Length..];
+                    }
+                    else if (user.StartsWith("role:", StringComparison.OrdinalIgnoreCase))
+                    {
+                        actorType = ActorType.Role;
+                        var after = user["role:".Length..];
+                        var idx = after.IndexOf('#');
+                        actorId = idx >= 0 ? after[..idx] : after;
+                    }
+                    else
+                    {
+                        actorType = ActorType.User;
+                        actorId = user;
+                    }
+
+                    // Normalize resource
+                    var parts = obj.Split(':', 2);
+                    string resourceType = parts.Length == 2 ? parts[0] : obj;
+                    string resourceId = parts.Length == 2 ? parts[1] : string.Empty;
+
+                    list.Add(new AccessAssignment
+                    {
+                        ActorType = actorType,
+                        ActorId = actorId,
+                        Relation = relation,
+                        ResourceType = resourceType,
+                        ResourceId = resourceId,
+                        AssignedAt = t.Timestamp
+                    });
                 }
             }
 
             continuation = resp?.ContinuationToken;
         } while (!string.IsNullOrEmpty(continuation));
 
-        return all;
+        return list;
     }
+
 }

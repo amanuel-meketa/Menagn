@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using OpenFga.Sdk.Client;
 using OpenFga.Sdk.Configuration;
 using Scalar.AspNetCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,7 @@ builder.Services.AddOptions<OpenFGAConfig>().Bind(builder.Configuration.GetSecti
 // Register services
 builder.Services.AddScoped<AuthorizationService>();
 builder.Services.AddScoped<IOpenFGAService, OpenFGAService>();
+builder.Services.AddControllers().AddJsonOptions(opts => { opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 
 // OpenFGA Client configuration with error handling
 builder.Services.AddSingleton<OpenFgaClient>(provider =>
