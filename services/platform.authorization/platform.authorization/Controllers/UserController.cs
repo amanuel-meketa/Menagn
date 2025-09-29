@@ -74,5 +74,11 @@ namespace authorization.api.Controllers
         {
             return Ok(await _authorizationService.ListAssignmentsAsync(resource));
         }
+
+        [HttpGet("/relationship-tuple")]
+        public async Task<IActionResult> GetAllTuplesAsync()
+        {
+            return Ok(await _authorizationService.GetAllTuplesAsync());
+        }
     }
 }

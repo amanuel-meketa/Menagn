@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using OpenFga.Sdk.Client;
 using OpenFga.Sdk.Client.Model;
 using OpenFga.Sdk.Exceptions;
+using OpenFga.Sdk.Model;
 using System.Data;
 
 namespace authorization.infrastructure.Services;
@@ -72,7 +73,7 @@ public sealed class OpenFGAService : IOpenFGAService
 
         var request = new ClientWriteRequest
         {
-          
+
             Writes = new List<ClientTupleKey> { tupleKey }
         };
 
@@ -177,7 +178,7 @@ public sealed class OpenFGAService : IOpenFGAService
         }).ToList();
 
         var deletes = tupleKeys.Select(t => new ClientTupleKeyWithoutCondition
-         {
+        {
             User = t.User,
             Relation = t.Relation,
             Object = t.Object
@@ -192,9 +193,9 @@ public sealed class OpenFGAService : IOpenFGAService
         try
         {
             await _fgaClient.Write(request, null, cancellationToken);
-                  _logger.LogInformation( "Unassigned scopes {Scopes} from user {UserId} on resource {Resource}",
-                   string.Join(",", userResourceAssignment.Scopes), userResourceAssignment.UserId, "approvalInstance:all"
-                  );
+            _logger.LogInformation("Unassigned scopes {Scopes} from user {UserId} on resource {Resource}",
+             string.Join(",", userResourceAssignment.Scopes), userResourceAssignment.UserId, "approvalInstance:all"
+            );
         }
         catch (FgaApiValidationError ex)
         {
@@ -300,7 +301,7 @@ public sealed class OpenFGAService : IOpenFGAService
                 _logger.LogInformation($"Access ALLOWED for user {checkAccess.UserId}, relation {checkAccess.Relation}, resource {checkAccess.Resource}");
             else
                 _logger.LogWarning($"Access DENIED for user {checkAccess.UserId}, relation {checkAccess.Relation}, resource {checkAccess.Resource}");
-          
+
             return (bool)response.Allowed;
         }
         catch (ApiException ex)
@@ -320,7 +321,7 @@ public sealed class OpenFGAService : IOpenFGAService
         {
             var response = await _fgaClient.Read(new ClientReadRequest
             {
-                Object = $"{resource}:{ResourceId}" 
+                Object = $"{resource}:{ResourceId}"
             }, cancellationToken: cancellationToken);
 
             return response.Tuples.Select(t => new Assignment
@@ -341,5 +342,39 @@ public sealed class OpenFGAService : IOpenFGAService
             _logger.LogError(ex, $"Unexpected error while listing assignments for resource {resource}");
             throw new DataException($"Unexpected error while listing assignments for resource {resource}: {ex}");
         }
+    }
+
+    public async Task<List<RelationshipTuple>> GetAllTuplesAsync(CancellationToken cancellationToken = default)
+    {
+        var all = new List<RelationshipTuple>();
+        var readRequest = new ClientReadRequest();
+
+        string? continuation = null;
+        do
+        {
+            var options = new ClientReadOptions
+            {
+                ContinuationToken = continuation
+            };
+
+            var resp = await _fgaClient.Read(readRequest, options);
+
+            if (resp?.Tuples != null)
+            {
+                foreach (var t in resp.Tuples)
+                {
+                    all.Add(new RelationshipTuple(
+                        t.Key.User!,
+                        t.Key.Relation!,
+                        t.Key.Object!,
+                        t.Timestamp  
+                    ));
+                }
+            }
+
+            continuation = resp?.ContinuationToken;
+        } while (!string.IsNullOrEmpty(continuation));
+
+        return all;
     }
 }
