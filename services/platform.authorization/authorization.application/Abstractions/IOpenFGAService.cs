@@ -11,9 +11,10 @@ namespace authorization.application.Abstractions
         Task UnassignUserFromResourceAsync(UserResourceAssignment userResourceAssignment, CancellationToken cancellationToken = default);
         Task AssignRoleToResourceAsync(RoleResourceAssignment assignment, CancellationToken cancellationToken = default);
         Task UnassignRoleFromResourceAsync(RoleResourceAssignment assignment, CancellationToken cancellationToken = default);
-        Task<bool> CheckAccessAsync(CheckAccessAsync checkAccess, CancellationToken cancellationToken = default);
+        Task<bool> CheckAccessAsync(CheckAccess checkAccess, CancellationToken cancellationToken = default);
         Task<IEnumerable<Assignment>> ListAssignmentsAsync(string resource, CancellationToken cancellationToken = default);
         Task<List<AccessAssignment>> GetAllTuplesAsync(CancellationToken cancellationToken = default);
+        Task<List<AccessAssignment>> GetRoleAssignmentsAsync(string RoleId, CancellationToken cancellationToken = default);
 
     }
 }

@@ -64,7 +64,7 @@ namespace authorization.api.Controllers
         }
 
         [HttpPost("check-access")]
-        public async Task<bool> CheckAccessAsync(CheckAccessAsync checkAccess)
+        public async Task<bool> CheckAccessAsync(CheckAccess checkAccess)
         {
             return await _authorizationService.CheckAccessAsync(checkAccess);
         }
@@ -75,10 +75,16 @@ namespace authorization.api.Controllers
             return Ok(await _authorizationService.ListAssignmentsAsync(resource));
         }
 
-        [HttpGet("/relationship-tuple")]
+        [HttpGet("resource-assignments")]
         public async Task<IActionResult> GetAllTuplesAsync()
         {
             return Ok(await _authorizationService.GetAllTuplesAsync());
+        }
+
+        [HttpGet("role/{roleId}/assignments")]
+        public async Task<ActionResult<List<AccessAssignment>>> GetRoleAssignmentsAsync(string roleId)
+        {
+            return Ok(await _authorizationService.GetRoleAssignmentsAsync(roleId));
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 namespace authorization.data.Models
 {
-    public class CheckAccessAsync
+    public class CheckAccess
     {
         public required string UserId { get; set; }
         public required string Resource { get; set; }

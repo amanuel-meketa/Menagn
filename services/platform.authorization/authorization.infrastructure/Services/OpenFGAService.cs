@@ -283,7 +283,7 @@ public sealed class OpenFGAService : IOpenFGAService
             throw new DataException($"Failed to unassign role from resource with scopes {assignment.Scopes}: {ex}");
         }
     }
-    public async Task<bool> CheckAccessAsync(CheckAccessAsync checkAccess, CancellationToken cancellationToken = default)
+    public async Task<bool> CheckAccessAsync(CheckAccess checkAccess, CancellationToken cancellationToken = default)
     {
         var request = new ClientCheckRequest
         {
@@ -349,66 +349,177 @@ public sealed class OpenFGAService : IOpenFGAService
         var readRequest = new ClientReadRequest();
 
         string? continuation = null;
-        do
+        int pageCount = 0;
+        int totalTuples = 0;
+
+        try
         {
-            var options = new ClientReadOptions
-            {
-                ContinuationToken = continuation
-            };
+            _logger.LogDebug("Starting to retrieve all tuples from OpenFGA");
 
-            var resp = await _fgaClient.Read(readRequest, options, cancellationToken);
-
-            if (resp?.Tuples != null)
+            do
             {
-                foreach (var t in resp.Tuples)
+                pageCount++;
+                var options = new ClientReadOptions
                 {
-                    var user = t.Key.User ?? string.Empty;
-                    var relation = t.Key.Relation ?? string.Empty;
-                    var obj = t.Key.Object ?? string.Empty;
+                    ContinuationToken = continuation
+                };
 
-                    // Normalize actor
-                    ActorType actorType;
-                    string actorId;
+                _logger.LogDebug("Retrieving page {PageCount} of tuples, ContinuationToken: {ContinuationToken}", pageCount, continuation ?? "null");
 
-                    if (user.StartsWith("user:", StringComparison.OrdinalIgnoreCase))
+                var resp = await _fgaClient.Read(readRequest, options, cancellationToken);
+
+                if (resp?.Tuples != null)
+                {
+                    _logger.LogDebug("Retrieved {TupleCount} tuples from page {PageCount}",
+                        resp.Tuples.Count, pageCount);
+
+                    foreach (var tuple in resp.Tuples)
                     {
-                        actorType = ActorType.User;
-                        actorId = user["user:".Length..];
+                        var assignment = CreateAccessAssignmentFromTuple(tuple);
+                        if (assignment is not null)
+                        {
+                            list.Add(assignment);
+                            totalTuples++;
+                        }
                     }
-                    else if (user.StartsWith("role:", StringComparison.OrdinalIgnoreCase))
-                    {
-                        actorType = ActorType.Role;
-                        var after = user["role:".Length..];
-                        var idx = after.IndexOf('#');
-                        actorId = idx >= 0 ? after[..idx] : after;
-                    }
-                    else
-                    {
-                        actorType = ActorType.User;
-                        actorId = user;
-                    }
-
-                    // Normalize resource
-                    var parts = obj.Split(':', 2);
-                    string resourceType = parts.Length == 2 ? parts[0] : obj;
-                    string resourceId = parts.Length == 2 ? parts[1] : string.Empty;
-
-                    list.Add(new AccessAssignment
-                    {
-                        ActorType = actorType,
-                        ActorId = actorId,
-                        Relation = relation,
-                        ResourceType = resourceType,
-                        ResourceId = resourceId,
-                        AssignedAt = t.Timestamp
-                    });
                 }
+                else
+                {
+                    _logger.LogWarning("No tuples found in page {PageCount}", pageCount);
+                }
+
+                continuation = resp?.ContinuationToken;
+
+                _logger.LogDebug("Page {PageCount} processed. Has more pages: {HasMorePages}", pageCount, !string.IsNullOrEmpty(continuation));
+
+            } while (!string.IsNullOrEmpty(continuation));
+
+            _logger.LogInformation("Successfully retrieved all tuples. Total pages: {PageCount}, Total tuples: {TotalTuples}", pageCount, totalTuples);
+
+            return list;
+        }
+        catch (ApiException ex)
+        {
+            _logger.LogError(ex, "OpenFGA API error while retrieving all tuples. Pages processed: {PageCount}, Tuples processed: {TotalTuples}. Details: {Message}", pageCount, totalTuples, ex.Message);
+            throw;
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogWarning("Operation canceled while retrieving tuples. Pages processed: {PageCount}, Tuples processed: {TotalTuples}", pageCount, totalTuples);
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error while retrieving all tuples. Pages processed: {PageCount}, Tuples processed: {TotalTuples}", pageCount, totalTuples);
+            throw;
+        }
+    }
+    public async Task<List<AccessAssignment>> GetRoleAssignmentsAsync(string roleId, CancellationToken cancellationToken = default)
+    {
+        var assignments = new List<AccessAssignment>();
+        string? continuation = null;
+
+        try
+        {
+            _logger.LogDebug("Fetching all assignments for RoleId={RoleId}", roleId);
+
+            do
+            {
+                var readRequest = new ClientReadRequest();
+                var options = new ClientReadOptions { ContinuationToken = continuation };
+                var resp = await _fgaClient.Read(readRequest, options, cancellationToken);
+
+                if (resp?.Tuples != null)
+                {
+                    foreach (var tuple in resp.Tuples)
+                    {
+                        var assignment = CreateAccessAssignmentFromTuple(tuple);
+                        if (assignment != null)
+                        {
+                            if ((assignment.ActorType == ActorType.Role && assignment.ActorId == roleId) ||
+                                (assignment.ResourceType == "role" && assignment.ResourceId == roleId && assignment.Relation == "assignee"))
+                            {
+                                assignments.Add(assignment);
+                            }
+                        }
+                    }
+                }
+
+                continuation = resp?.ContinuationToken;
+            } while (!string.IsNullOrEmpty(continuation));
+
+            _logger.LogInformation("Found {Count} assignments for RoleId={RoleId}", assignments.Count, roleId);
+            return assignments;
+        }
+        catch (ApiException ex)
+        {
+            _logger.LogError(ex, "OpenFGA API error while fetching assignments for RoleId={RoleId}", roleId);
+            throw new DataException("Failed to list RoleAssignment", ex);
+        }
+    }
+    private static AccessAssignment? CreateAccessAssignmentFromTuple(object tuple)
+    {
+        try
+        {
+            // Use reflection to access properties safely
+            var type = tuple.GetType();
+            var keyProperty = type.GetProperty("Key");
+            var timestampProperty = type.GetProperty("Timestamp");
+
+            if (keyProperty?.GetValue(tuple) is not object keyObj) return null;
+
+            var keyType = keyObj.GetType();
+            var userProperty = keyType.GetProperty("User");
+            var relationProperty = keyType.GetProperty("Relation");
+            var objectProperty = keyType.GetProperty("Object");
+
+            var user = userProperty?.GetValue(keyObj) as string ?? string.Empty;
+            var relation = relationProperty?.GetValue(keyObj) as string ?? string.Empty;
+            var obj = objectProperty?.GetValue(keyObj) as string ?? string.Empty;
+            var timestamp = timestampProperty?.GetValue(tuple) as DateTime? ?? DateTime.MinValue;
+
+            // Normalize actor using the enum
+            ActorType actorType;
+            string actorId;
+
+            if (user.StartsWith("user:", StringComparison.OrdinalIgnoreCase))
+            {
+                actorType = ActorType.User;
+                actorId = user.Substring("user:".Length);
+            }
+            else if (user.StartsWith("role:", StringComparison.OrdinalIgnoreCase))
+            {
+                actorType = ActorType.Role;
+                var after = user.Substring("role:".Length);
+                var idx = after.IndexOf('#');
+                actorId = idx >= 0 ? after.Substring(0, idx) : after;
+            }
+            else
+            {
+                actorType = ActorType.User;
+                actorId = user;
             }
 
-            continuation = resp?.ContinuationToken;
-        } while (!string.IsNullOrEmpty(continuation));
+            // Normalize resource
+            var parts = obj.Split(':', 2);
+            string resourceType = parts.Length == 2 ? parts[0] : obj;
+            string resourceId = parts.Length == 2 ? parts[1] : string.Empty;
 
-        return list;
+            return new AccessAssignment
+            {
+                ActorType = actorType,
+                ActorId = actorId,
+                Relation = relation,
+                ResourceType = resourceType,
+                ResourceId = resourceId,
+                AssignedAt = timestamp
+            };
+        }
+        catch (Exception ex)
+        {
+            // Log the error but don't throw to avoid breaking the entire operation
+            // You might want to inject ILogger here or handle this differently
+            return null;
+        }
     }
-
 }

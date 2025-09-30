@@ -33,7 +33,7 @@ namespace authorization.application.Services
         {
             try
             {
-                 await _openFgaService.AssignRoleToUserAsync(userId, roleName);
+                await _openFgaService.AssignRoleToUserAsync(userId, roleName);
             }
             catch (Exception ex)
             {
@@ -46,7 +46,7 @@ namespace authorization.application.Services
         {
             try
             {
-                 await _openFgaService.UnassignRoleFromUserAsync(userId, roleName);
+                await _openFgaService.UnassignRoleFromUserAsync(userId, roleName);
             }
             catch (Exception ex)
             {
@@ -59,7 +59,7 @@ namespace authorization.application.Services
         {
             try
             {
-                 await _openFgaService.AssignUserToResourceAsync(userResourceAssignment);
+                await _openFgaService.AssignUserToResourceAsync(userResourceAssignment);
             }
             catch (Exception ex)
             {
@@ -72,7 +72,7 @@ namespace authorization.application.Services
         {
             try
             {
-                 await _openFgaService.UnassignUserFromResourceAsync(userResourceAssignment);
+                await _openFgaService.UnassignUserFromResourceAsync(userResourceAssignment);
             }
             catch (Exception ex)
             {
@@ -107,11 +107,11 @@ namespace authorization.application.Services
             }
         }
 
-        public async Task<bool> CheckAccessAsync(CheckAccessAsync checkAccess)
+        public async Task<bool> CheckAccessAsync(CheckAccess checkAccess)
         {
             try
             {
-               return await _openFgaService.CheckAccessAsync(checkAccess);
+                return await _openFgaService.CheckAccessAsync(checkAccess);
             }
             catch (Exception ex)
             {
@@ -124,7 +124,7 @@ namespace authorization.application.Services
         {
             try
             {
-               return await _openFgaService.ListAssignmentsAsync(resource);
+                return await _openFgaService.ListAssignmentsAsync(resource);
             }
             catch (Exception ex)
             {
@@ -145,6 +145,17 @@ namespace authorization.application.Services
                 throw new DataException("Failed to list all tuples", ex);
             }
         }
-
+       public async Task<IEnumerable<AccessAssignment>> GetRoleAssignmentsAsync(string roleId)
+        {
+            try
+            {
+                return await _openFgaService.GetRoleAssignmentsAsync(roleId); ;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to list RoleAssignment");
+                throw new DataException("Failed to list RoleAssignment", ex);
+            }
+        }
     }
 }
