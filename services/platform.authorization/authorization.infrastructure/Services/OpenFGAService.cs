@@ -131,11 +131,11 @@ public sealed class OpenFGAService : IOpenFGAService
             throw;
         }
     }
-    public async Task AssignUserToResourceAsync(UserResourceAssignment userResourceAssignment, CancellationToken cancellationToken = default)
+    public async Task AssignUserToResourceAsync(Guid userId, UserResourceAssignment userResourceAssignment, CancellationToken cancellationToken = default)
     {
         var tupleKeys = userResourceAssignment.Scopes.Select(scope => new ClientTupleKey
         {
-            User = $"user:{userResourceAssignment.UserId}",
+            User = $"user:{userId}",
             Relation = scope,
             Object = $"{userResourceAssignment.Resource}:{ResourceId}"
         }).ToList();
@@ -155,24 +155,24 @@ public sealed class OpenFGAService : IOpenFGAService
         try
         {
             await _fgaClient.Write(request, null, cancellationToken);
-            _logger.LogInformation($"Assigned scopes {userResourceAssignment.Scopes} to user {userResourceAssignment.UserId} on approvalInstance {userResourceAssignment.Resource}");
+            _logger.LogInformation($"Assigned scopes {userResourceAssignment.Scopes} to user {userId} on approvalInstance {userResourceAssignment.Resource}");
         }
         catch (FgaApiValidationError ex) when (ex.Message.Contains("cannot write a tuple which already exists"))
         {
-            _logger.LogWarning($"Attempted to assign existing scopes {userResourceAssignment.Scopes} to user {userResourceAssignment.UserId}. This is treated as successful.");
+            _logger.LogWarning($"Attempted to assign existing scopes {userResourceAssignment.Scopes} to user {userId}. This is treated as successful.");
             return;
         }
         catch (ApiException ex)
         {
-            _logger.LogError(ex, "OpenFGA API error while assigning scopes for user {UserId} on approvalInstance {ApprovalInstanceId}", userResourceAssignment.UserId, userResourceAssignment.Resource);
+            _logger.LogError(ex, "OpenFGA API error while assigning scopes for user {UserId} on approvalInstance {ApprovalInstanceId}", userId, userResourceAssignment.Resource);
             throw;
         }
     }
-    public async Task UnassignUserFromResourceAsync(UserResourceAssignment userResourceAssignment, CancellationToken cancellationToken = default)
+    public async Task UnassignUserFromResourceAsync(Guid userId, UserResourceAssignment userResourceAssignment, CancellationToken cancellationToken = default)
     {
         var tupleKeys = userResourceAssignment.Scopes.Select(scope => new ClientTupleKey
         {
-            User = $"user:{userResourceAssignment.UserId}",
+            User = $"user:{userId}",
             Relation = scope,
             Object = $"{userResourceAssignment.Resource}:{ResourceId}"
         }).ToList();
@@ -194,36 +194,36 @@ public sealed class OpenFGAService : IOpenFGAService
         {
             await _fgaClient.Write(request, null, cancellationToken);
             _logger.LogInformation("Unassigned scopes {Scopes} from user {UserId} on resource {Resource}",
-             string.Join(",", userResourceAssignment.Scopes), userResourceAssignment.UserId, "approvalInstance:all"
+             string.Join(",", userResourceAssignment.Scopes), userId, "approvalInstance:all"
             );
         }
         catch (FgaApiValidationError ex)
         {
             if (ex.Message?.Contains("tuple to be deleted did not exist", StringComparison.OrdinalIgnoreCase) == true)
             {
-                _logger.LogWarning("Attempted to delete tuples that do not exist. Details: {Message}", ex.Message);
+                _logger.LogWarning($"Attempted to delete tuples that do not exist. Details: {ex.Message}");
                 return;
             }
 
-            _logger.LogError(ex, "Service validation error while unassigning scopes for user {UserId}", userResourceAssignment.UserId);
+            _logger.LogError(ex, $"Service validation error while unassigning scopes for user {userId}");
             throw;
         }
         catch (ApiException ex)
         {
-            _logger.LogError(ex, "Service API error while unassigning scopes for user {UserId}", userResourceAssignment.UserId);
+            _logger.LogError(ex, $"Service API error while unassigning scopes for user {userId}");
             throw;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unexpected error while unassigning scopes for user {UserId}", userResourceAssignment.UserId);
+            _logger.LogError(ex, $"Unexpected error while unassigning scopes for user {userId}");
             throw;
         }
     }
-    public async Task AssignRoleToResourceAsync(RoleResourceAssignment assignment, CancellationToken cancellationToken = default)
+    public async Task AssignRoleToResourceAsync(string roleName, RoleResourceAssignment assignment, CancellationToken cancellationToken = default)
     {
         var tuples = assignment.Scopes.Select(scope => new ClientTupleKey
         {
-            User = $"role:{assignment.Role}#assignee",
+            User = $"role:{roleName}#assignee",
             Relation = scope,
             Object = $"{assignment.Resource}:{ResourceId}"
         }).ToList();
@@ -234,28 +234,28 @@ public sealed class OpenFGAService : IOpenFGAService
         {
             await _fgaClient.Write(request, null, cancellationToken);
 
-            _logger.LogInformation($"Assigned scopes {assignment.Scopes} to role {assignment.Role} on resource {assignment.Resource}");
+            _logger.LogInformation($"Assigned scopes {assignment.Scopes} to role {roleName} on resource {assignment.Resource}");
         }
         catch (FgaApiValidationError ex) when (ex.Message.Contains("already existed"))
         {
-            _logger.LogWarning($"Role {assignment.Role} already has scopes {assignment.Scopes} on resource {assignment.Resource}. Ignoring duplicate assignment.");
+            _logger.LogWarning($"Role {roleName} already has scopes {assignment.Scopes} on resource {assignment.Resource}. Ignoring duplicate assignment.");
         }
         catch (ApiException ex)
         {
-            _logger.LogError(ex, $"API error while assigning scopes for role {assignment.Role} on resource {assignment.Resource}");
+            _logger.LogError(ex, $"API error while assigning scopes for role {roleName} on resource {assignment.Resource}");
             throw new DataException($"Failed to assign role to resource with scopes {assignment.Scopes} {ex}");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Unexpected error while assigning scopes for role {assignment.Role} on resource {assignment.Resource}");
+            _logger.LogError(ex, $"Unexpected error while assigning scopes for role {roleName} on resource {assignment.Resource}");
             throw new DataException($"Failed to assign role to resource with scopes {ex}");
         }
     }
-    public async Task UnassignRoleFromResourceAsync(RoleResourceAssignment assignment, CancellationToken cancellationToken = default)
+    public async Task UnassignRoleFromResourceAsync(string roleName, RoleResourceAssignment assignment, CancellationToken cancellationToken = default)
     {
         var tuples = assignment.Scopes.Select(scope => new ClientTupleKeyWithoutCondition
         {
-            User = $"role:{assignment.Role}#assignee",
+            User = $"role:{roleName}#assignee",
             Relation = scope,
             Object = $"{assignment.Resource}:{ResourceId}"
         }).ToList();
@@ -266,20 +266,20 @@ public sealed class OpenFGAService : IOpenFGAService
         {
             await _fgaClient.Write(request, null, cancellationToken);
 
-            _logger.LogInformation($"Unassigned scopes {assignment.Scopes} from role {assignment.Role} on resource {assignment.Resource}");
+            _logger.LogInformation($"Unassigned scopes {assignment.Scopes} from role {roleName} on resource {assignment.Resource}");
         }
         catch (FgaApiValidationError ex) when (ex.Message.Contains("did not exist"))
         {
-            _logger.LogWarning($"Attempted to unassign scopes {assignment.Scopes} from role {assignment.Role} on resource {assignment.Resource}, but they did not exist. Ignoring.");
+            _logger.LogWarning($"Attempted to unassign scopes {assignment.Scopes} from role {roleName} on resource {assignment.Resource}, but they did not exist. Ignoring.");
         }
         catch (ApiException ex)
         {
-            _logger.LogError(ex, $"API error while unassigning scopes for role {assignment.Role} on resource {assignment.Resource}");
+            _logger.LogError(ex, $"API error while unassigning scopes for role {roleName} on resource {assignment.Resource}");
             throw new DataException($"Failed to unassign role from resource with scopes {assignment.Scopes}: {ex}");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Unexpected error while unassigning scopes for role {assignment.Role} on resource {assignment.Resource}");
+            _logger.LogError(ex, $"Unexpected error while unassigning scopes for role {roleName} on resource {assignment.Resource}");
             throw new DataException($"Failed to unassign role from resource with scopes {assignment.Scopes}: {ex}");
         }
     }
@@ -457,55 +457,36 @@ public sealed class OpenFGAService : IOpenFGAService
             throw new DataException("Failed to list RoleAssignment", ex);
         }
     }
-    private static AccessAssignment? CreateAccessAssignmentFromTuple(object tuple)
+    private AccessAssignment? CreateAccessAssignmentFromTuple(object? tuple)
     {
+        if (tuple is null)
+        {
+            _logger.LogWarning("CreateAccessAssignmentFromTuple was called with null.");
+            return null;
+        }
+
         try
         {
-            // Use reflection to access properties safely
-            var type = tuple.GetType();
-            var keyProperty = type.GetProperty("Key");
-            var timestampProperty = type.GetProperty("Timestamp");
+            var tupleType = tuple.GetType();
+            var key = tupleType.GetProperty("Key")?.GetValue(tuple);
 
-            if (keyProperty?.GetValue(tuple) is not object keyObj) return null;
-
-            var keyType = keyObj.GetType();
-            var userProperty = keyType.GetProperty("User");
-            var relationProperty = keyType.GetProperty("Relation");
-            var objectProperty = keyType.GetProperty("Object");
-
-            var user = userProperty?.GetValue(keyObj) as string ?? string.Empty;
-            var relation = relationProperty?.GetValue(keyObj) as string ?? string.Empty;
-            var obj = objectProperty?.GetValue(keyObj) as string ?? string.Empty;
-            var timestamp = timestampProperty?.GetValue(tuple) as DateTime? ?? DateTime.MinValue;
-
-            // Normalize actor using the enum
-            ActorType actorType;
-            string actorId;
-
-            if (user.StartsWith("user:", StringComparison.OrdinalIgnoreCase))
+            if (key is null)
             {
-                actorType = ActorType.User;
-                actorId = user.Substring("user:".Length);
-            }
-            else if (user.StartsWith("role:", StringComparison.OrdinalIgnoreCase))
-            {
-                actorType = ActorType.Role;
-                var after = user.Substring("role:".Length);
-                var idx = after.IndexOf('#');
-                actorId = idx >= 0 ? after.Substring(0, idx) : after;
-            }
-            else
-            {
-                actorType = ActorType.User;
-                actorId = user;
+                _logger.LogWarning("Tuple of type {TypeName} does not contain a valid 'Key' property.", tupleType.Name);
+                return null;
             }
 
-            // Normalize resource
-            var parts = obj.Split(':', 2);
-            string resourceType = parts.Length == 2 ? parts[0] : obj;
-            string resourceId = parts.Length == 2 ? parts[1] : string.Empty;
+            var timestamp = tupleType.GetProperty("Timestamp")?.GetValue(tuple) as DateTime? ?? DateTime.MinValue;
 
-            return new AccessAssignment
+            var keyType = key.GetType();
+            var user = keyType.GetProperty("User")?.GetValue(key) as string ?? string.Empty;
+            var relation = keyType.GetProperty("Relation")?.GetValue(key) as string ?? string.Empty;
+            var obj = keyType.GetProperty("Object")?.GetValue(key) as string ?? string.Empty;
+
+            var (actorType, actorId) = ExtractActor(user);
+            var (resourceType, resourceId) = ExtractResource(obj);
+
+            var assignment = new AccessAssignment
             {
                 ActorType = actorType,
                 ActorId = actorId,
@@ -514,12 +495,38 @@ public sealed class OpenFGAService : IOpenFGAService
                 ResourceId = resourceId,
                 AssignedAt = timestamp
             };
+
+            _logger.LogDebug($"Mapped tuple to AccessAssignment: {actorType}/{actorId} -> {relation} {resourceType}:{resourceId}");
+
+            return assignment;
         }
         catch (Exception ex)
         {
-            // Log the error but don't throw to avoid breaking the entire operation
-            // You might want to inject ILogger here or handle this differently
+            _logger.LogError(ex, "Failed to convert tuple of type {TupleType}.", tuple.GetType().Name);
             return null;
         }
     }
+
+    private static (ActorType actorType, string actorId) ExtractActor(string user)
+    {
+        if (user.StartsWith("user:", StringComparison.OrdinalIgnoreCase))
+            return (ActorType.User, user["user:".Length..]);
+
+        if (user.StartsWith("role:", StringComparison.OrdinalIgnoreCase))
+        {
+            var after = user["role:".Length..];
+            var hashIndex = after.IndexOf('#');
+            return hashIndex >= 0
+                ? (ActorType.Role, after[..hashIndex])
+                : (ActorType.Role, after);
+        }
+
+        return (ActorType.User, user); // fallback
+    }
+    private static (string resourceType, string resourceId) ExtractResource(string obj)
+    {
+        var parts = obj.Split(':', 2);
+        return parts.Length == 2 ? (parts[0], parts[1]): (obj, string.Empty);
+    }
+
 }

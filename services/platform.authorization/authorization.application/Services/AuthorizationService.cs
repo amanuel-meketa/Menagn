@@ -55,11 +55,11 @@ namespace authorization.application.Services
             }
         }
 
-        public async Task AssignUserToResourceAsync(UserResourceAssignment userResourceAssignment)
+        public async Task AssignUserToResourceAsync(Guid userId, UserResourceAssignment userResourceAssignment)
         {
             try
             {
-                await _openFgaService.AssignUserToResourceAsync(userResourceAssignment);
+                await _openFgaService.AssignUserToResourceAsync(userId, userResourceAssignment);
             }
             catch (Exception ex)
             {
@@ -68,11 +68,11 @@ namespace authorization.application.Services
             }
         }
 
-        public async Task UnassignUserFromResourceAsync(UserResourceAssignment userResourceAssignment)
+        public async Task UnassignUserFromResourceAsync(Guid userId, UserResourceAssignment userResourceAssignment)
         {
             try
             {
-                await _openFgaService.UnassignUserFromResourceAsync(userResourceAssignment);
+                await _openFgaService.UnassignUserFromResourceAsync(userId, userResourceAssignment);
             }
             catch (Exception ex)
             {
@@ -81,11 +81,11 @@ namespace authorization.application.Services
             }
         }
 
-        public async Task AssignRoleToResourceAsync(RoleResourceAssignment assignment)
+        public async Task AssignRoleToResourceAsync(string roleNam, RoleResourceAssignment assignment)
         {
             try
             {
-                await _openFgaService.AssignRoleToResourceAsync(assignment);
+                await _openFgaService.AssignRoleToResourceAsync(roleNam, assignment);
             }
             catch (Exception ex)
             {
@@ -94,11 +94,11 @@ namespace authorization.application.Services
             }
         }
 
-        public async Task UnassignRoleFromResourceAsync(RoleResourceAssignment assignment)
+        public async Task UnassignRoleFromResourceAsync(string roleNam, RoleResourceAssignment assignment)
         {
             try
             {
-                await _openFgaService.UnassignRoleFromResourceAsync(assignment);
+                await _openFgaService.UnassignRoleFromResourceAsync(roleNam, assignment);
             }
             catch (Exception ex)
             {

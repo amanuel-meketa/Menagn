@@ -2,7 +2,6 @@ using authorization.api.Configs;
 using authorization.application.Abstractions;
 using authorization.application.Services;
 using authorization.infrastructure.Services;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using OpenFga.Sdk.Client;
 using OpenFga.Sdk.Configuration;
@@ -72,7 +71,7 @@ builder.Services.AddSingleton<OpenFgaClient>(provider =>
 });
 
 // Add health checks
-builder.Services.AddHealthChecks().AddCheck<OpenFGAHealthCheck>("openfga");
+builder.Services.AddHealthChecks();
 builder.Services.AddCors(o => o.AddPolicy("AllowAll", p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
 var app = builder.Build();
@@ -83,71 +82,24 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 
-    // Log configuration values (avoid logging sensitive data in production)
+    // Redirect root to Scalar UI
+    app.MapGet("/", context =>
+    {
+        context.Response.Redirect("/scalar");
+        return Task.CompletedTask;
+    });
+
+    // Log configuration values
     var config = app.Services.GetRequiredService<IOptions<OpenFGAConfig>>().Value;
     app.Logger.LogInformation("OpenFGA Configuration:");
     app.Logger.LogInformation("  ApiUrl: {ApiUrl}", config.BaseUrl);
     app.Logger.LogInformation("  StoreId: {StoreId}", config.StoreName);
     app.Logger.LogInformation("  SchemaVersion: {SchemaVersion}", config.SchemaVersion);
 }
+
 app.UseCors("AllowAll");
 app.UseAuthorization();
 app.MapControllers();
-
-// Health check endpoint
-app.MapHealthChecks("/health");
-app.MapGet("/health-detailed", async (OpenFgaClient openFgaClient, IOpenFGAService openFgaService) =>
-{
-    try
-    {
-        // Test OpenFGA connection
-        var stores = await openFgaClient.ListStores();
-        var storeCount = stores.Stores?.Count ?? 0;
-
-        return Results.Ok(new
-        {
-            status = "Healthy",
-            timestamp = DateTime.UtcNow,
-            openFga = new { connected = true, storeCount },
-            version = typeof(Program).Assembly.GetName().Version?.ToString() ?? "unknown"
-        });
-    }
-    catch (Exception ex)
-    {
-        return Results.Problem(
-            title: "Unhealthy",
-            detail: $"OpenFGA connection failed: {ex.Message}",
-            statusCode: 503);
-    }
-});
+app.MapGet("/health", () => Results.Ok("Healthy")).WithName("HealthCheck").WithOpenApi();
 
 app.Run();
-
-// Health check implementation
-public class OpenFGAHealthCheck : IHealthCheck
-{
-    private readonly OpenFgaClient _openFgaClient;
-
-    public OpenFGAHealthCheck(OpenFgaClient openFgaClient)
-    {
-        _openFgaClient = openFgaClient;
-    }
-
-    public async Task<HealthCheckResult> CheckHealthAsync(
-        HealthCheckContext context,
-        CancellationToken cancellationToken = default)
-    {
-        try
-        {
-            var stores = await _openFgaClient.ListStores(cancellationToken: cancellationToken);
-            return HealthCheckResult.Healthy(
-                $"OpenFGA is healthy. Stores: {stores.Stores?.Count ?? 0}");
-        }
-        catch (Exception ex)
-        {
-            return HealthCheckResult.Unhealthy(
-                "OpenFGA health check failed",
-                ex);
-        }
-    }
-}

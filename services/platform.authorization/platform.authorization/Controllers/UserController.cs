@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace authorization.api.Controllers
 {
     [ApiController]
-    [Route("api/")]
+    [Route("api")]
     public class UserController : ControllerBase
     {
         private readonly AuthorizationService _authorizationService;
@@ -15,76 +15,91 @@ namespace authorization.api.Controllers
             _authorizationService = authorizationService;
         }
 
-        [HttpGet("user/{userId}/roles")]
-        public async Task<IReadOnlyList<string>> GetUserRoles(string userId)
+        // ------------------ USER ROLES ------------------
+
+        [HttpGet("users/{userId}/roles")]
+        public async Task<ActionResult<IReadOnlyList<string>>> GetUserRolesAsync(string userId)
         {
-            return await _authorizationService.GetUserRolesAsync(userId);
+            var roles = await _authorizationService.GetUserRolesAsync(userId);
+            return Ok(roles);
         }
 
-        [HttpPost("user/{userId}/roles/{roleName}")]
-        public async Task<IActionResult> AssignRoleToUser(string userId, string roleName)
+        [HttpPost("users/{userId}/roles/{roleName}")]
+        public async Task<IActionResult> AddRoleToUserAsync(string userId, string roleName)
         {
             await _authorizationService.AssignRoleToUserAsync(userId, roleName);
-            return Ok(new { Message = $"Role '{roleName}' assigned to user '{userId}' successfully." });
+            return CreatedAtAction(nameof(GetUserRolesAsync), new { userId }, new { Message = $"Role '{roleName}' assigned to user '{userId}'." });
         }
 
-        [HttpDelete("user/{userId}/roles/{roleName}")]
-        public async Task<IActionResult> UnassignRoleFromUser(string userId, string roleName)
+        [HttpDelete("users/{userId}/roles/{roleName}")]
+        public async Task<IActionResult> RemoveRoleFromUserAsync(string userId, string roleName)
         {
             await _authorizationService.UnassignRoleFromUserAsync(userId, roleName);
-            return Ok(new { Message = $"Role '{roleName}' unassigned from user '{userId}' successfully." });
+            return NoContent();
         }
 
-        [HttpPost("user/{userId}/assigne-resource/scopes")]
-        public async Task<IActionResult> AssignUserToResourceAsync(UserResourceAssignment userResourceAssignment)
+        // ------------------ USER RESOURCE ASSIGNMENTS ------------------
+
+        [HttpPost("users/{userId}/resources")]
+        public async Task<IActionResult> AssignUserToResourceAsync(Guid userId, [FromBody] UserResourceAssignment assignment)
         {
-            await _authorizationService.AssignUserToResourceAsync(userResourceAssignment);
-            return Ok(new { Message = $"User '{userResourceAssignment.UserId}' assigned to resource '{userResourceAssignment.Resource}' with scops successfully." });
+            await _authorizationService.AssignUserToResourceAsync(userId, assignment);
+            return Created($"api/users/{userId}/resources", new { Message = $"User '{userId}' assigned to resource '{assignment.Resource}'." });
         }
 
-        [HttpDelete("user/{userId}/unassigne-resource/scopes")]
-        public async Task<IActionResult> UnassignUserFromResourceAsync(UserResourceAssignment userResourceAssignment)
+        [HttpDelete("users/{userId}/resources")]
+        public async Task<IActionResult> UnassignUserFromResourceAsync(Guid userId, [FromBody] UserResourceAssignment assignment)
         {
-            await _authorizationService.UnassignUserFromResourceAsync(userResourceAssignment);
-            return Ok(new { Message = $"User '{userResourceAssignment.UserId}' unassigned to resource '{userResourceAssignment.Resource}' with scops successfully." });
+            await _authorizationService.UnassignUserFromResourceAsync(userId, assignment);
+            return NoContent();
         }
 
-        [HttpPost("role/assigne-resource/scopes")]
-        public async Task<IActionResult> AssignRoleToResourceAsync(RoleResourceAssignment assignment)
-        {
-            await _authorizationService.AssignRoleToResourceAsync(assignment);
-            return Ok(new { Message = $"Role '{assignment.Role}' unassigned to resource '{assignment.Resource}' with scops successfully." });
-        }
+        // ------------------ ROLE RESOURCE ASSIGNMENTS ------------------
 
-        [HttpDelete("role/unassigne-resource/scopes")]
-        public async Task<IActionResult> UnassignRoleFromResourceAsync(RoleResourceAssignment assignment)
-        {
-            await _authorizationService.UnassignRoleFromResourceAsync(assignment);
-            return Ok(new { Message = $"Role '{assignment.Role}' unassigned to resource '{assignment.Resource}' with scops successfully." });
-        }
-
-        [HttpPost("check-access")]
-        public async Task<bool> CheckAccessAsync(CheckAccess checkAccess)
-        {
-            return await _authorizationService.CheckAccessAsync(checkAccess);
-        }
-
-        [HttpGet("{resource}/assignments")]
-        public async Task<IActionResult> GetAssignments(string resource)
-        {
-            return Ok(await _authorizationService.ListAssignmentsAsync(resource));
-        }
-
-        [HttpGet("resource-assignments")]
-        public async Task<IActionResult> GetAllTuplesAsync()
-        {
-            return Ok(await _authorizationService.GetAllTuplesAsync());
-        }
-
-        [HttpGet("role/{roleId}/assignments")]
+        [HttpGet("roles/{roleId}/assignments")]
         public async Task<ActionResult<List<AccessAssignment>>> GetRoleAssignmentsAsync(string roleId)
         {
-            return Ok(await _authorizationService.GetRoleAssignmentsAsync(roleId));
+            var result = await _authorizationService.GetRoleAssignmentsAsync(roleId);
+            return Ok(result);
+        }
+
+        [HttpPost("roles/{roleName}/resources")]
+        public async Task<IActionResult> AssignRoleToResourceAsync(string roleName, [FromBody] RoleResourceAssignment assignment)
+        {
+            await _authorizationService.AssignRoleToResourceAsync(roleName, assignment);
+            return Created($"api/roles/{roleName}/resources", new { Message = $"Role '{roleName}' assigned to resource '{assignment.Resource}'." });
+        }
+
+        [HttpDelete("roles/{roleName}/resources")]
+        public async Task<IActionResult> UnassignRoleFromResourceAsync(string roleName, [FromBody] RoleResourceAssignment assignment)
+        {
+            await _authorizationService.UnassignRoleFromResourceAsync(roleName, assignment);
+            return NoContent();
+        }
+
+        // ------------------ ACCESS CHECK ------------------
+
+        [HttpPost("access/check")]
+        public async Task<ActionResult<bool>> CheckAccessAsync([FromBody] CheckAccess checkAccess)
+        {
+            var result = await _authorizationService.CheckAccessAsync(checkAccess);
+            return Ok(result);
+        }
+
+        // ------------------ ASSIGNMENT RETRIEVAL ------------------
+
+        [HttpGet("resources/{resourceId}/assignments")]
+        public async Task<IActionResult> GetResourceAssignmentsAsync(string resourceId)
+        {
+            var result = await _authorizationService.ListAssignmentsAsync(resourceId);
+            return Ok(result);
+        }
+
+        [HttpGet("resources/assignments")]
+        public async Task<IActionResult> GetAllAssignmentsAsync()
+        {
+            var result = await _authorizationService.GetAllTuplesAsync();
+            return Ok(result);
         }
     }
 }
