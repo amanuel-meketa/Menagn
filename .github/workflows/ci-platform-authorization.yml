@@ -35,7 +35,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: services/platform-authorization
-          file: services/platform-authorization/platform.authorization/Dockerfile
+          file: services/platform.authorization/platform.authorization/Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/platform-authorization:latest
