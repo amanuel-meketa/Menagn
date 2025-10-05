@@ -34,7 +34,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
-          context: services/platform-authorization
+          context: services/platform.authorization
           file: services/platform.authorization/platform.authorization/Dockerfile
           push: true
           tags: |
