@@ -24,7 +24,15 @@ services:
       - "2000:7070"
     networks:
       - menagn-network
-      
+  
+  platform-authorization:
+    container_name: authorization-service
+    image: amanuelmeketa/platform-authorization:latest
+    networks:
+      - menagn-network
+    ports:
+      - "5005:5005"
+
   platform.bootstrapper:
     container_name: service-bootstrapper
     image: amanuelmeketa/platform.bootstrapper:latest
@@ -112,7 +120,7 @@ services:
   authorization-provider:
     container_name: authorization-provider
     image: openfga/openfga:latest
-    command: run
+    command: run --http-addr :6060
     environment:
       OPENFGA_DATASTORE_ENGINE: postgres
       OPENFGA_DATASTORE_URI: postgres://postgres:password@platform-database:5432/postgres?sslmode=disable
@@ -122,7 +130,7 @@ services:
       migrate:
         condition: service_completed_successfully
     ports:
-      - "8080:8080"  
+      - "6060:6060"  
       - "3000:3000"
     networks:
       - menagn-network

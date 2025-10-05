@@ -145,7 +145,8 @@ namespace authorization.application.Services
                 throw new DataException("Failed to list all tuples", ex);
             }
         }
-       public async Task<IEnumerable<AccessAssignment>> GetRoleAssignmentsAsync(string roleId)
+
+        public async Task<IEnumerable<AccessAssignment>> GetRoleAssignmentsAsync(string roleId)
         {
             try
             {

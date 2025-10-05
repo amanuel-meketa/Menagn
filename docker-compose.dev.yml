@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   security.api:
     build:
@@ -15,12 +13,24 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
 
+  platform-authorization:
+    build:
+      context: ./services/platform.authorization
+      dockerfile: platform.authorization/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development  
+      - DOTNET_URLS=http://0.0.0.0:5005  
+      - OPENFGA_BASEURL=http://authorization-provider:8080
+      - OPENFGA_API_TOKEN=w9F#2vLq8Xy!bR3uPz6@Hj7KmQdT1sVc
+      - OPENFGA_STORENAME=01K5GW5VCHH54SXRMXW0CX01Z3
+      - OPENFGA_AUTHMODELID=optional-model-id
+
   platform.bootstrapper:
     build:
       context: ./services/platform.bootstrapper
       dockerfile: MicroserviceBootstrapper/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development    
+      - ASPNETCORE_ENVIRONMENT=Development  
 
   platform.ui:
     build:
