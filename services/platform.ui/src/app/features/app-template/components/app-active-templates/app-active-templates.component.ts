@@ -13,14 +13,13 @@ import { AppTemplateService } from '../../services/app-template.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-active-templates',
-  standalone: true,
-  imports: [
-    CommonModule, FormsModule, NzButtonModule, NzCardModule,
-    NzInputModule, NzIconModule, NzEmptyModule
-  ],
-  templateUrl: './app-active-templates.component.html',
-  styleUrl: './app-active-templates.component.css'
+    selector: 'app-active-templates',
+    imports: [
+        CommonModule, FormsModule, NzButtonModule, NzCardModule,
+        NzInputModule, NzIconModule, NzEmptyModule
+    ],
+    templateUrl: './app-active-templates.component.html',
+    styleUrl: './app-active-templates.component.css'
 })
 export class ActiveTemplatesComponent implements OnInit, OnDestroy {
   private readonly _appTemplateService = inject(AppTemplateService);

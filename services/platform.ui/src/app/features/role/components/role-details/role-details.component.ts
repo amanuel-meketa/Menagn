@@ -13,12 +13,11 @@ import { RolesharedService } from '../../services/Roleshared.service';
 import { RoleAssignedUsersComponent } from '../role-assigned-users/role-assigned-users.component';
 
 @Component({
-  selector: 'app-role-details',
-  standalone: true,
-  imports: [ NzButtonModule, NzModalModule, ReactiveFormsModule, NzFormModule, NzInputModule, NzTabsModule, NzButtonModule,
-             RoleAssignedUsersComponent],
-  templateUrl: './role-details.component.html',
-  styleUrl: './role-details.component.css'
+    selector: 'app-role-details',
+    imports: [NzButtonModule, NzModalModule, ReactiveFormsModule, NzFormModule, NzInputModule, NzTabsModule, NzButtonModule,
+        RoleAssignedUsersComponent],
+    templateUrl: './role-details.component.html',
+    styleUrl: './role-details.component.css'
 })
 export class RoleDetailsComponent implements OnInit {
 

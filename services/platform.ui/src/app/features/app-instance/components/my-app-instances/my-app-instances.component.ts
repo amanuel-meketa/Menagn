@@ -23,12 +23,11 @@ import { AppTemplateService } from '../../../app-template/services/app-template.
 import { StageProgressComponent } from '../../../stage-definition/components/stage-progress/stage-progress.component';
 
 @Component({
-  selector: 'app-my-app-instances',
-  standalone: true,
-  imports: [ CommonModule, FormsModule, NzInputModule, NzDatePickerModule, NzSelectModule, NzPaginationModule, NzButtonModule,
-             NzIconModule, NzModalModule, NzCardModule, RouterModule, NzTagModule, StageProgressComponent ],
-  templateUrl: './my-app-instances.component.html',
-  styleUrl: './my-app-instances.component.css'
+    selector: 'app-my-app-instances',
+    imports: [CommonModule, FormsModule, NzInputModule, NzDatePickerModule, NzSelectModule, NzPaginationModule, NzButtonModule,
+        NzIconModule, NzModalModule, NzCardModule, RouterModule, NzTagModule, StageProgressComponent],
+    templateUrl: './my-app-instances.component.html',
+    styleUrl: './my-app-instances.component.css'
 })
 
 export class MyAppInstancesComponent implements OnInit, OnDestroy {

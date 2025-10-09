@@ -15,12 +15,11 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 
 @Component({
-  selector: 'app-user-register',
-  standalone: true,
-  imports: [ ReactiveFormsModule,NzBreadCrumbModule,NzButtonModule,NzFormModule,NzInputModule,NzLayoutModule,NzModalModule,
-             NzCardModule,CommonModule,RouterLink],
-  templateUrl: './user-register.component.html',
-  styleUrls: ['./user-register.component.css']
+    selector: 'app-user-register',
+    imports: [ReactiveFormsModule, NzBreadCrumbModule, NzButtonModule, NzFormModule, NzInputModule, NzLayoutModule, NzModalModule,
+        NzCardModule, CommonModule, RouterLink],
+    templateUrl: './user-register.component.html',
+    styleUrls: ['./user-register.component.css']
 })
 
 export class UserRegisterComponent implements OnInit, OnDestroy {

@@ -8,11 +8,10 @@ import { GetAppTypeModel } from '../../../../models/Application-Type/GetAppTypeM
 import { AppTemplateService } from '../../services/app-template.service';
 
 @Component({
-  selector: 'app-app-template-update',
-  standalone: true,
-  imports: [],
-  templateUrl: './app-template-update.component.html',
-  styleUrl: './app-template-update.component.css'
+    selector: 'app-app-template-update',
+    imports: [],
+    templateUrl: './app-template-update.component.html',
+    styleUrl: './app-template-update.component.css'
 })
 export class ApplicationTypeUpdateComponent implements OnInit {
 

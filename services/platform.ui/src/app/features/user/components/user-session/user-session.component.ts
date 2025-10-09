@@ -9,11 +9,10 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 
 @Component({
-  selector: 'app-user-session',
-  standalone: true,
-  imports: [NzTableModule, CommonModule, NzModalModule, NzButtonModule, NzDividerModule], 
-  templateUrl: './user-session.component.html',
-  styleUrls: ['./user-session.component.css']
+    selector: 'app-user-session',
+    imports: [NzTableModule, CommonModule, NzModalModule, NzButtonModule, NzDividerModule],
+    templateUrl: './user-session.component.html',
+    styleUrls: ['./user-session.component.css']
 })
 export class UserSessionComponent implements OnInit {
   private _userService = inject(UserService);

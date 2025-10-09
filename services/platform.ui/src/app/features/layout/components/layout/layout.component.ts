@@ -10,14 +10,13 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { AuthService } from '../../../../shared/services/auth-service.service';
 
 @Component({
-  selector: 'app-layout',
-  standalone: true,
-  imports: [
-    RouterOutlet, RouterLink, CommonModule, NzBreadCrumbModule, NzIconModule, NzLayoutModule,
-    NzMenuModule, NzButtonModule, NzDropDownModule
-  ],
-  templateUrl: './layout.component.html',
-  styleUrl: './layout.component.css'
+    selector: 'app-layout',
+    imports: [
+        RouterOutlet, RouterLink, CommonModule, NzBreadCrumbModule, NzIconModule, NzLayoutModule,
+        NzMenuModule, NzButtonModule, NzDropDownModule
+    ],
+    templateUrl: './layout.component.html',
+    styleUrl: './layout.component.css'
 })
 export class LayoutComponent {
   private _authService = inject(AuthService); 

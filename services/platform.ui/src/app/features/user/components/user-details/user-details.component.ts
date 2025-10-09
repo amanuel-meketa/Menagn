@@ -19,14 +19,13 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-user-details',
-  standalone: true,
-  imports: [CommonModule, RouterLink, NzBreadCrumbModule, NzTabsModule, NzCardModule, NzFormModule, NzButtonModule, NzTableModule,
-            FormsModule, NzSpinModule, ResetPasswordComponent, UserSessionComponent, UserRoleComponent, NzIconModule,
-            NzSwitchModule],
-  templateUrl: './user-details.component.html',
-  styleUrls: ['./user-details.component.css'],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]  // Add this line
+    selector: 'app-user-details',
+    imports: [CommonModule, RouterLink, NzBreadCrumbModule, NzTabsModule, NzCardModule, NzFormModule, NzButtonModule, NzTableModule,
+        FormsModule, NzSpinModule, ResetPasswordComponent, UserSessionComponent, UserRoleComponent, NzIconModule,
+        NzSwitchModule],
+    templateUrl: './user-details.component.html',
+    styleUrls: ['./user-details.component.css'],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA] // Add this line
 })
 
 export class UserDetailsComponent implements OnInit {

@@ -11,11 +11,10 @@ import { AppTemplateService } from '../../services/app-template.service';
 import { CreateAppTemplateModel } from '../../../../models/Application-Type/CreateAppTemplateModel';
 
 @Component({
-  selector: 'app-app-template-create',
-  standalone: true,
-  imports: [ NzButtonModule, NzModalModule, ReactiveFormsModule, NzFormModule, NzInputModule ],
-  templateUrl: './app-template-create.component.html',
-  styleUrl: './app-template-create.component.css'
+    selector: 'app-app-template-create',
+    imports: [NzButtonModule, NzModalModule, ReactiveFormsModule, NzFormModule, NzInputModule],
+    templateUrl: './app-template-create.component.html',
+    styleUrl: './app-template-create.component.css'
 })
 export class AppTemplateCreateComponent {
   private fb = inject(NonNullableFormBuilder);

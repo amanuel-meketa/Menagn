@@ -6,11 +6,10 @@ import { UserService } from '../../services/user.service';
 import { GetRole } from '../../../../models/User/GetUserRole';
 
 @Component({
-  selector: 'app-user-role',
-  standalone: true,
-  imports: [NzButtonModule, NzTransferModule],
-  templateUrl: './user-role.component.html',
-  styleUrls: ['./user-role.component.css']
+    selector: 'app-user-role',
+    imports: [NzButtonModule, NzTransferModule],
+    templateUrl: './user-role.component.html',
+    styleUrls: ['./user-role.component.css']
 })
 export class UserRoleComponent implements OnInit {
   private messageService = inject(NzMessageService);

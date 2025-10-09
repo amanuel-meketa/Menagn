@@ -15,12 +15,11 @@ import { Subscription } from 'rxjs';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-role-list',
-  standalone: true,
-  imports: [ NzButtonModule, NzDividerModule, NzGridModule, NzIconModule, NzModalModule, NzTableModule, CdkDrag, CdkDropList, 
-             RoleRegisterComponent, RouterModule ],
-  templateUrl: './role-list.component.html',
-  styleUrls: ['./role-list.component.css']
+    selector: 'app-role-list',
+    imports: [NzButtonModule, NzDividerModule, NzGridModule, NzIconModule, NzModalModule, NzTableModule, CdkDrag, CdkDropList,
+        RoleRegisterComponent, RouterModule],
+    templateUrl: './role-list.component.html',
+    styleUrls: ['./role-list.component.css']
 })
 
 export class RoleListComponent implements OnInit {

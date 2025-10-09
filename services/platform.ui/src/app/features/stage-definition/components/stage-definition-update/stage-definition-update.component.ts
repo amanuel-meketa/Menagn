@@ -7,11 +7,10 @@ import { UpdateStageDefiModel } from '../../../../models/Stage-Definition/Update
 import { GetStageDefiModel } from '../../../../models/Stage-Definition/GetStageDefiModel';
 
 @Component({
-  selector: 'app-stage-definition-update',
-  standalone: true,
-  imports: [],
-  templateUrl: './stage-definition-update.component.html',
-  styleUrl: './stage-definition-update.component.css'
+    selector: 'app-stage-definition-update',
+    imports: [],
+    templateUrl: './stage-definition-update.component.html',
+    styleUrl: './stage-definition-update.component.css'
 })
 export class StageDefinitionUpdateComponent implements OnInit {
 

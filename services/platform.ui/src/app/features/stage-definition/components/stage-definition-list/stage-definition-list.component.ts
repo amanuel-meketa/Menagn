@@ -18,12 +18,11 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { StageDefinitinCreateComponent } from '../stage-definitin-create/stage-definitin-create.component';
 
 @Component({
-  selector: 'app-stage-definition-list',
-  standalone: true,
-  imports: [ NzTreeModule, NzIconModule, NzDropDownModule, NzMenuModule, CommonModule, NzCardModule, NzTagModule, 
-             NzSpinModule,NzEmptyModule, NzDividerModule, NzButtonModule, NzToolTipModule, RouterModule, StageDefinitinCreateComponent ],
-  templateUrl: './stage-definition-list.component.html',
-  styleUrls: ['./stage-definition-list.component.scss']
+    selector: 'app-stage-definition-list',
+    imports: [NzTreeModule, NzIconModule, NzDropDownModule, NzMenuModule, CommonModule, NzCardModule, NzTagModule,
+        NzSpinModule, NzEmptyModule, NzDividerModule, NzButtonModule, NzToolTipModule, RouterModule],
+    templateUrl: './stage-definition-list.component.html',
+    styleUrl: './stage-definition-list.component.css'
 })
 export class StageDefinitionListComponent implements OnInit {
   treeData: NzTreeNodeOptions[] = [];

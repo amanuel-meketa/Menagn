@@ -9,15 +9,13 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { AppTypesharedService } from '../../services/app-template-shared.service';
 import { GetAppTypeModel } from '../../../../models/Application-Type/GetAppTypeModel';
-import { RoleAssignedUsersComponent } from '../../../role/components/role-assigned-users/role-assigned-users.component';
 import { AppTemplateService } from '../../services/app-template.service';
 
 @Component({
-  selector: 'app-app-template-details',
-  standalone: true,
-  imports: [ ReactiveFormsModule, NzButtonModule, NzFormModule, NzInputModule, NzModalModule, NzTabsModule, RoleAssignedUsersComponent ],
-  templateUrl: './app-template-details.component.html',
-  styleUrl: './app-template-details.component.css'
+    selector: 'app-app-template-details',
+    imports: [ReactiveFormsModule, NzButtonModule, NzFormModule, NzInputModule, NzModalModule, NzTabsModule],
+    templateUrl: './app-template-details.component.html',
+    styleUrl: './app-template-details.component.css'
 })
 export class ApplicationTypeDetailsComponent implements OnInit {
 

@@ -14,12 +14,11 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-user-list',
-  standalone: true,
-  imports: [ NzButtonModule, NzDividerModule, CommonModule, NzGridModule, NzIconModule, NzModalModule, NzTableModule, CdkDrag, CdkDropList,
-    RouterLink ],
-  templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.css']
+    selector: 'app-user-list',
+    imports: [NzButtonModule, NzDividerModule, CommonModule, NzGridModule, NzIconModule, NzModalModule, NzTableModule, CdkDrag, CdkDropList,
+        RouterLink],
+    templateUrl: './user-list.component.html',
+    styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
   private _userService = inject(UserService);  

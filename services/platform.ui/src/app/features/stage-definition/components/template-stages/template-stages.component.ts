@@ -10,11 +10,10 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
 @Component({
-  selector: 'app-template-stages',
-  standalone: true,
-  imports: [ NzButtonModule, NzIconModule, NzToolTipModule, NzModalModule, NzStepsModule, NzTagModule, CommonModule ],
-  templateUrl: './template-stages.component.html',
-  styleUrl: './template-stages.component.css'
+    selector: 'app-template-stages',
+    imports: [NzButtonModule, NzIconModule, NzToolTipModule, NzModalModule, NzStepsModule, NzTagModule, CommonModule],
+    templateUrl: './template-stages.component.html',
+    styleUrl: './template-stages.component.css'
 })
 export class TemplateStagesComponent {
   private readonly _stageDefiService = inject(StageDefinitionService);

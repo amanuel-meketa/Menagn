@@ -17,12 +17,11 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { TemplateStagesComponent } from '../../../stage-definition/components/template-stages/template-stages.component';
 
 @Component({
-  selector: 'app-app-template-list',
-  standalone: true,
-  imports: [ NzButtonModule, NzGridModule, NzIconModule, NzModalModule, NzCardModule, CommonModule, RouterModule, 
-             AppTemplateCreateComponent, NzTagModule, TemplateStagesComponent ],
-  templateUrl: './app-template-list.component.html',
-  styleUrl: './app-template-list.component.css'
+    selector: 'app-app-template-list',
+    imports: [NzButtonModule, NzGridModule, NzIconModule, NzModalModule, NzCardModule, CommonModule, RouterModule,
+        AppTemplateCreateComponent, NzTagModule, TemplateStagesComponent],
+    templateUrl: './app-template-list.component.html',
+    styleUrl: './app-template-list.component.css'
 })
 
 export class AppTemplateListComponent implements OnInit, OnDestroy {

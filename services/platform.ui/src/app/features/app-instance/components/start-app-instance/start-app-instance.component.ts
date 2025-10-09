@@ -16,12 +16,11 @@ import { ApprovalRequest } from '../../../../models/Approval-Instances/ApprovalR
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 
 @Component({
-  selector: 'start-app-instance',
-  standalone: true,
-  imports: [ CommonModule, ReactiveFormsModule, NzFormModule, NzCardModule, NzButtonModule, NzDividerModule, NzIconModule,
-             NzInputModule, NzBreadCrumbModule ],
-  templateUrl: './start-app-instance.component.html',
-  styleUrls: ['./start-app-instance.component.css']
+    selector: 'start-app-instance',
+    imports: [CommonModule, ReactiveFormsModule, NzFormModule, NzCardModule, NzButtonModule, NzDividerModule, NzIconModule,
+        NzInputModule, NzBreadCrumbModule],
+    templateUrl: './start-app-instance.component.html',
+    styleUrls: ['./start-app-instance.component.css']
 })
 export class StartAppInstanceComponent implements OnInit {
   private fb = inject(NonNullableFormBuilder);

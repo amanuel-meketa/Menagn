@@ -18,12 +18,11 @@ import { AppTemplateService } from '../../../app-template/services/app-template.
 import { AddStageDefiModel } from '../../../../models/Stage-Definition/AddStageDefiModel';
 
 @Component({
-  selector: 'app-stage-definitin-create',
-  standalone: true,
-  imports: [ CommonModule, ReactiveFormsModule, NzFormModule, NzInputModule, NzSelectModule, NzCardModule,
-             NzButtonModule,NzAffixModule, NzCollapseModule, NzStepsModule],
-  templateUrl: './stage-definitin-create.component.html',
-  styleUrls: ['./stage-definitin-create.component.css']
+    selector: 'app-stage-definitin-create',
+    imports: [CommonModule, ReactiveFormsModule, NzFormModule, NzInputModule, NzSelectModule, NzCardModule,
+        NzButtonModule, NzAffixModule, NzCollapseModule, NzStepsModule],
+    templateUrl: './stage-definitin-create.component.html',
+    styleUrls: ['./stage-definitin-create.component.css']
 })
 export class StageDefinitinCreateComponent implements OnInit {
   private readonly fb = inject(FormBuilder);

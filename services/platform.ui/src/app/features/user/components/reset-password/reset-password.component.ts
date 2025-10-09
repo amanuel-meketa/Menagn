@@ -9,11 +9,10 @@ import { UserService } from '../../services/user.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
-  selector: 'app-reset-password',
-  standalone: true,
-  imports: [ReactiveFormsModule, NzButtonModule, NzFormModule, NzInputModule],
-  templateUrl: './reset-password.component.html',
-  styleUrls: ['./reset-password.component.css']
+    selector: 'app-reset-password',
+    imports: [ReactiveFormsModule, NzButtonModule, NzFormModule, NzInputModule],
+    templateUrl: './reset-password.component.html',
+    styleUrls: ['./reset-password.component.css']
 })
 export class ResetPasswordComponent implements OnInit, OnDestroy {
   private _userService = inject(UserService);

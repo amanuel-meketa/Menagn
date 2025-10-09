@@ -14,12 +14,11 @@ import { NzModalService, NzModalModule } from 'ng-zorro-antd/modal';
 import { AuthService } from '../../../../shared/services/auth-service.service';
 
 @Component({
-  selector: 'app-assigned-task',
-  standalone: true,
-  imports: [ CommonModule, FormsModule, NzCardModule, NzEmptyModule, NzPaginationModule, NzSelectModule, NzTagModule,
-             NzButtonModule, NzIconModule, NzModalModule ],
-  templateUrl: './assigned-task.component.html',
-  styleUrls: ['./assigned-task.component.css']
+    selector: 'app-assigned-task',
+    imports: [CommonModule, FormsModule, NzCardModule, NzEmptyModule, NzPaginationModule, NzSelectModule, NzTagModule,
+        NzButtonModule, NzIconModule, NzModalModule],
+    templateUrl: './assigned-task.component.html',
+    styleUrls: ['./assigned-task.component.css']
 })
 
 export class AssignedTaskComponent implements OnInit {

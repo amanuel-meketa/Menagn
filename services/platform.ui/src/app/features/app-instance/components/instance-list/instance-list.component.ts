@@ -12,12 +12,11 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { AppInstanceService } from '../../services/app-instance.service';
 
 @Component({
-  selector: 'app-instance-list',
-  standalone: true,
-  imports: [ CommonModule, NzCardModule, FormsModule, NzListModule, NzIconModule, NzSelectModule, NzAvatarModule,
-             NzTagModule, NzGridModule],
-  templateUrl: './instance-list.component.html',
-  styleUrls: ['./instance-list.component.css']
+    selector: 'app-instance-list',
+    imports: [CommonModule, NzCardModule, FormsModule, NzListModule, NzIconModule, NzSelectModule, NzAvatarModule,
+        NzTagModule, NzGridModule],
+    templateUrl: './instance-list.component.html',
+    styleUrls: ['./instance-list.component.css']
 })
 
 export class InstanceListComponent implements OnInit {

@@ -9,11 +9,10 @@ import { AssignedUser } from '../../../../models/Role/AssignedUser';
 import { RoleService } from '../../services/role.service';
 
 @Component({
-  selector: 'app-role-assigned-users',
-  standalone: true,
-  imports: [FormsModule, NzButtonModule, NzDropDownModule, NzIconModule, NzInputModule, NzTableModule],
-  templateUrl: './role-assigned-users.component.html',
-  styleUrls: ['./role-assigned-users.component.css']
+    selector: 'app-role-assigned-users',
+    imports: [FormsModule, NzButtonModule, NzDropDownModule, NzIconModule, NzInputModule, NzTableModule],
+    templateUrl: './role-assigned-users.component.html',
+    styleUrls: ['./role-assigned-users.component.css']
 })
 export class RoleAssignedUsersComponent implements OnInit {
   private _roleService = inject(RoleService);

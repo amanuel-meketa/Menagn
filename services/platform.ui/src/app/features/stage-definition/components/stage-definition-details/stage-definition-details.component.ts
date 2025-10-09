@@ -13,11 +13,10 @@ import { StageDefinitionService } from '../../services/stage-definition.service'
 import { StageDefinitionSharedService } from '../../services/stage-definition-shared.service';
 
 @Component({
-  selector: 'app-stage-definition-details',
-  standalone: true,
-  imports: [ ReactiveFormsModule, NzButtonModule, NzFormModule, NzInputModule, NzModalModule, NzTabsModule, RoleAssignedUsersComponent ],
-  templateUrl: './stage-definition-details.component.html',
-  styleUrl: './stage-definition-details.component.css'
+    selector: 'app-stage-definition-details',
+    imports: [ReactiveFormsModule, NzButtonModule, NzFormModule, NzInputModule, NzModalModule, NzTabsModule],
+    templateUrl: './stage-definition-details.component.html',
+    styleUrl: './stage-definition-details.component.css'
 })
 
 export class StageDefinitionDetailsComponent  implements OnInit {

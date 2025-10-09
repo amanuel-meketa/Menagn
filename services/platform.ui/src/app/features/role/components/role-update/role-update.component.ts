@@ -6,9 +6,10 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { RolesharedService } from '../../services/Roleshared.service';
 
 @Component({
-  selector: 'app-role-update',
-  templateUrl: './role-update.component.html',
-  styleUrls: ['./role-update.component.css']
+    selector: 'app-role-update',
+    templateUrl: './role-update.component.html',
+    styleUrls: ['./role-update.component.css'],
+    standalone: false
 })
 export class RoleUpdateComponent implements OnInit {
   private _roleService = inject(RoleService);

@@ -16,12 +16,11 @@ import { NzProgressModule } from 'ng-zorro-antd/progress';
 import { NzCardModule } from 'ng-zorro-antd/card';
 
 @Component({
-  selector: 'app-stage-progress',
-  standalone: true,
-  imports: [ CommonModule, NzButtonModule, NzIconModule, NzModalModule, NzStepsModule, NzTagModule, NzSkeletonModule,
-            NzToolTipModule, NzProgressModule, NzCardModule ],
-  templateUrl: './stage-progress.component.html',
-  styleUrl: './stage-progress.component.css'
+    selector: 'app-stage-progress',
+    imports: [CommonModule, NzButtonModule, NzIconModule, NzModalModule, NzStepsModule, NzTagModule, NzSkeletonModule,
+        NzToolTipModule, NzProgressModule, NzCardModule],
+    templateUrl: './stage-progress.component.html',
+    styleUrl: './stage-progress.component.css'
 })
 export class StageProgressComponent implements OnDestroy {
   private readonly _stageDefiService = inject(StageDefinitionService);
