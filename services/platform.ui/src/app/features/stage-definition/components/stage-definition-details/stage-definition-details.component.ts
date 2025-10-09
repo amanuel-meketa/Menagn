@@ -5,7 +5,6 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
-import { RoleAssignedUsersComponent } from '../../../role/components/role-assigned-users/role-assigned-users.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { GetStageDefiModel } from '../../../../models/Stage-Definition/GetStageDefiModel';
