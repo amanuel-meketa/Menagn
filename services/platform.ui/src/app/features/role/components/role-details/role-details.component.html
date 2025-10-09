@@ -1,5 +1,5 @@
 <ng-template #roleFormTemplate>
-  <nz-tabset nzType="card">
+  <nz-tabs nzType="card">
     <nz-tab [nzTitle]="'Role Details'">
       <form nz-form [formGroup]="validateForm" nzLayout="horizontal">
         <nz-form-item>
@@ -31,5 +31,5 @@
       <app-role-assigned-users [roleName]="validateForm.value.name!"></app-role-assigned-users>
     </nz-tab>
 
-  </nz-tabset>
+  </nz-tabs>
 </ng-template>

@@ -7,11 +7,11 @@ import { GetStageDefiModel } from '../../../../models/Stage-Definition/GetStageD
 import { StageDefinitionService } from '../../services/stage-definition.service';
 import { CommonModule } from '@angular/common';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 
 @Component({
     selector: 'app-template-stages',
-    imports: [NzButtonModule, NzIconModule, NzToolTipModule, NzModalModule, NzStepsModule, NzTagModule, CommonModule],
+    imports: [NzButtonModule, NzIconModule, NzTooltipModule, NzModalModule, NzStepsModule, NzTagModule, CommonModule],
     templateUrl: './template-stages.component.html',
     styleUrl: './template-stages.component.css'
 })

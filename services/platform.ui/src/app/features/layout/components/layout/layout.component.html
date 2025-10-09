@@ -80,12 +80,12 @@
        <button *ngIf="!token" nz-button (click)="login()" style="margin-left: auto;">Login</button>
 
         <!-- Display user email and dropdown if token exists -->
-        <nz-button-group *ngIf="token" style="margin-left: auto;">
+        <div class="button-group">
           <button nz-button>{{ token }}</button>
           <button nz-button nz-dropdown [nzDropdownMenu]="menu2" nzPlacement="bottomRight">
             <span nz-icon nzType="user"></span>
           </button>
-        </nz-button-group>
+        </div>               
       </div>
     
       <nz-dropdown-menu #menu2="nzDropdownMenu">

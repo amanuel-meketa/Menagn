@@ -11,14 +11,14 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzStepsModule } from 'ng-zorro-antd/steps';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
-import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzTooltipModule } from 'ng-zorro-antd/tooltip';
 import { NzProgressModule } from 'ng-zorro-antd/progress';
 import { NzCardModule } from 'ng-zorro-antd/card';
 
 @Component({
     selector: 'app-stage-progress',
     imports: [CommonModule, NzButtonModule, NzIconModule, NzModalModule, NzStepsModule, NzTagModule, NzSkeletonModule,
-        NzToolTipModule, NzProgressModule, NzCardModule],
+        NzTooltipModule, NzProgressModule, NzCardModule],
     templateUrl: './stage-progress.component.html',
     styleUrl: './stage-progress.component.css'
 })

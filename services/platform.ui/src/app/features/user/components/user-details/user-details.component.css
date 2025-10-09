@@ -107,7 +107,7 @@ html, body {
   height: 100%; /* Ensure content fits without scrolling */
 }
 
-nz-tabset {
+nz-tabs {
   flex-grow: 1;
   display: flex;
   flex-direction: column;

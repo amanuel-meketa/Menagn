@@ -5,7 +5,7 @@
   <nz-breadcrumb-item>User Details</nz-breadcrumb-item>
 </nz-breadcrumb>
 
-<nz-tabset nzType="card">
+<nz-tabs nzType="card">
   <nz-tab [nzTitle]="'User Details'">
     <div *ngIf="!userDetails">
       <nz-spin nzSize="large" nzTip="Loading user details..."></nz-spin>
@@ -62,4 +62,4 @@
   <nz-tab [nzTitle]="'Session'">
     <app-user-session [userId]="userId"></app-user-session>
   </nz-tab>
-</nz-tabset>
+</nz-tabs>
