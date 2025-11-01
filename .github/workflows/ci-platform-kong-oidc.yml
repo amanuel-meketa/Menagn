@@ -34,8 +34,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
-          context: gateway
-          file: gateway/Dockerfile
+          context: ./gateway
+          file: ./gateway/Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/platform.kong-oidc:latest
