@@ -4,11 +4,11 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - 'gateway/**'
+      - './gateway/**'
   pull_request:
     branches: [ "main" ]
     paths:
-      - 'gateway/**'
+      - './gateway/**'
   workflow_dispatch:
 
 jobs:
