@@ -135,24 +135,6 @@ services:
     networks:
       - menagn-network
 
-  kong-database:
-    image: postgres:16
-    container_name: kong-database
-    restart: always
-    networks:
-      - menagn-network
-    environment:
-      POSTGRES_USER: kong
-      POSTGRES_PASSWORD: kong
-      POSTGRES_DB: kong
-    ports:
-      - "5435:5432"  # Host port changed to avoid conflict
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "kong"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
   kong-migration:
     image: amanuelmeketa/kong-oidc:latest
     container_name: kong-migration
@@ -161,26 +143,26 @@ services:
       - menagn-network
     environment:
       KONG_DATABASE: postgres
-      KONG_PG_HOST: kong-database
-      KONG_PG_USER: kong
-      KONG_PG_PASSWORD: kong
+      KONG_PG_HOST: platform-database
+      KONG_PG_USER: postgres
+      KONG_PG_PASSWORD: password
       KONG_PG_DATABASE: kong
     depends_on:
-      kong-database:
+      postgres:
         condition: service_healthy
     restart: "no"
 
   kong:
-    image: amanuelmeketa/kong-oidc:latest
+    image: amanuelmeketa/platform.kong-oidc:latest
     container_name: kong
     restart: always
     networks:
       - menagn-network
     environment:
       KONG_DATABASE: postgres
-      KONG_PG_HOST: kong-database
-      KONG_PG_USER: kong
-      KONG_PG_PASSWORD: kong
+      KONG_PG_HOST: platform-database
+      KONG_PG_USER: postgres
+      KONG_PG_PASSWORD: password
       KONG_PG_DATABASE: kong
 
       # Enable custom plugin
@@ -204,10 +186,10 @@ services:
       KONG_HEADERS: "off"
 
     depends_on:
-      kong-database:
-        condition: service_healthy
       kong-migration:
         condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8001"]
