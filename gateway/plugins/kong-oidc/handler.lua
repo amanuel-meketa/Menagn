@@ -1,25 +1,29 @@
-local kong = kong
 local plugin = {
-  PRIORITY = 1000,    -- run order, higher = first
+  PRIORITY = 1000,
   VERSION = "1.0.0",
 }
 
--- Access phase: main plugin logic
-function plugin:access(conf)
-  kong.log.debug("Running kong-oidc plugin for request: ", kong.request.get_path())
+local oidc = require("resty.openidc")
 
-  -- Example: Check Authorization header
-  local token = kong.request.get_header("Authorization")
-  if not token then
-    return kong.response.exit(401, { message = "Missing Authorization header" })
+function plugin:access(conf)
+  local opts = {
+    discovery = conf.issuer .. "/.well-known/openid-configuration",
+    client_id = conf.client_id,
+    client_secret = conf.client_secret,
+    redirect_uri = conf.redirect_uri,
+    scope = "openid profile email",
+    ssl_verify = "no", -- or true in production
+  }
+
+  local res, err = oidc.authenticate(opts)
+
+  if err then
+    kong.log.err("OIDC authentication error: ", err)
+    return kong.response.exit(500, { message = "OIDC Auth failed: " .. err })
   end
 
-  -- TODO: Add your OIDC introspection or JWT validation logic here
-  -- Example pseudo-code:
-  -- local valid = oidc_validate(token, conf.issuer, conf.client_id)
-  -- if not valid then
-  --    return kong.response.exit(403, { message = "Invalid token" })
-  -- end
+  kong.service.request.set_header("X-User", res.id_token.sub)
+  kong.service.request.set_header("Authorization", "Bearer " .. res.access_token)
 end
 
 return plugin
