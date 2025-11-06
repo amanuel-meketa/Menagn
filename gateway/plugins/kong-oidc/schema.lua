@@ -10,7 +10,7 @@ return {
           { client_secret = { type = "string", required = true } },
 
           -- Provide valid defaults (length ≥ 1)
-          { redirect_uri = { type = "string", required = true, default = "http://localhost:8000/cb" } },
+          { redirect_uri = { type = "string", required = true, default = "http://localhost:8000" } },
           { authorization_endpoint = { type = "string", required = false, default = "/protocol/openid-connect/auth" } },
 		  { token_endpoint         = { type = "string", required = false, default = "/protocol/openid-connect/token" } },
 		  { userinfo_endpoint      = { type = "string", required = false, default = "/protocol/openid-connect/userinfo" } },
