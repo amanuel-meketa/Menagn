@@ -11,9 +11,9 @@ return {
 
           -- Provide valid defaults (length ≥ 1)
           { redirect_uri = { type = "string", required = true, default = "http://localhost:8000/cb" } },
-          { authorization_endpoint = { type = "string", required = false, default = "default" } },
-          { token_endpoint = { type = "string", required = false, default = "default" } },
-          { userinfo_endpoint = { type = "string", required = false, default = "default" } },
+          { authorization_endpoint = { type = "string", required = false, default = "/protocol/openid-connect/auth" } },
+		  { token_endpoint         = { type = "string", required = false, default = "/protocol/openid-connect/token" } },
+		  { userinfo_endpoint      = { type = "string", required = false, default = "/protocol/openid-connect/userinfo" } },
 
           { scope = { type = "string", default = "openid" } },
           { response_type = { type = "string", default = "code" } },
