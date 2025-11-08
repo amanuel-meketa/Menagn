@@ -26,11 +26,12 @@ var host = Host.CreateDefaultBuilder(args)
         // Bind configurations for all supported services
         services.Configure<AuthenticationConfig>(configuration.GetSection("authentication"));
         services.Configure<AuthorizationConfig>(configuration.GetSection("authorization"));
+        services.Configure<ApiGatewayConfig>(configuration.GetSection("apiGatewaay"));
 
-        // Register all initializers here
+        // Register all initializers 
         services.AddTransient<IServiceInitializer, AuthenticationInitializer>();
         services.AddTransient<IServiceInitializer, AuthorizationInitializer>();
-        // In your Program.cs or Startup.cs
+        services.AddTransient<IServiceInitializer, ApiGatewayInitializer>();
         services.AddSingleton<OpenFgaClient>(provider =>
         {
             var config = provider.GetService<IOptions<AuthorizationConfig>>().Value;
