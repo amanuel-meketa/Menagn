@@ -9,7 +9,7 @@ import { InstanceList } from '../../../models/Approval-Instances/InstanceList';
 })
 export class AppInstanceService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost/approvals/approval-instance';
+  private readonly baseUrl = 'http://localhost:8080/approvals/approval-instance';
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
   
   getAllInstances(): Observable<InstanceList[]> {

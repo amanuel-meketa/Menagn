@@ -10,7 +10,7 @@ import { AssignedUser } from '../../../models/Role/AssignedUser';
 })
 export class RoleService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost/api';
+  private readonly baseUrl = 'localhost:8080/security';
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
   private roleListUpdated = new BehaviorSubject<boolean>(false);

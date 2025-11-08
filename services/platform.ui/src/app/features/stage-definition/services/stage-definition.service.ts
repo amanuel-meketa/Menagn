@@ -13,7 +13,7 @@ import { AddStageDefiModel } from '../../../models/Stage-Definition/AddStageDefi
 export class StageDefinitionService {
 
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost/approvals/stage-definition';
+  private readonly baseUrl = 'http://localhost:8080/approvals/stage-definition';
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
  
   private StageDefiListUpdated = new BehaviorSubject<boolean>(false);

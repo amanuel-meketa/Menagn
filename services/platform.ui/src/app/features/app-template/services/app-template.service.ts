@@ -11,7 +11,7 @@ import { CreateAppTemplateModel } from '../../../models/Application-Type/CreateA
 export class AppTemplateService {
 
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost/approvals/approval-template';
+  private readonly baseUrl = 'http://localhost:8080/approvals/approval-template';
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
   private AppTempListUpdated = new BehaviorSubject<boolean>(false);
