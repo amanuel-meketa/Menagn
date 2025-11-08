@@ -105,7 +105,7 @@ namespace MicroserviceBootstrapper.Initializers
                 {
                     client_id = _authConfig.ClientId,
                     client_secret = _authConfig.ClientSecret,
-                    issuer = $"{_authConfig.BaseUrl}/realms/{_authConfig.Realm}",
+                    issuer = $"{_gatewayConfig.Issuer}/realms/{_authConfig.Realm}",
                     redirect_uri = _authConfig.RedirectUri,
                     scope = "openid profile",
                     unauth_action = "redirect"

@@ -11,5 +11,6 @@ public sealed record ApiGatewayService
 public sealed record ApiGatewayConfig : AuthenticationConfig
 {
     public string AdminUrl { get; init; } = null!;
+    public string Issuer { get; init; } = null!;
     public List<ApiGatewayService> Services { get; init; } = new();
 }
