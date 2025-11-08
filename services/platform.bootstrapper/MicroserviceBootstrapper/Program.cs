@@ -13,8 +13,8 @@ using OpenFga.Sdk.Configuration;
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration((hostingContext, config) =>
     {
-        config.SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-              .AddEnvironmentVariables();
+        config.SetBasePath(AppContext.BaseDirectory)
+              .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).AddEnvironmentVariables();
     })
     .ConfigureServices((hostContext, services) =>
     {
@@ -26,7 +26,7 @@ var host = Host.CreateDefaultBuilder(args)
         // Bind configurations for all supported services
         services.Configure<AuthenticationConfig>(configuration.GetSection("authentication"));
         services.Configure<AuthorizationConfig>(configuration.GetSection("authorization"));
-        services.Configure<ApiGatewayConfig>(configuration.GetSection("apiGatewaay"));
+        services.Configure<ApiGatewayConfig>(configuration.GetSection("apiGateway"));
 
         // Register all initializers 
         services.AddTransient<IServiceInitializer, AuthenticationInitializer>();

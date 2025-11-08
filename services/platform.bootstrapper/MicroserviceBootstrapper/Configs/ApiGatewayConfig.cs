@@ -1,12 +1,15 @@
-﻿
-namespace MicroserviceBootstrapper.Configs
+﻿using MicroserviceBootstrapper.Configs;
+
+// Each service/route definition
+public sealed record ApiGatewayService
 {
-    public class ApiGatewayConfig
-    {
-        public string AdminApiUrl { get; set; } = "http://localhost:8001";
-        public string ClientId { get; set; } = "menagn";
-        public string ClientSecret { get; set; } = "ShxxjZKYS9JMLwRyi0fBanG0InzbnbhY";
-        public string Issuer { get; set; } = "http://host.docker.internal:8180/realms/Menagn";
-        public string RedirectUri { get; set; } = "http://localhost:8000";
-    }
+    public string Name { get; init; } = null!;
+    public string Url { get; init; } = null!;
+    public string Path { get; init; } = "/";
+}
+
+public sealed record ApiGatewayConfig : AuthenticationConfig
+{
+    public string AdminUrl { get; init; } = null!;
+    public List<ApiGatewayService> Services { get; init; } = new();
 }
