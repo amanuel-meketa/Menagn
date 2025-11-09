@@ -43,6 +43,17 @@ services:
     image: amanuelmeketa/platform.bootstrapper:latest
     networks:
       - menagn-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kong-postgres:
+        condition: service_healthy
+      kong-migration:
+        condition: service_completed_successfully
+      migrate:
+        condition: service_completed_successfully
+      authorization-provider:
+        condition: service_healthy  
 
   platform.ui:
     container_name: platform.ui
