@@ -3,13 +3,15 @@ local cjson = require("cjson.safe")
 local kong = kong
 
 local plugin = {
-  PRIORITY = 1000,   -- high priority to run before most plugins
-  VERSION = "1.0.1",
+  PRIORITY = 1000,   -- high priority
+  VERSION = "1.0.2",
 }
 
--- Build the Keycloak login URL
+-- Use a shared dictionary for caching tokens
+local token_cache = ngx.shared.kong_oidc_cache
+
+-- Build Keycloak login URL
 local function build_auth_url(conf, state)
-  -- URL-encode all parameters properly
   return string.format(
     "%s/protocol/openid-connect/auth?client_id=%s&response_type=code&scope=%s&redirect_uri=%s&state=%s",
     conf.issuer,
@@ -20,7 +22,7 @@ local function build_auth_url(conf, state)
   )
 end
 
--- Exchange authorization code for token
+-- Exchange code for tokens
 local function exchange_code_for_token(conf, code)
   local httpc = http.new()
   local res, err = httpc:request_uri(conf.issuer .. "/protocol/openid-connect/token", {
@@ -32,9 +34,7 @@ local function exchange_code_for_token(conf, code)
       client_id = conf.client_id,
       client_secret = conf.client_secret,
     }),
-    headers = {
-      ["Content-Type"] = "application/x-www-form-urlencoded",
-    },
+    headers = { ["Content-Type"] = "application/x-www-form-urlencoded" },
     ssl_verify = conf.ssl_verify,
   })
 
@@ -52,14 +52,12 @@ local function exchange_code_for_token(conf, code)
   return body
 end
 
--- Fetch user info from Keycloak
+-- Fetch user info
 local function fetch_userinfo(conf, token)
   local httpc = http.new()
   local res, err = httpc:request_uri(conf.issuer .. "/protocol/openid-connect/userinfo", {
     method = "GET",
-    headers = {
-      ["Authorization"] = "Bearer " .. token,
-    },
+    headers = { ["Authorization"] = "Bearer " .. token },
     ssl_verify = conf.ssl_verify,
   })
 
@@ -71,20 +69,23 @@ local function fetch_userinfo(conf, token)
   return cjson.decode(res.body)
 end
 
--- Main plugin access phase
+-- Main plugin access
 function plugin:access(conf)
   local args = kong.request.get_query()
   local state_cookie_name = "oidc_state"
+  local session_cookie_name = "oidc_session"
 
-  -- 1️⃣ Handle callback with authorization code
+  -- Retrieve session ID from cookie
+  local session_id = ngx.var["cookie_" .. session_cookie_name]
+
+  -- 1️⃣ Handle callback from Keycloak
   if args.code then
-    -- Verify state cookie (optional, for CSRF protection)
     local state_cookie = ngx.var["cookie_" .. state_cookie_name]
     if not state_cookie or state_cookie ~= args.state then
       return kong.response.exit(400, { message = "Invalid state parameter" })
     end
 
-    -- Exchange code for token
+    -- Exchange code for tokens
     local token_data, err = exchange_code_for_token(conf, args.code)
     if not token_data then
       return kong.response.exit(401, { message = "Token exchange failed", error = err })
@@ -96,13 +97,22 @@ function plugin:access(conf)
       return kong.response.exit(401, { message = "Userinfo fetch failed", error = uerr })
     end
 
-    -- Store user info in header for upstream service
-    kong.service.request.set_header("X-User", userinfo.preferred_username or "unknown")
+    -- Generate session ID
+    session_id = ngx.encode_base64(token_data.access_token .. "-" .. ngx.time())
+
+    -- Cache tokens in Kong (expire with token lifetime)
+    local expire = tonumber(token_data.expires_in) or 3600
+    token_cache:set(session_id .. "_access", token_data.access_token, expire)
+    token_cache:set(session_id .. "_refresh", token_data.refresh_token, expire * 2)
+    token_cache:set(session_id .. "_id", token_data.id_token, expire)
+
+    -- Set session cookie
+    ngx.header["Set-Cookie"] = session_cookie_name .. "=" .. session_id .. "; Path=/; HttpOnly"
 
     -- Clear state cookie
     ngx.header["Set-Cookie"] = state_cookie_name .. "=; Path=/; Max-Age=0"
 
-    -- Redirect user to original path (decoded from state)
+    -- Redirect to original path
     local redirect_path = "/"
     local state_parts = ngx.decode_base64(args.state or "")
     if state_parts then
@@ -116,12 +126,8 @@ function plugin:access(conf)
     return kong.response.exit(302)
   end
 
-  -- 2️⃣ No code → redirect to Keycloak login
-  local auth_header = kong.request.get_header("Authorization")
-  local session_cookie = ngx.var.cookie_oidc_session
-
-  if not auth_header and not session_cookie then
-    -- Generate state for CSRF protection
+  -- 2️⃣ Redirect unauthenticated users to Keycloak
+  if not session_id then
     local state = ngx.encode_base64(ngx.time() .. "-" .. kong.request.get_path())
     ngx.header["Set-Cookie"] = state_cookie_name .. "=" .. state .. "; Path=/; HttpOnly"
     local auth_url = build_auth_url(conf, state)
@@ -129,8 +135,24 @@ function plugin:access(conf)
     return kong.response.exit(302)
   end
 
-  -- 3️⃣ Otherwise, user is already authenticated
-  kong.log.debug("User is authenticated, continuing request")
+  -- 3️⃣ Authenticated users → forward cached token to upstream
+  local access_token = token_cache:get(session_id .. "_access")
+  if access_token then
+    kong.service.request.set_header("Authorization", "Bearer " .. access_token)
+  else
+    -- Optional: redirect to Keycloak if cached token expired
+    local state = ngx.encode_base64(ngx.time() .. "-" .. kong.request.get_path())
+    ngx.header["Set-Cookie"] = state_cookie_name .. "=" .. state .. "; Path=/; HttpOnly"
+    local auth_url = build_auth_url(conf, state)
+    kong.response.set_header("Location", auth_url)
+    return kong.response.exit(302)
+  end
+
+  -- Optional: set user info header for upstream
+  local userinfo_json = token_cache:get(session_id .. "_id")
+  if userinfo_json then
+    kong.service.request.set_header("X-User", userinfo_json)
+  end
 end
 
 return plugin
