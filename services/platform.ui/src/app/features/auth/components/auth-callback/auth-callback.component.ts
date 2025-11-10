@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { AuthService } from '../../../../shared/services/auth-service.service';
+import { Auth } from '../../../../shared/model/auth';
 
 @Component({
   selector: 'app-auth-callback',
@@ -15,16 +16,10 @@ export class AuthCallbackComponent implements OnInit {
   private readonly messageService = inject(NzMessageService);
 
   ngOnInit(): void {
-    // 1️⃣ Try to get token from query param (redirect from Kong)
     const params = new URLSearchParams(window.location.search);
-    let token = params.get('access_token');
+    const token = params.get('access_token');
     const refresh = params.get('refresh_token');
     const expires_in = params.get('expires_in');
-
-    // 2️⃣ Fallback: try to get token from a custom header set by Kong
-    if (!token) {
-      token = (window as any)?.KONG_ACCESS_TOKEN; // if you inject it via JS on page
-    }
 
     if (token) {
       this.authService.setTokenFromKong({
@@ -34,7 +29,7 @@ export class AuthCallbackComponent implements OnInit {
         expires_in: expires_in || '',
         nameIdentifier: '',
         emailAddress: '',
-      });
+      } as Auth);
 
       this.router.navigateByUrl('dashboard');
     } else {

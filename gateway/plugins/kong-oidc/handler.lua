@@ -53,13 +53,16 @@ function plugin:access(conf)
   local args = kong.request.get_query()
   local state_cookie_name = "oidc_state"
 
-  -- Handle Keycloak callback with code
+  -- Step 1: Handle Keycloak callback with code
   if args.code then
+    kong.log.info("Callback hit with code: ", args.code)
     local state_cookie = ngx.var["cookie_" .. state_cookie_name]
+
     if not state_cookie or state_cookie ~= args.state then
       return kong.response.exit(400, { message = "Invalid state parameter" })
     end
 
+    -- Exchange code for token
     local token_data, err = exchange_code_for_token(conf, args.code)
     if not token_data then
       return kong.response.exit(401, { message = "Token exchange failed", error = err })
@@ -68,36 +71,28 @@ function plugin:access(conf)
     -- Clear state cookie
     ngx.header["Set-Cookie"] = state_cookie_name .. "=; Path=/; Max-Age=0"
 
-    -- Build redirect URL including tokens in query params
-    local redirect_path = "/"
-    local state_parts = ngx.decode_base64(args.state or "")
-    if state_parts then
-      local sep_index = state_parts:find("-")
-      if sep_index then
-        redirect_path = state_parts:sub(sep_index + 1)
-      end
-    end
-
-    redirect_path = redirect_path
+    -- Redirect to Angular UI with access token
+    local redirect_url = "/auth-callback"
       .. "?access_token=" .. ngx.escape_uri(token_data.access_token)
       .. "&refresh_token=" .. ngx.escape_uri(token_data.refresh_token or "")
       .. "&expires_in=" .. ngx.escape_uri(token_data.expires_in or "")
 
-    kong.response.set_header("Location", redirect_path)
+    kong.response.set_header("Location", redirect_url)
     return kong.response.exit(302)
   end
 
-  -- Redirect unauthenticated users to Keycloak
+  -- Step 2: Redirect unauthenticated users to Keycloak
   local client_auth_header = kong.request.get_header("Authorization")
   if not client_auth_header then
     local state = ngx.encode_base64(ngx.time() .. "-" .. kong.request.get_path())
     ngx.header["Set-Cookie"] = state_cookie_name .. "=" .. state .. "; Path=/; HttpOnly"
+
     local auth_url = build_auth_url(conf, state)
     kong.response.set_header("Location", auth_url)
     return kong.response.exit(302)
   end
 
-  -- Forward Authorization header if already present
+  -- Step 3: Forward Authorization header if already present
   kong.service.request.set_header("Authorization", client_auth_header)
 end
 
