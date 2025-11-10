@@ -3,10 +3,11 @@ local cjson = require("cjson.safe")
 local kong = kong
 
 local plugin = {
-  PRIORITY = 1000,
-  VERSION = "1.0.4",
+  PRIORITY = 1000,  -- high priority
+  VERSION = "1.0.5",
 }
 
+-- Build Keycloak login URL
 local function build_auth_url(conf, state)
   return string.format(
     "%s/protocol/openid-connect/auth?client_id=%s&response_type=code&scope=%s&redirect_uri=%s&state=%s",
@@ -18,6 +19,7 @@ local function build_auth_url(conf, state)
   )
 end
 
+-- Exchange authorization code for token
 local function exchange_code_for_token(conf, code)
   local httpc = http.new()
   local res, err = httpc:request_uri(conf.issuer .. "/protocol/openid-connect/token", {
@@ -32,25 +34,31 @@ local function exchange_code_for_token(conf, code)
     headers = { ["Content-Type"] = "application/x-www-form-urlencoded" },
     ssl_verify = conf.ssl_verify,
   })
+
   if not res then
     kong.log.err("Token exchange failed: ", err)
     return nil, err
   end
+
   local body = cjson.decode(res.body)
   if not body or not body.access_token then
     kong.log.err("Invalid token response: ", res.body)
     return nil, "Invalid token response"
   end
+
   return body
 end
 
+-- Main plugin access phase
 function plugin:access(conf)
   local args = kong.request.get_query()
   local state_cookie_name = "oidc_state"
+  local session_cookie_name = "access_token"
 
   local client_auth_header = kong.request.get_header("Authorization")
+  local access_token_cookie = ngx.var["cookie_" .. session_cookie_name]
 
-  -- Handle Keycloak callback
+  -- 1️⃣ Handle Keycloak callback with code
   if args.code then
     local state_cookie = ngx.var["cookie_" .. state_cookie_name]
     if not state_cookie or state_cookie ~= args.state then
@@ -62,8 +70,9 @@ function plugin:access(conf)
       return kong.response.exit(401, { message = "Token exchange failed", error = err })
     end
 
-    -- Pass access token to Angular UI in header
-    kong.response.set_header("X-Access-Token", token_data.access_token)
+    -- Set secure HttpOnly cookie for Angular app
+    ngx.header["Set-Cookie"] = session_cookie_name .. "=" .. token_data.access_token ..
+                               "; Path=/; HttpOnly; Secure; SameSite=Lax"
 
     -- Clear state cookie
     ngx.header["Set-Cookie"] = state_cookie_name .. "=; Path=/; Max-Age=0"
@@ -82,8 +91,8 @@ function plugin:access(conf)
     return kong.response.exit(302)
   end
 
-  -- Redirect unauthenticated users to Keycloak
-  if not client_auth_header then
+  -- 2️⃣ Redirect unauthenticated users to Keycloak
+  if not access_token_cookie and not client_auth_header then
     local state = ngx.encode_base64(ngx.time() .. "-" .. kong.request.get_path())
     ngx.header["Set-Cookie"] = state_cookie_name .. "=" .. state .. "; Path=/; HttpOnly"
     local auth_url = build_auth_url(conf, state)
@@ -91,8 +100,12 @@ function plugin:access(conf)
     return kong.response.exit(302)
   end
 
-  -- Forward client Authorization header to backend as-is
-  kong.service.request.set_header("Authorization", client_auth_header)
+  -- 3️⃣ Forward access token to backend
+  if access_token_cookie then
+    kong.service.request.set_header("Authorization", "Bearer " .. access_token_cookie)
+  elseif client_auth_header then
+    kong.service.request.set_header("Authorization", client_auth_header)
+  end
 end
 
 return plugin
