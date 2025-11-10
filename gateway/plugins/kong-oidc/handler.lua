@@ -72,10 +72,11 @@ function plugin:access(conf)
     ngx.header["Set-Cookie"] = state_cookie_name .. "=; Path=/; Max-Age=0"
 
     -- Redirect to Angular UI with access token
-    local redirect_url = "/auth-callback"
-      .. "?access_token=" .. ngx.escape_uri(token_data.access_token)
-      .. "&refresh_token=" .. ngx.escape_uri(token_data.refresh_token or "")
-      .. "&expires_in=" .. ngx.escape_uri(token_data.expires_in or "")
+    -- Redirect to Angular UI with access token
+    local redirect_url = "http://localhost:8000/auth-callback"
+    .. "?access_token=" .. ngx.escape_uri(token_data.access_token)
+    .. "&refresh_token=" .. ngx.escape_uri(token_data.refresh_token or "")
+    .. "&expires_in=" .. ngx.escape_uri(token_data.expires_in or "")
 
     kong.response.set_header("Location", redirect_url)
     return kong.response.exit(302)
