@@ -11,37 +11,34 @@ import { AuthService } from '../../../../shared/services/auth-service.service';
 })
 export class AuthCallbackComponent implements OnInit {
   private readonly authService = inject(AuthService);
-  private readonly messageService = inject(NzMessageService);
   private readonly router = inject(Router);
+  private readonly messageService = inject(NzMessageService);
 
   ngOnInit(): void {
-    const code = new URLSearchParams(window.location.search).get('code');
-    if (code) {
-      this.handleAuthorizationCode(code);
-    } else {
-      this.messageService.error('Authorization code not found.');
+    // 1️⃣ Try to get token from query param (redirect from Kong)
+    const params = new URLSearchParams(window.location.search);
+    let token = params.get('access_token');
+    const refresh = params.get('refresh_token');
+    const expires_in = params.get('expires_in');
+
+    // 2️⃣ Fallback: try to get token from a custom header set by Kong
+    if (!token) {
+      token = (window as any)?.KONG_ACCESS_TOKEN; // if you inject it via JS on page
     }
-  }
 
-  private handleAuthorizationCode(code: string): void {
-    const loading = this.messageService.loading('Logging in...', { nzDuration: 0 }).messageId;
+    if (token) {
+      this.authService.setTokenFromKong({
+        access_token: token,
+        refresh_token: refresh || '',
+        token_type: 'Bearer',
+        expires_in: expires_in || '',
+        nameIdentifier: '',
+        emailAddress: '',
+      });
 
-    this.authService.exchangeAuthorizationCode(code).subscribe({
-      next: (response) => {
-        this.messageService.remove(loading);
-
-        if (response) {
-          this.authService.setToken(response);
-          this.router.navigateByUrl('dashboard');
-        } else {
-          this.messageService.error('Token exchange failed.');
-        }
-      },
-      error: (err) => {
-        this.messageService.remove(loading);
-        console.error('Token exchange error:', err);
-        this.messageService.error('Login failed. Please try again.');
-      }
-    });
+      this.router.navigateByUrl('dashboard');
+    } else {
+      this.messageService.error('Access token not found.');
+    }
   }
 }
