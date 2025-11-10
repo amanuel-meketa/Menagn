@@ -8,7 +8,7 @@ return {
           { issuer = { type = "string", required = true, default = "http://host.docker.internal:8180/realms/Menagn" } },
           { client_id = { type = "string", required = true, default = "menagn" } },
           { client_secret = { type = "string", required = true, default = "ShxxjZKYS9JMLwRyi0fBanG0InzbnbhY" } },
-          { redirect_uri = { type = "string", required = true, default = "http://localhost:8000" } },
+          { redirect_uri = { type = "string", required = true, default = "http://localhost:8000/setTokenFromKong" } },
           { authorization_endpoint = { type = "string", default = "/protocol/openid-connect/auth" } },
           { token_endpoint = { type = "string", default = "/protocol/openid-connect/token" } },
           { userinfo_endpoint = { type = "string", default = "/protocol/openid-connect/userinfo" } },
