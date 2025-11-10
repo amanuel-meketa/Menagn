@@ -7,6 +7,7 @@ local plugin = {
   VERSION = "1.0.6",
 }
 
+-- Build Keycloak login URL
 local function build_auth_url(conf, state)
   return string.format(
     "%s/protocol/openid-connect/auth?client_id=%s&response_type=code&scope=%s&redirect_uri=%s&state=%s",
@@ -18,6 +19,7 @@ local function build_auth_url(conf, state)
   )
 end
 
+-- Exchange authorization code for token
 local function exchange_code_for_token(conf, code)
   local httpc = http.new()
   local res, err = httpc:request_uri(conf.issuer .. "/protocol/openid-connect/token", {
@@ -63,13 +65,10 @@ function plugin:access(conf)
       return kong.response.exit(401, { message = "Token exchange failed", error = err })
     end
 
-    -- Pass token to Angular via header
-    kong.response.set_header("X-Access-Token", token_data.access_token)
-
     -- Clear state cookie
     ngx.header["Set-Cookie"] = state_cookie_name .. "=; Path=/; Max-Age=0"
 
-    -- Redirect to original path
+    -- Build redirect URL including tokens in query params
     local redirect_path = "/"
     local state_parts = ngx.decode_base64(args.state or "")
     if state_parts then
@@ -79,11 +78,16 @@ function plugin:access(conf)
       end
     end
 
+    redirect_path = redirect_path
+      .. "?access_token=" .. ngx.escape_uri(token_data.access_token)
+      .. "&refresh_token=" .. ngx.escape_uri(token_data.refresh_token or "")
+      .. "&expires_in=" .. ngx.escape_uri(token_data.expires_in or "")
+
     kong.response.set_header("Location", redirect_path)
     return kong.response.exit(302)
   end
 
-  -- Redirect unauthenticated users
+  -- Redirect unauthenticated users to Keycloak
   local client_auth_header = kong.request.get_header("Authorization")
   if not client_auth_header then
     local state = ngx.encode_base64(ngx.time() .. "-" .. kong.request.get_path())
@@ -93,7 +97,7 @@ function plugin:access(conf)
     return kong.response.exit(302)
   end
 
-  -- Forward client Authorization header to backend
+  -- Forward Authorization header if already present
   kong.service.request.set_header("Authorization", client_auth_header)
 end
 
