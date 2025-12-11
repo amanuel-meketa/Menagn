@@ -8,7 +8,6 @@ using security.sharedUtils.Dtos.User.Outgoing;
 
 namespace security.api.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/user")]
     public class UserController(IUserService userService) : ControllerBase

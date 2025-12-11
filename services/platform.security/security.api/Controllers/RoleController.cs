@@ -2,10 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using security.business.Contracts;
 using security.sharedUtils.Dtos.Role.Incoming;
-using security.sharedUtils.Dtos.User.Outgoing;
 namespace security.api.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/role")]
     public class RoleController(IRoleService roleService) : ControllerBase

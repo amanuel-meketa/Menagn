@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using security.business.Contracts;
 using security.sharedUtils.Dtos.Event.Event;
 
-    [Authorize]
     [ApiController]
     [Route("api/eventLog")]
     public class EventLogController : ControllerBase

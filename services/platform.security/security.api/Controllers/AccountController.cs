@@ -8,7 +8,6 @@ using System.Web;
 
 namespace security.api.Controllers
 {
-    [Authorize]
     [ApiController()]
     [Route("api/auth")]
     public class AccountController : ControllerBase
