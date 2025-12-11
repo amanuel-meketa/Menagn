@@ -166,7 +166,7 @@ services:
       POSTGRES_USER: kong
       POSTGRES_PASSWORD: kongpassword
     ports:
-      - "5435:5432" 
+      - "5435:5432"
     networks:
       - menagn-network
     healthcheck:
@@ -204,25 +204,28 @@ services:
       KONG_PG_USER: kong
       KONG_PG_PASSWORD: kongpassword
       KONG_PG_DATABASE: kong
+
       KONG_PLUGINS: bundled,kong-oidc
+
       KONG_PROXY_LISTEN: "0.0.0.0:8000,0.0.0.0:8443 ssl"
       KONG_ADMIN_LISTEN: "0.0.0.0:8001"
       KONG_ADMIN_GUI_LISTEN: "0.0.0.0:8002,0.0.0.0:8445 ssl"
       KONG_ADMIN_GUI_URL: http://localhost:8002
+
       KONG_ADMIN_GUI_AUTH: basic-auth
       KONG_ADMIN_GUI_USERNAME: admin
       KONG_ADMIN_GUI_PASSWORD: admin123
+
       KONG_HEADERS: "off"
+      KONG_REAL_IP_HEADER: "X-Forwarded-For"
+      KONG_TRUSTED_IPS: "0.0.0.0/0"
+
     depends_on:
       kong-migration:
         condition: service_completed_successfully
       kong-postgres:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8001"]
-      interval: 5s
-      timeout: 2s
-      retries: 15
+
     ports:
       - "8080:8000"
       - "8443:8443"

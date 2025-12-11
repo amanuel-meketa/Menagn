@@ -14,51 +14,57 @@ var host = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration((hostingContext, config) =>
     {
         config.SetBasePath(AppContext.BaseDirectory)
-              .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).AddEnvironmentVariables();
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddEnvironmentVariables();
     })
     .ConfigureServices((hostContext, services) =>
     {
-        services.AddLogging(config =>{ config.AddConsole(); config.SetMinimumLevel(LogLevel.Information); });
-        services.AddSingleton<Logger>();
-
         var configuration = hostContext.Configuration;
 
-        // Bind configurations for all supported services
+        // Logging
+        services.AddLogging(builder =>
+        {
+            builder.AddConsole();
+            builder.SetMinimumLevel(LogLevel.Information);
+        });
+        services.AddSingleton<Logger>();
+
+        // Bind configuration sections
         services.Configure<AuthenticationConfig>(configuration.GetSection("authentication"));
         services.Configure<AuthorizationConfig>(configuration.GetSection("authorization"));
         services.Configure<ApiGatewayConfig>(configuration.GetSection("apiGateway"));
 
-        // Register all initializers 
+        // Microservice initializers
         services.AddTransient<IServiceInitializer, AuthenticationInitializer>();
         services.AddTransient<IServiceInitializer, AuthorizationInitializer>();
         services.AddTransient<IServiceInitializer, ApiGatewayInitializer>();
+
+        // OpenFGA Client
         services.AddSingleton<OpenFgaClient>(provider =>
         {
-            var config = provider.GetService<IOptions<AuthorizationConfig>>().Value;
+            var authConfig = provider.GetRequiredService<IOptions<AuthorizationConfig>>().Value;
 
-            var configuration = new ClientConfiguration()
+            return new OpenFgaClient(new ClientConfiguration
             {
-                ApiUrl = config.BaseUrl,
-                Credentials = new Credentials()
+                ApiUrl = authConfig.BaseUrl,
+                Credentials = new Credentials
                 {
                     Method = CredentialsMethod.ApiToken,
-                    Config = new CredentialsConfig()
-                    {
-                        ApiToken = config.ApiToken
-                    }
+                    Config = new CredentialsConfig { ApiToken = authConfig.ApiToken }
                 }
-            };
-
-            return new OpenFgaClient(configuration);
+            });
         });
     })
     .Build();
 
-// Resolve logger
+
+// ------------------------------------------------------
+// EXECUTING INITIALIZERS
+// ------------------------------------------------------
+
 var logger = host.Services.GetRequiredService<ILogger<Program>>();
 logger.LogInformation("Starting service initializers...");
 
-// Resolve all initializers
 var initializers = host.Services.GetServices<IServiceInitializer>();
 var hasError = false;
 
@@ -80,8 +86,8 @@ foreach (var initializer in initializers)
 if (hasError)
 {
     logger.LogError("One or more services failed to initialize. Exiting with failure code.");
-    return 1; // Exit code for failure
+    return 1;
 }
 
 logger.LogInformation("All services initialized successfully.");
-return 0; // Exit code for success
+return 0;
