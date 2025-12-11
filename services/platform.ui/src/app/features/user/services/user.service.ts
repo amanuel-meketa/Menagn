@@ -11,8 +11,8 @@ import { GetRole } from '../../../models/User/GetUserRole';
 
 export class UserService { [x: string]: any;
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost:8080/security';
-  //private readonly baseUrl =  window.location.origin + '/api';;
+  private readonly baseUrl = 'http://localhost:8080/api';
+  //private readonly baseUrl =  window.location.origin + '/api';
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
   registerUser(postData: RegisterPostData): Observable<any> {
