@@ -18,7 +18,6 @@ namespace approvals.api.Controllers
         }
 
         [HttpPost("start")]
-        [Authorize]
         public async Task<IActionResult> StartApproval([FromBody] StartApprovalRequestDto request)
         {
             var policyName = "ApprovalInstance#start";
@@ -30,7 +29,6 @@ namespace approvals.api.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<GetApprovalInstanceDto>>> GetAll()
         {
             var policyName = "ApprovalInstance#list";
@@ -42,7 +40,6 @@ namespace approvals.api.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<ActionResult<GetApprovalInstanceDto>> Get(Guid id)
         {
             var policyName = "ApprovalInstance#read";
@@ -54,7 +51,6 @@ namespace approvals.api.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateApprovaleInstanceDto updateAppDto)
         {
             var policyName = "ApprovalInstance#update";
@@ -66,7 +62,6 @@ namespace approvals.api.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
         public async Task<IActionResult> Delete(Guid id)
         {
             var policyName = "ApprovalInstance#delete";
@@ -78,7 +73,6 @@ namespace approvals.api.Controllers
         }
 
         [HttpGet("template/{templateId:guid}/instances")]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<GetApprovalInstanceDto>>> GetByTemplateIdAsync(Guid templateId)
         {
             var policyName = "ApprovalTemplate#read-instances";
@@ -89,7 +83,6 @@ namespace approvals.api.Controllers
         }
 
         [HttpGet("user/{userId}/instances")]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<GetMyApprovalInstanceDto>>> GetMyInstancesAsync(Guid userId)
         {
             var currentUserId = User.FindFirst("sub")?.Value;
