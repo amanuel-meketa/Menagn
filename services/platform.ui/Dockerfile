@@ -1,29 +1,22 @@
-# Stage 1: Compile and Build Angular codebase
-FROM node:latest as build
+# Stage 1: Build Angular
+FROM node:20 as build
 WORKDIR /app
 
-# Copy package.json and package-lock.json to install dependencies
 COPY package*.json ./
 RUN npm ci
 
-# Install Angular CLI globally
-RUN npm install -g @angular/cli
-
-# Copy all source code and build the Angular app
 COPY . .
 RUN npm run build -- --configuration=production
 
-# Stage 2: Serve app with NGINX
-FROM nginx:latest
+# Stage 2: NGINX
+FROM nginx:alpine
 
-# Copy the built Angular app to the NGINX html directory
-COPY --from=build /app/dist/platform.ui/browser /usr/share/nginx/html
-
-# Copy custom NGINX configuration
+# Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose the port NGINX will serve on
-EXPOSE 8000
+# Copy Angular compiled output
+COPY --from=build /app/dist/platform.ui/browser /usr/share/nginx/html
 
-# Start NGINX server
+EXPOSE 80
+
 CMD ["nginx", "-g", "daemon off;"]
