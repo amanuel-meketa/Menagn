@@ -1,4 +1,5 @@
-﻿using MicroserviceBootstrapper.Utils;
+﻿using MicroserviceBootstrapper.Configs;
+using MicroserviceBootstrapper.Utils;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Json;
 
@@ -9,7 +10,11 @@ public class ApiGatewayInitializer : BaseServiceInitializer
     private readonly ApiGatewayConfig _gatewayConfig;
     private readonly HttpClient _httpClient;
 
-    public ApiGatewayInitializer(IOptions<ApiGatewayConfig> gatewayConfig, Logger logger) : base(logger)
+    public ApiGatewayInitializer(
+        IOptions<ApiGatewayConfig> gatewayConfig,
+        IOptions<AuthenticationConfig> authOptions,
+        Logger logger
+    ) : base(logger)
     {
         _gatewayConfig = gatewayConfig.Value;
         _httpClient = new HttpClient { BaseAddress = new Uri(_gatewayConfig.AdminUrl) };
@@ -111,39 +116,22 @@ public class ApiGatewayInitializer : BaseServiceInitializer
     // ----------------------------------------------------
     public KongPluginRequest ToKongPluginRequest(KongOidcPluginConfig config)
     {
-        var kongConfig = new KongOidcConfig
-        {
-            client_id = config.ClientId,
-            client_secret = config.ClientSecret,
-            issuer = config.Issuer,
-
-            authorization_endpoint = config.AuthorizationEndpoint,
-            token_endpoint = config.TokenEndpoint,
-            userinfo_endpoint = config.UserInfoEndpoint,
-
-            redirect_uri = config.RedirectUri,
-
-            logout_path = config.LogoutPath,
-            response_type = config.ResponseType,
-            grant_type = config.GrantType,
-            scope = config.Scope,
-
-            unauth_action = config.UnauthAction,
-            session_timeout = config.SessionTimeout,
-            session_cookie_name = config.SessionCookieName,
-
-            ssl_verify = config.SslVerify,
-            debug = config.Debug
-        };
-
         return new KongPluginRequest
         {
             name = "kong-oidc",
             enabled = true,
-            config = kongConfig
+            config = new KongOidcConfig
+            {
+                client_id = config.ClientId,
+                client_secret = config.ClientSecret,
+                discovery = config.Discovery,
+                issuer = config.Issuer,
+                redirect_uri = config.RedirectUri,
+                scope = config.Scope,
+                unauth_action = config.UnauthAction
+            }
         };
     }
-
 
     // ----------------------------------------------------
     //              RESOURCE EXISTS HELPER
