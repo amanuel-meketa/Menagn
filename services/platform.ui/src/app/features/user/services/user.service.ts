@@ -6,13 +6,15 @@ import { UserListData } from '../../../models/UserListData';
 import { GetCurrentUser } from '../../../models/User/GetCurrentUser';
 import { UserSession } from '../../../models/User/UserSession';
 import { GetRole } from '../../../models/User/GetUserRole';
+import { ApiConfigService } from '../../../shared/config/api-config.service';
 
 @Injectable({  providedIn: 'root' })
 
 export class UserService { [x: string]: any;
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost:8000/api';
-  //private readonly baseUrl =  window.location.origin + '/api';
+  private readonly apiConfig = inject(ApiConfigService);
+  
+  private readonly baseUrl = `${this.apiConfig.apiBaseUrl}/api`;
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
   registerUser(postData: RegisterPostData): Observable<any> {

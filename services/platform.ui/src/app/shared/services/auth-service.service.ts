@@ -4,15 +4,16 @@ import { UserService } from '../../features/user/services/user.service';
 import { GetCurrentUser } from '../../models/User/GetCurrentUser';
 import { Auth } from '../model/auth';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from '../../../environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly baseUrl = 'http://localhost:8080/security';
   private readonly _userService = inject(UserService);
   private readonly http = inject(HttpClient);
-
+  public readonly baseUrl = environment.apiBaseUrl + '/security';
+  
   authenticateUser(): void {
     window.location.href = `${this.baseUrl}/auth/authenticate`;
   }

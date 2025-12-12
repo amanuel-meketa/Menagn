@@ -3,13 +3,17 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { ApprovalRequest } from '../../../models/Approval-Instances/ApprovalRequest';
 import { InstanceList } from '../../../models/Approval-Instances/InstanceList';
+import { ApiConfigService } from '../../../shared/config/api-config.service';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class AppInstanceService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost:8000/approvals/approval-instance';
+   private readonly apiConfig = inject(ApiConfigService);
+   
+  private readonly baseUrl = `${this.apiConfig.apiBaseUrl}/approval-instance`;
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
   
   getAllInstances(): Observable<InstanceList[]> {
