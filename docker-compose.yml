@@ -60,7 +60,7 @@ services:
     image: amanuelmeketa/platform.ui:latest
     platform: linux/amd64
     ports:
-      - "8000:8000"
+      - "5000:80"
     networks:
       - menagn-network
 
@@ -113,7 +113,7 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
     ports:
-      - "8180:8080"
+      - "8080:8080"
     depends_on:
       - postgres
     restart: always
@@ -193,8 +193,10 @@ services:
     restart: "no"
 
   kong:
-    image: amanuelmeketa/platform.kong-oidc:latest
     container_name: kong
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
     restart: always
     networks:
       - menagn-network
@@ -204,35 +206,21 @@ services:
       KONG_PG_USER: kong
       KONG_PG_PASSWORD: kongpassword
       KONG_PG_DATABASE: kong
-
       KONG_PLUGINS: bundled,kong-oidc
 
-      KONG_PROXY_LISTEN: "0.0.0.0:8000,0.0.0.0:8443 ssl"
+      KONG_PROXY_LISTEN: "0.0.0.0:8000"
       KONG_ADMIN_LISTEN: "0.0.0.0:8001"
-      KONG_ADMIN_GUI_LISTEN: "0.0.0.0:8002,0.0.0.0:8445 ssl"
-      KONG_ADMIN_GUI_URL: http://localhost:8002
-
-      KONG_ADMIN_GUI_AUTH: basic-auth
-      KONG_ADMIN_GUI_USERNAME: admin
-      KONG_ADMIN_GUI_PASSWORD: admin123
-
-      KONG_HEADERS: "off"
-      KONG_REAL_IP_HEADER: "X-Forwarded-For"
-      KONG_TRUSTED_IPS: "0.0.0.0/0"
+      KONG_ADMIN_GUI_LISTEN: "0.0.0.0:8002"
+      KONG_ADMIN_GUI_URL: "http://localhost:8002"
 
     depends_on:
       kong-migration:
         condition: service_completed_successfully
-      kong-postgres:
-        condition: service_healthy
-
     ports:
-      - "8080:8000"
-      - "8443:8443"
+      - "8000:8000"
       - "8001:8001"
       - "8002:8002"
-      - "8445:8445"
-
+  
 # ------------------------------
 # Volumes & Networks
 # ------------------------------
