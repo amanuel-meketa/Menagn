@@ -4,6 +4,7 @@ using security.business.Contracts;
 using security.sharedUtils.Dtos.Account.Incoming;
 using security.sharedUtils.Dtos.Account.Outgoing;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Web;
 
 namespace security.api.Controllers
@@ -98,17 +99,37 @@ namespace security.api.Controllers
         /// <summary>
         /// Retrieves the user information from the claims in the current context.
         /// </summary>
-        [HttpGet("userinfo")]
-        public ActionResult<UserInfoDto> GetUserInfo()
+        [HttpGet("me")]
+        public ActionResult<object> Me()
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            // Read the user info header
+            var userInfoJson = Request.Headers["X-Userinfo"].FirstOrDefault();
+            Console.WriteLine("User Info Header: " + userInfoJson);
 
-            if (identity == null || !identity.IsAuthenticated)
-                return Unauthorized(new { message = "User is not authenticated" });
+            if (string.IsNullOrEmpty(userInfoJson))
+                return Unauthorized(new { message = "User info header missing" });
 
-            var claims = identity.Claims.Select(c => new { c.Type, c.Value }).ToList();
+            try
+            {
+                var userInfo = JsonSerializer.Deserialize<Dictionary<string, object>>(userInfoJson);
 
-            return Ok(claims);
+                if (userInfo == null)
+                    return Unauthorized(new { message = "Invalid user info" });
+
+                return Ok(new
+                {
+                    Success = true,
+                    User = userInfo
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    message = "Failed to parse user info",
+                    error = ex.Message
+                });
+            }
         }
 
         /// <summary>
