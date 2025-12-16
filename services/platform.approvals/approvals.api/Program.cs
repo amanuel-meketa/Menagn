@@ -32,8 +32,7 @@ builder.Services.AddPersistence(builder.Configuration);
 
 // ---- CORS
 builder.Services.AddCors(o =>
-    o.AddPolicy("AllowAll", p =>
-        p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
+    o.AddPolicy("AllowAll", p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
     )
 );
 
