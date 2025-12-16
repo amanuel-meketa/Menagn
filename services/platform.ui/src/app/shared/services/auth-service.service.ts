@@ -1,78 +1,50 @@
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { UserService } from '../../features/user/services/user.service';
+import { BehaviorSubject, Observable, of, tap } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import { GetCurrentUser } from '../../models/User/GetCurrentUser';
-import { Auth } from '../model/auth';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../../../environments/environment.prod';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly _userService = inject(UserService);
   private readonly http = inject(HttpClient);
-  public readonly baseUrl = environment.apiBaseUrl + '/security';
-  
-  authenticateUser(): void {
-    window.location.href = `${this.baseUrl}/auth/authenticate`;
-  }
+  private readonly baseUrl = environment.apiBaseUrl + '/security';
 
-  // Called when Kong sends token directly
-  setTokenFromKong(authData: Auth): void {
-    sessionStorage.setItem('Bearer', JSON.stringify(authData));
-  }
-  
-  setToken(authData: any): void {
-    sessionStorage.setItem('Bearer', JSON.stringify(authData));
-  }
-
-  public getStoredToken(): Auth | null {
-    const stored = sessionStorage.getItem('Bearer');
-    return stored ? JSON.parse(stored) : null;
-  }
-
-  removeToken(): void {
-    sessionStorage.removeItem('Bearer');
-    this.currentUserSubject.next(null);
-  }
-
-  // BehaviorSubject for user state
   private currentUserSubject = new BehaviorSubject<GetCurrentUser | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
-  setCurrentUser(user: GetCurrentUser): void {
-    this.currentUserSubject.next(user);
+  /** Load user either from real endpoint or mock */
+  loadCurrentUser(): Observable<GetCurrentUser> {
+    if (environment.production === false) {
+      const mockUser: GetCurrentUser = {
+        userId: '00ce2b8e-24a4-4af8-ace6-333bf96758db',
+        username: 'user(mock)',
+        email: 'user@debelo.com'
+      };
+      this.currentUserSubject.next(mockUser);
+      sessionStorage.setItem('currentUser', JSON.stringify(mockUser));
+      return of(mockUser);
+    } else {
+      return this.http.get<GetCurrentUser>(`${this.baseUrl}/me`).pipe(
+        tap(user => {
+          this.currentUserSubject.next(user);
+          sessionStorage.setItem('currentUser', JSON.stringify(user));
+        })
+      );
+    }
   }
 
-  getCurrentUser(): Observable<GetCurrentUser> {
-    return this._userService.getCurrentUser();
+  restoreUserFromSession(): void {
+    const stored = sessionStorage.getItem('currentUser');
+    if (stored) this.currentUserSubject.next(JSON.parse(stored));
   }
 
-  public getCurrentUserInfoFromToken(): { id: string; email?: string; username?: string } | null {
-  const token = sessionStorage.getItem('Bearer');
-  if (!token) return null;
-
-  try {
-    const parsed = JSON.parse(token);
-    const accessToken = parsed.access_token || parsed.token || parsed;
-    const payloadBase64 = accessToken.split('.')[1];
-    if (!payloadBase64) return null;
-
-    const payload = JSON.parse(atob(payloadBase64));
-    return {
-      id: payload.sub || payload.id || '',
-      email: payload.email,
-      username: payload.username
-    };
-    
-  } catch (err) {
-    console.error('Error parsing token:', err);
-    return null;
-  }
-}
-  
   logout(): void {
-    this.removeToken();
+    sessionStorage.removeItem('currentUser');
+    this.currentUserSubject.next(null);
+    window.location.href = `${this.baseUrl}/logout`;
+  }
+
+  get currentUser(): GetCurrentUser | null {
+    return this.currentUserSubject.value;
   }
 }

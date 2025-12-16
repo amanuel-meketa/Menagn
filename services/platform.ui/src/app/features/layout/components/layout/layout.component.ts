@@ -1,45 +1,47 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterOutlet, RouterLink } from '@angular/router';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { AuthService } from '../../../../shared/services/auth-service.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
-    selector: 'app-layout',
-    imports: [
-        RouterOutlet, RouterLink, CommonModule, NzBreadCrumbModule, NzIconModule, NzLayoutModule,
-        NzMenuModule, NzButtonModule, NzDropDownModule
-    ],
-    templateUrl: './layout.component.html',
-    styleUrl: './layout.component.css'
+  selector: 'app-layout',
+  standalone: true,
+  imports: [ CommonModule, RouterOutlet, RouterLink, NzBreadCrumbModule, NzIconModule, NzLayoutModule, NzMenuModule,
+             NzButtonModule, NzDropDownModule],
+  templateUrl: './layout.component.html',
+  styleUrl: './layout.component.css'
 })
 export class LayoutComponent {
-  private _authService = inject(AuthService); 
-  private router = inject(Router);
+
+  private readonly authService = inject(AuthService);
+
   isCollapsed = false;
-  currentYear: number = new Date().getFullYear();
+  currentYear = new Date().getFullYear();
 
-  token = this._authService.getStoredToken()?.emailAddress || null;
-  
-  login() {
-    this._authService.authenticateUser();
-  }  
+  // Convert Observable → Signal (Angular 18 best practice)
+  currentUser = toSignal(this.authService.currentUser$, { initialValue: null });
 
-  onPasswordReset(): void {
-    console.log('Password Reset clicked');
-  }
+  // Example computed value for template
+  userName = computed(() =>
+    this.currentUser()?.username || this.currentUser()?.email || 'User'
+  );
 
   onUserProfile(): void {
     console.log('User Profile clicked');
   }
 
+  onPasswordReset(): void {
+    console.log('Password Reset clicked');
+  }
+
   onLogout(): void {
-    this._authService.logout()
-    this.router.navigateByUrl('/login');
+    this.authService.logout();
   }
 }

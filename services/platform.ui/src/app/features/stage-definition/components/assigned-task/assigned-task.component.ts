@@ -44,7 +44,7 @@ export class AssignedTaskComponent implements OnInit {
   @ViewChild('taskModal', { static: true }) taskModal!: TemplateRef<any>;
 
   ngOnInit(): void {
-    const userId = this._authService.getCurrentUserInfoFromToken()?.id ?? this.defaultUserId;
+    const userId = this._authService.currentUser?.userId?? this.defaultUserId;
     this.loadTasks(userId);
   }
 

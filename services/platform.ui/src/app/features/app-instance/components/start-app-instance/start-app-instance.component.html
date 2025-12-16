@@ -1,51 +1,75 @@
-<nz-breadcrumb style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+<nz-breadcrumb style="margin-bottom: 24px; font-size: 14px;">
   <nz-breadcrumb-item>
-    <a (click)="goBack()" style="text-decoration: underline;">Active Templates</a>
+    <a (click)="goBack()" class="text-blue-600 hover:underline">Active Templates</a>
   </nz-breadcrumb-item>
   <nz-breadcrumb-item>Start Instance</nz-breadcrumb-item>
 </nz-breadcrumb>
 
-<div class="page-wrap">
+<div class="page-wrap max-w-3xl mx-auto">
   <!-- Page Header -->
-  <div class="header flex items-center justify-between mb-6">
-    <button nz-button nzType="default" nzGhost (click)="goBack()" class="flex items-center gap-2">
-      <i nz-icon nzType="arrow-left"></i> Back
-    </button>
-    <h2 class="title text-2xl font-bold">Start Instance</h2>
+  <div class="header flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-2">
+    <div class="flex items-center gap-3">
+      <button nz-button nzType="default" nzGhost (click)="goBack()" class="flex items-center gap-2">
+        <i nz-icon nzType="arrow-left"></i> Back
+      </button>
+      <h1 class="text-3xl font-semibold text-gray-800">Start Application Instance</h1>
+    </div>
+    <p class="text-gray-500 text-sm md:text-base mt-2 md:mt-0">Review the template and confirm before sending the request</p>
   </div>
 
-  <!-- Form Card -->
-  <nz-card nzBordered class="shadow-lg rounded-2xl p-6 bg-white">
-    <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()" nzLayout="vertical">
-      <!-- Hidden userId -->
-      <input type="hidden" formControlName="userId" />
+  <!-- Step Tracker -->
+  <nz-steps [nzCurrent]="0" nzSize="small" style="margin-bottom: 32px;">
+    <nz-step nzTitle="Initiated"></nz-step>
+    <nz-step nzTitle="Manager Approval"></nz-step>
+    <nz-step nzTitle="Final Approval"></nz-step>
+  </nz-steps>
 
-      <!-- Template -->
-      <nz-form-item>
-        <nz-form-label nzFor="templateId">Template</nz-form-label>
-        <nz-form-control>
-          <nz-input-group nzPrefixIcon="appstore">
-            <input nz-input id="templateId" formControlName="templateId" readonly class="bg-gray-100 font-semibold" />
-          </nz-input-group>
-        </nz-form-control>
-      </nz-form-item>
-
-      <!-- Current User (display only) -->
-      <nz-form-item>
-        <nz-form-label nzFor="userId">Current User</nz-form-label>
-        <nz-form-control>
-          <nz-input-group nzPrefixIcon="user">
-            <input nz-input id="userId" formControlName="userId"  class="bg-gray-100 font-semibold" />
-          </nz-input-group>
-        </nz-form-control>
-      </nz-form-item>
-
-      <!-- Actions -->
-      <div class="flex justify-end gap-3 mt-6">
-        <button nz-button nzType="primary" [disabled]="validateForm.invalid || starting" [nzLoading]="starting" class="flex items-center gap-2">
-          <i nz-icon nzType="play-circle"></i> Send Request
-        </button>
+  <!-- Template Info Card -->
+  <nz-card nzBordered class="shadow-md rounded-xl p-6 bg-gray-50 mb-6">
+    <h3 class="text-lg font-semibold mb-4">Template Summary</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700">
+      <div>
+        <strong>Name:</strong> {{ validateForm.value.templateId }}
       </div>
+      <div>
+        <strong>Estimated Steps:</strong> {{ "expected steps" }}
+      </div>
+    </div>
+  </nz-card>
+
+  <!-- Form Card -->
+  <nz-card nzBordered class="shadow-lg rounded-2xl p-8 bg-white">
+    <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()" nzLayout="vertical">
+
+      <!-- Form Fields -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Template -->
+        <nz-form-item>
+          <nz-form-label nzFor="templateId" nzRequired>Template</nz-form-label>
+          <nz-form-control>
+            <nz-input-group nzPrefixIcon="appstore">
+              <input nz-input id="templateId" formControlName="templateId" readonly
+                     class="bg-gray-100 font-medium text-gray-800" placeholder="Selected template" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+       
+      </div>
+      
+      <!-- Actions -->
+     <div class="flex justify-end mt-8">
+  <button nz-button nzType="default" (click)="goBack()" style="margin-right: 16px;">
+    Cancel
+  </button>
+  <button nz-button nzType="primary" [disabled]="validateForm.invalid || starting"
+          [nzLoading]="starting" class="flex items-center gap-2">
+    <i nz-icon nzType="play-circle"></i> Start Instance
+  </button>
+</div>
+
+
+
     </form>
   </nz-card>
 </div>

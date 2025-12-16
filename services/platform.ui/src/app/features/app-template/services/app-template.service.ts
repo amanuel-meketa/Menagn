@@ -14,7 +14,7 @@ export class AppTemplateService {
   private readonly http = inject(HttpClient);
   private readonly apiConfig = inject(ApiConfigService);
   
-  private readonly baseUrl = `${this.apiConfig.apiBaseUrl}/approval-template`;
+  private readonly baseUrl = `${this.apiConfig.apiBaseUrl}/approval/approval-template`;
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
   private AppTempListUpdated = new BehaviorSubject<boolean>(false);

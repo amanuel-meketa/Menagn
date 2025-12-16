@@ -73,33 +73,53 @@
   <nz-layout >
    
     <nz-header>
-      <div style="display: flex; width: 100%; justify-content: space-between;">
-        <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'" (click)="isCollapsed = !isCollapsed"></span>
-    
-       <!-- Display Login button if token does not exist -->
-       <button *ngIf="!token" nz-button (click)="login()" style="margin-left: auto;">Login</button>
+      <div style="display: flex; width: 100%; justify-content: space-between; align-items: center;">
 
-        <!-- Display user email and dropdown if token exists -->
-        <div class="button-group">
-          <button nz-button>{{ token }}</button>
-          <button nz-button nz-dropdown [nzDropdownMenu]="menu2" nzPlacement="bottomRight">
-            <span nz-icon nzType="user"></span>
-          </button>
-        </div>               
+        <!-- Collapse trigger -->
+        <span
+          class="trigger"
+          nz-icon
+          [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+          (click)="isCollapsed = !isCollapsed">
+        </span>
+
+        <!-- User dropdown (only when user is loaded) -->
+        <ng-container *ngIf="currentUser() as user">
+          <div class="button-group">
+            <button nz-button nzType="text">
+              {{ user.username || user.email }}
+            </button>
+
+            <button
+              nz-button
+              nzType="text"
+              nz-dropdown
+              [nzDropdownMenu]="menu2"
+              nzPlacement="bottomRight">
+              <span nz-icon nzType="user"></span>
+            </button>
+          </div>
+        </ng-container>
+
       </div>
-    
+
+      <!-- Dropdown menu -->
       <nz-dropdown-menu #menu2="nzDropdownMenu">
         <ul nz-menu>
-          <li nz-menu-item (click)="onPasswordReset()">
-            <i nz-icon nzType="lock" nzTheme="outline"></i>
-            <span>Password Reset</span>
-          </li>
           <li nz-menu-item (click)="onUserProfile()">
-            <i nz-icon nzType="profile" nzTheme="outline"></i>
+            <i nz-icon nzType="profile"></i>
             <span>User Profile</span>
           </li>
+
+          <li nz-menu-item (click)="onPasswordReset()">
+            <i nz-icon nzType="lock"></i>
+            <span>Password Reset</span>
+          </li>
+
+          <li nz-menu-divider></li>
+
           <li nz-menu-item (click)="onLogout()">
-            <i nz-icon nzType="logout" nzTheme="outline"></i>
+            <i nz-icon nzType="logout"></i>
             <span>Logout</span>
           </li>
         </ul>

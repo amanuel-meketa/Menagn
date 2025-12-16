@@ -6,7 +6,6 @@ import { LayoutComponent } from './features/layout/components/layout/layout.comp
 import { UserDetailsComponent } from './features/user/components/user-details/user-details.component';
 import { UserEditComponent } from './features/user/components/user-edit/user-edit.component';
 import { ResetPasswordComponent } from './features/user/components/reset-password/reset-password.component';
-import { authGuard } from './guards/auth.guard';
 import { UserSessionComponent } from './features/user/components/user-session/user-session.component';
 import { UserRoleComponent } from './features/user/components/user-role/user-role.component';
 import { RoleListComponent } from './features/role/components/role-list/role-list.component';
@@ -14,7 +13,6 @@ import { RoleRegisterComponent } from './features/role/components/role-register/
 import { RoleDetailsComponent } from './features/role/components/role-details/role-details.component';
 import { RoleUpdateComponent } from './features/role/components/role-update/role-update.component';
 import { RoleAssignedUsersComponent } from './features/role/components/role-assigned-users/role-assigned-users.component';
-import { AuthCallbackComponent } from './features/auth/components/auth-callback/auth-callback.component';
 import { ApplicationTypeDetailsComponent } from './features/app-template/components/app-template-details/app-template-details.component';
 import { ApplicationTypeUpdateComponent } from './features/app-template/components/app-template-update/app-template-update.component';
 import { AppTemplateListComponent } from './features/app-template/components/app-template-list/app-template-list.component';
@@ -32,9 +30,8 @@ import { StageProgressComponent } from './features/stage-definition/components/s
 import { AssignedTaskComponent } from './features/stage-definition/components/assigned-task/assigned-task.component';
 
 export const routes: Routes = [
-  { path: 'auth-callback', component: AuthCallbackComponent, pathMatch: 'full' },
   { path: '', component: LayoutComponent, children: [
-      { path: 'dashboard', component: DashboardComponent},
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'register', component: UserRegisterComponent },
       { path: 'list', component: UserListComponent},
       { path: 'user-details/:id', component: UserDetailsComponent},

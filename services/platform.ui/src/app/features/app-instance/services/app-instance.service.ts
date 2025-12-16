@@ -13,7 +13,7 @@ export class AppInstanceService {
   private readonly http = inject(HttpClient);
    private readonly apiConfig = inject(ApiConfigService);
    
-  private readonly baseUrl = `${this.apiConfig.apiBaseUrl}/approval-instance`;
+  private readonly baseUrl = `${this.apiConfig.apiBaseUrl}/approval/approval-instance`;
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
   
   getAllInstances(): Observable<InstanceList[]> {
@@ -29,6 +29,6 @@ export class AppInstanceService {
   }
   
   getMyInstances(userId: string): Observable<InstanceList[]> {
-    return this.http.get<InstanceList[]>(`${this.baseUrl}/user/${userId}/instances`, { headers: this.jsonHeaders });
+   return this.http.get<InstanceList[]>(`${this.baseUrl}/user/${userId}/instances`, { headers: this.jsonHeaders });
   }
 }

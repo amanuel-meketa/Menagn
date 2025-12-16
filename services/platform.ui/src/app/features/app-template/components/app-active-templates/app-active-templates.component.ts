@@ -14,10 +14,8 @@ import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-active-templates',
-    imports: [
-        CommonModule, FormsModule, NzButtonModule, NzCardModule,
-        NzInputModule, NzIconModule, NzEmptyModule
-    ],
+    imports: [ CommonModule, FormsModule, NzButtonModule, NzCardModule,
+               NzInputModule, NzIconModule, NzEmptyModule],
     templateUrl: './app-active-templates.component.html',
     styleUrl: './app-active-templates.component.css'
 })
