@@ -59,8 +59,7 @@ public class ApiGatewayInitializer : BaseServiceInitializer
                     name = serviceName,
                     protocol = protocol,
                     host = host,
-                    port = port,
-                    path = routePath
+                    port = port
                 });
 
                 if (!serviceResponse.IsSuccessStatusCode)
@@ -114,6 +113,7 @@ public class ApiGatewayInitializer : BaseServiceInitializer
     // ----------------------------------------------------
     //              BUILD PLUGIN CONFIG
     // ----------------------------------------------------
+
     public KongPluginRequest ToKongPluginRequest(KongOidcPluginConfig config)
     {
         return new KongPluginRequest
@@ -136,6 +136,7 @@ public class ApiGatewayInitializer : BaseServiceInitializer
     // ----------------------------------------------------
     //              RESOURCE EXISTS HELPER
     // ----------------------------------------------------
+
     private async Task<bool> ResourceExistsAsync(string path)
     {
         try
