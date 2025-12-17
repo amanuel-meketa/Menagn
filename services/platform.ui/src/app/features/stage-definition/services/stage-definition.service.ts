@@ -17,7 +17,7 @@ export class StageDefinitionService {
 
   private readonly apiConfig = inject(ApiConfigService);
     
-  private readonly baseUrl = `${this.apiConfig.apiBaseUrl}/approval/stage-definition`;
+  private readonly baseUrl = `${this.apiConfig.apiBaseUrl}/approvals/stage-definition`;
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
  
   private StageDefiListUpdated = new BehaviorSubject<boolean>(false);
