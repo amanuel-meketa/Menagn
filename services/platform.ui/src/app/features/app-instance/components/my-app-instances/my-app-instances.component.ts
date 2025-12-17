@@ -67,8 +67,7 @@ ngOnInit(): void {
   this.loadInstances(user.userId);
 
   // Re-load on template updates
-  this.appTemplateService.AppTypeListUpdated$
-    .pipe(takeUntil(this.destroy$))
+  this.appTemplateService.AppTypeListUpdated$.pipe(takeUntil(this.destroy$))
     .subscribe(() => {
       const refreshedUser = this.authService.currentUser;
       if (refreshedUser && refreshedUser.userId) {

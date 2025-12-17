@@ -4,13 +4,16 @@ import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { GetRole } from '../../../models/User/GetUserRole';
 import { CreateRole } from '../../../models/Role/CreateRole';
 import { AssignedUser } from '../../../models/Role/AssignedUser';
+import { ApiConfigService } from '../../../shared/config/api-config.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RoleService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'localhost:8000/security';
+  private readonly apiConfig = inject(ApiConfigService);
+     
+  private readonly baseUrl = `${this.apiConfig.apiBaseUrl}/security/api`;
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
   private roleListUpdated = new BehaviorSubject<boolean>(false);

@@ -11,7 +11,7 @@ import { ApiConfigService } from '../../../shared/config/api-config.service';
 
 export class AppInstanceService {
   private readonly http = inject(HttpClient);
-   private readonly apiConfig = inject(ApiConfigService);
+  private readonly apiConfig = inject(ApiConfigService);
    
   private readonly baseUrl = `${this.apiConfig.apiBaseUrl}/approval/approval-instance`;
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });

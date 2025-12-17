@@ -7,7 +7,7 @@ import { GetCurrentUser } from '../../models/User/GetCurrentUser';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = environment.apiBaseUrl + '/security';
+  private readonly baseUrl = environment.apiBaseUrl + '/security/api';
 
   private currentUserSubject = new BehaviorSubject<GetCurrentUser | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
