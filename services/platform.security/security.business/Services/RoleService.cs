@@ -2,8 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using security.business.Contracts;
+using security.business.Contracts.Messaging;
+using security.data.Entities.Events;
 using security.sharedUtils.Dtos.Role.Incoming;
-using security.sharedUtils.Dtos.User.Outgoing;
 using SharedLibrary.Utilities;
 using System.Net;
 
@@ -12,14 +13,14 @@ namespace security.business.Services
     public class RoleService : IRoleService
     {
         private readonly IIdentityService _identityService;
-        private readonly IMapper _mapper;
         private readonly string _restApi;
+        private readonly IEventPublisher _eventPublisher;
 
-        public RoleService(IIdentityService identityService, IConfiguration configuration, IMapper mapper)
+        public RoleService(IIdentityService identityService, IConfiguration configuration, IEventPublisher eventPublisher)
         {
             _identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _restApi = configuration["Keycloak:AdminRest:RestApi"] ?? throw new ArgumentNullException(nameof(configuration), "Rest API URL not configured.");
+             _eventPublisher = eventPublisher;
         }
 
         public async Task<RoleDto> CreateRole(CreateRoleDto role)
@@ -28,9 +29,11 @@ namespace security.business.Services
             var clientId = await _identityService.GetClientIdAsync(accessToken);
             var url = $"{_restApi}/clients/{clientId}/roles";
 
-            var roleUpdatePayload = new Dictionary<string, string>();
-            roleUpdatePayload.Add("name", role.Name);
-            roleUpdatePayload.Add("description", role.Description);
+            var roleUpdatePayload = new Dictionary<string, string>
+            {
+                { "name", role.Name },
+                { "description", role.Description }
+            };
 
             var content = HttpContentHelper.CreateHttpContent(roleUpdatePayload);
             var response = await _identityService.SendHttpRequestAsync(url, HttpMethod.Post, accessToken, content);
@@ -43,8 +46,22 @@ namespace security.business.Services
             var location = response.Headers.Location?.ToString()
                 ?? throw new InvalidOperationException("Location header missing in response.");
 
-            return await GetRoleFromLocationAsync(location);
+            var createdRole = await GetRoleFromLocationAsync(location)
+                ?? throw new InvalidOperationException("Failed to retrieve created role.");
+
+            var roleCreatedEvent = new RoleCreatedEvent
+            {
+                RoleId = Guid.NewGuid(),
+                RoleName = createdRole.Name,
+                Description = createdRole.Description
+            };
+
+            await _eventPublisher.PublishRoleCreatedAsync(roleCreatedEvent);
+
+
+            return createdRole;
         }
+
 
         public async Task<IEnumerable<RoleDto>> GetRoles()
         {

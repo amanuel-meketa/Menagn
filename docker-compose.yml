@@ -11,6 +11,8 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ASPNETCORE_HTTP_PORTS: 9090
+      KAFKA_BOOTSTRAP_SERVERS: broker:9092
+      Kafka__ClientId: security-service  
     ports:
       - "9090:9090"
     networks:
