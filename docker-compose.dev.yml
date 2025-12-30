@@ -36,8 +36,3 @@ services:
     build:
       context: ./services/platform.ui
       dockerfile: Dockerfile
-
-  nginx:
-    build:
-      context: ./gateway
-      dockerfile: Dockerfile
