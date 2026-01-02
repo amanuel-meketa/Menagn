@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   # ------------------------------
   # Main Platform Services
@@ -44,18 +42,7 @@ services:
     container_name: service-bootstrapper
     image: amanuelmeketa/platform.bootstrapper:latest
     networks:
-      - menagn-network
-    depends_on:
-      postgres:
-        condition: service_healthy
-      kong-postgres:
-        condition: service_healthy
-      kong-migration:
-        condition: service_completed_successfully
-      migrate:
-        condition: service_completed_successfully
-      authorization-provider:
-        condition: service_healthy  
+      - menagn-network 
 
   platform.ui:
     container_name: platform.ui
@@ -125,36 +112,69 @@ services:
       - ./infrastructure/keycloak/themes/debelo:/opt/keycloak/themes/debelo:ro
       - ./configeration/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
 
-  migrate:
-    container_name: authorization.migrate
-    image: openfga/openfga:latest
+  # ------------------------------
+  # Authorization Services
+  # ------------------------------
+  authz-database:
+    image: postgres:17
+    container_name: authz-database
+    environment:
+      POSTGRES_DB: openfga
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - authz_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - menagn-network
+
+  authz-migration:
+    image: openfga/openfga:v1.11.2
+    container_name: authz-migration
     command: migrate
     environment:
       OPENFGA_DATASTORE_ENGINE: postgres
-      OPENFGA_DATASTORE_URI: postgres://postgres:password@platform-database:5432/postgres?sslmode=disable
+      OPENFGA_DATASTORE_URI: postgres://postgres:password@authz-database:5432/openfga?sslmode=disable
     depends_on:
-      postgres:
+      authz-database:
         condition: service_healthy
     networks:
       - menagn-network
 
-  authorization-provider:
-    container_name: authorization-provider
-    image: openfga/openfga:latest
-    command: run --http-addr :6060
+  authz-provider:
+    image: openfga/openfga:v1.11.2
+    container_name: authz-provider
+    command: run
     environment:
       OPENFGA_DATASTORE_ENGINE: postgres
-      OPENFGA_DATASTORE_URI: postgres://postgres:password@platform-database:5432/postgres?sslmode=disable
+      OPENFGA_DATASTORE_URI: postgres://postgres:password@authz-database:5432/openfga?sslmode=disable
+      OPENFGA_HTTP_ADDR: 0.0.0.0:6060
+      OPENFGA_PLAYGROUND_ENABLED: "false"
       OPENFGA_LOG_FORMAT: json
-      OPENFGA_AUTH_TOKEN: w9F#2vLq8Xy!bR3uPz6@Hj7KmQdT1sVc
-    depends_on:
-      migrate:
-        condition: service_completed_successfully
     ports:
-      - "6060:6060"  
-      - "3000:3000"
+      - "6060:6060"
+    depends_on:
+      authz-migration:
+        condition: service_completed_successfully
     networks:
       - menagn-network
+
+  authz-studio:
+    image: ghcr.io/prakashm88/openfga-studio:latest
+    container_name: authz-studio
+    ports:
+      - "3000:3000"
+    environment:
+      OPENFGA_API_HOST: http://authz-provider:6060
+    depends_on:
+      - authz-provider
+    networks:
+      - menagn-network
+
 
   # ------------------------------
   # Kong Services
@@ -222,7 +242,10 @@ services:
       - "8000:8000"
       - "8001:8001"
       - "8002:8002"
-  
+
+  # ------------------------------
+  # kafka message broker
+  # ------------------------------
   broker:
     container_name: broker
     image: apache/kafka:latest
@@ -268,6 +291,7 @@ services:
 volumes:
   postgres_data:
   pgadmin-data:
+  authz_pgdata:
   kafka_data:
 
 networks:
