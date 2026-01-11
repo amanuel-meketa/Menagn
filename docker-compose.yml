@@ -163,19 +163,6 @@ services:
     networks:
       - menagn-network
 
-  authz-studio:
-    image: ghcr.io/prakashm88/openfga-studio:latest
-    container_name: authz-studio
-    ports:
-      - "3000:3000"
-    environment:
-      OPENFGA_API_HOST: http://authz-provider:6060
-    depends_on:
-      - authz-provider
-    networks:
-      - menagn-network
-
-
   # ------------------------------
   # Kong Services
   # ------------------------------
