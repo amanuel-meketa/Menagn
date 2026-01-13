@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { GetStageDefiModel } from '../../../models/Stage-Definition/GetStageDefiModel';
 import { UpdateStageDefiModel } from '../../../models/Stage-Definition/UpdateStageDefiModel';
 import { AddStageDefiModel } from '../../../models/Stage-Definition/AddStageDefiModel';
-import { ApiConfigService } from '../../../shared/config/api-config.service';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +14,7 @@ import { ApiConfigService } from '../../../shared/config/api-config.service';
 export class StageDefinitionService {
 
   private readonly http = inject(HttpClient);
-
-  private readonly apiConfig = inject(ApiConfigService);
-    
-  private readonly baseUrl = `${this.apiConfig.apiBaseUrl}/approvals/stage-definition`;
+  private readonly baseUrl = `${environment.apiBaseUrl}/approvals/stage-definition`;
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
  
   private StageDefiListUpdated = new BehaviorSubject<boolean>(false);

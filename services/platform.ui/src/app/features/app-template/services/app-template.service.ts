@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { GetAppTypeModel } from '../../../models/Application-Type/GetAppTypeModel';
 import { UpdateAppTypeMode } from '../../../models/Application-Type/UpdateAppTypeMode';
 import { CreateAppTemplateModel } from '../../../models/Application-Type/CreateAppTemplateModel';
-import { ApiConfigService } from '../../../shared/config/api-config.service';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +12,7 @@ import { ApiConfigService } from '../../../shared/config/api-config.service';
 export class AppTemplateService {
 
   private readonly http = inject(HttpClient);
-  private readonly apiConfig = inject(ApiConfigService);
-  
-  private readonly baseUrl = `${this.apiConfig.apiBaseUrl}/approvals/approval-template`;
+  private readonly baseUrl = `${environment.apiBaseUrl}/approvals/approval-template`;
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
   private AppTempListUpdated = new BehaviorSubject<boolean>(false);

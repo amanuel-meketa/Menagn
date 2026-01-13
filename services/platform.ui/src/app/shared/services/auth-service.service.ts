@@ -7,14 +7,14 @@ import { AuthMeResponse, BackendUser, GetCurrentUser } from '../../models/User/G
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
-  private readonly securityApi = `${environment.apiBaseUrl}/security/api`;
+  private readonly baseUrl = `${environment.apiBaseUrl}/security/api`;
 
   private currentUserSubject = new BehaviorSubject<GetCurrentUser | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
   constructor() {
     this.restoreUserFromSession(); // <-- automatically restore on service init
-  }
+  }      
 
   /** Load current user (mock in dev, real in prod) */
   loadCurrentUser(): Observable<GetCurrentUser> {
@@ -22,20 +22,20 @@ export class AuthService {
       return this.loadMockUser();
     }
 
-   return this.http.get<AuthMeResponse>(`${this.securityApi}/auth/me`).pipe(
+   return this.http.get<AuthMeResponse>(`${this.baseUrl}/auth/me`).pipe(
       map(response => {
         if (response?.user?.user) { 
           const user = this.mapBackendUser(response.user.user);
           this.setUser(user);
           return user;
         } else {
-          console.warn('No user data in /auth/me response', response);
+          console.warn('No user data in /me response', response);
           this.clearUser();
           return null as any;
         }
       }),
       catchError(err => {
-        console.error('Failed to load /auth/me', err);
+        console.error('Failed to load /me', err);
         this.clearUser();
         throw err;
       })
@@ -65,7 +65,7 @@ export class AuthService {
   /** Logout */
   logout(): void {
     this.clearUser();
-    window.location.href = `${this.securityApi}/logout`;
+    window.location.href = `${this.baseUrl}/logout`;
   }
 
   /** Access current user synchronously */
@@ -94,7 +94,7 @@ export class AuthService {
 
   private loadMockUser(): Observable<GetCurrentUser> {
     const mockUser: GetCurrentUser = {
-      userId: '00ce2b8e-24a4-4af8-ace6-333bf96758db',
+      userId: '338e9b83-b214-453c-af4f-a468ffce6219',
       username: 'user (mock)',
       email: 'user@debelo.com',
       fullName: 'Debelo User',
