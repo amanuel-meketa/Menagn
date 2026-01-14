@@ -1,0 +1,177 @@
+/* HUB SHELL */
+.hub-shell {
+  padding: 24px;
+  background: #f5f5f5;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+}
+
+/* HEADER */
+.hub-header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.hub-title h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.hub-title .subtitle {
+  color: #595959;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.hub-controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  width: 220px;
+}
+
+/* FEATURED ROW */
+.featured-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.featured-item {
+  display: flex;
+  gap: 12px;
+  background: #fff;
+  padding: 12px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.featured-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+.f-name {
+  font-weight: 600;
+}
+
+.f-desc {
+  font-size: 12px;
+  color: #8c8c8c;
+}
+
+/* GRID */
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.grid-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* CARD */
+.template-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+  background: #fff;
+}
+
+.template-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* CARD COVER */
+.card-cover {
+  height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fafafa;
+}
+
+.cover-placeholder i {
+  font-size: 36px;
+  color: #1890ff;
+}
+
+/* META */
+.card-meta {
+  padding: 16px;
+}
+
+.meta-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.meta-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.meta-actions button {
+  margin-left: 4px;
+}
+
+.meta-desc {
+  font-size: 13px;
+  color: #595959;
+  margin: 8px 0;
+}
+
+.meta-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #8c8c8c;
+}
+
+.meta-footer .stages {
+  margin-left: 8px;
+}
+
+/* PAGINATION */
+.pager {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+/* PREVIEW MODAL */
+.preview-body h2 {
+  margin-top: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.preview-stages h4 {
+  margin: 12px 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.preview-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}

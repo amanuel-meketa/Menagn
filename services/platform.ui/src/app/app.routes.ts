@@ -28,6 +28,7 @@ import { ActiveTemplatesComponent } from './features/app-template/components/app
 import { MyAppInstancesComponent } from './features/app-instance/components/my-app-instances/my-app-instances.component';
 import { StageProgressComponent } from './features/stage-definition/components/stage-progress/stage-progress.component';
 import { AssignedTaskComponent } from './features/stage-definition/components/assigned-task/assigned-task.component';
+import { TemplateHubListComponent } from './features/template-hub/components/template-hub-list/template-hub-list';
 
 export const routes: Routes = [
   { path: '', component: LayoutComponent, children: [
@@ -51,6 +52,8 @@ export const routes: Routes = [
       { path: 'app-template-details/:templateId', component: ApplicationTypeDetailsComponent},
       { path: 'app-template-update', component: ApplicationTypeUpdateComponent},
       { path: 'app-active-templates', component: ActiveTemplatesComponent},
+
+      { path: 'template-hub-lists', component: TemplateHubListComponent},
 
       { path: 'stage-definition-list', component: StageDefinitionListComponent},
       { path: 'stage-definition-create', component: StageDefinitinCreateComponent},
