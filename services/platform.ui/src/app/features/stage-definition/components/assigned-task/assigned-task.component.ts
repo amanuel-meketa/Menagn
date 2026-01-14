@@ -12,11 +12,12 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalService, NzModalModule } from 'ng-zorro-antd/modal';
 import { AuthService } from '../../../../shared/services/auth-service.service';
+import { take } from 'rxjs';
 
 @Component({
     selector: 'app-assigned-task',
     imports: [CommonModule, FormsModule, NzCardModule, NzEmptyModule, NzPaginationModule, NzSelectModule, NzTagModule,
-        NzButtonModule, NzIconModule, NzModalModule],
+              NzButtonModule, NzIconModule, NzModalModule],
     templateUrl: './assigned-task.component.html',
     styleUrls: ['./assigned-task.component.css']
 })
@@ -38,18 +39,17 @@ export class AssignedTaskComponent implements OnInit {
   assignmentTypeFilter: string | null = null;
   selectedTask: GetStageDefiModel | null = null;
   
- // temporary default user id used previously (replace with real auth)
- private readonly defaultUserId = '52b89ab2-b54b-4464-b517-38f82fa10dbd';
-
   @ViewChild('taskModal', { static: true }) taskModal!: TemplateRef<any>;
 
   ngOnInit(): void {
-    const userId = this._authService.currentUser?.userId?? this.defaultUserId;
-    this.loadTasks(userId);
-  }
+  this._authService.currentUser$.pipe(take(1)).subscribe(user => {
+      if (!user) return;
+      this.loadTasks(user.userId);
+    });
+}
 
   private loadTasks(userId: string ): void {
-    this._stageDefService.assignedTasks(this.defaultUserId).subscribe({
+    this._stageDefService.assignedTasks(userId).subscribe({
       next: (data: GetStageDefiModel[]) => {
         this.tasks = data;
         this.applyFilters();

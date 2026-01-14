@@ -16,7 +16,7 @@ export class StageDefinitionService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiBaseUrl}/approvals/stage-definition`;
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
- 
+
   private StageDefiListUpdated = new BehaviorSubject<boolean>(false);
 
   get AppTypeListUpdated$(): Observable<boolean> {
