@@ -1,6 +1,7 @@
 ﻿using approvals.application.Interfaces;
 using approvals.application.Interfaces.Repository;
 using approvals.application.Interfaces.Services;
+using approvals.application.Services;
 using approvals.infrastructure.Persistence;
 using approvals.infrastructure.Persistence.Repositories;
 using approvals.infrastructure.Persistence.Repositories.Base;
@@ -41,12 +42,14 @@ namespace platform.Infrastructure.Extensions
                         throw new InvalidOperationException($"Unsupported database provider: {provider}");
                 }
             });
+
             services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IApprovalRepository, ApprovalRepository>();
             services.AddScoped<IStageDefinitionRepository, StageDefinitionRepository>();
             services.AddScoped<IApprovalInstanceRepository, ApprovalInstanceRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ITemplateHubService, TemplateHubService>();
 
             return services;
         }

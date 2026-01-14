@@ -1,6 +1,8 @@
 ﻿using approvals.application;
 using approvals.application.DTOs.ApplicationType.Validator;
+using approvals.application.Interfaces.Repository;
 using approvals.infrastructure.Persistence;
+using approvals.infrastructure.Persistence.Repositories;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
@@ -30,11 +32,12 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreateAppTypeDtoValidator>(
 builder.Services.ConfigurApplicationServices();
 builder.Services.AddPersistence(builder.Configuration);
 
+// ---- GitHub Template Repo
+builder.Services.Configure<GitHubTemplateOptions>(builder.Configuration.GetSection("GitHubTemplateRepo"));
+builder.Services.AddHttpClient<ITemplateHubRepository, TemplateHubRepository>();
+
 // ---- CORS
-builder.Services.AddCors(o =>
-    o.AddPolicy("AllowAll", p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
-    )
-);
+builder.Services.AddCors(o => o.AddPolicy("AllowAll", p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
 var app = builder.Build();
 
@@ -46,9 +49,7 @@ if (Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true")
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Approvals API v1")
-    );
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Approvals API v1"));
 }
 
 app.UseCors("AllowAll");
