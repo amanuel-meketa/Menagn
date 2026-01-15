@@ -6,12 +6,28 @@
   margin-top: 24px;
   padding: 24px;
   background: #fafafa;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid #f0f0f0;
 }
 
-.stage-meta {
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.step-icon {
+  font-size: 22px;
+  color: #1677ff;
+}
+
+.step-desc {
   margin-top: 12px;
+  color: #555;
+}
+
+.stage-meta {
+  margin-top: 14px;
   display: flex;
   gap: 8px;
 }

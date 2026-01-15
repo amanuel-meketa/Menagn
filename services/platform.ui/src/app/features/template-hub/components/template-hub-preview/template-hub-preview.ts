@@ -1,26 +1,19 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+
 import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzTimelineModule } from 'ng-zorro-antd/timeline';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzStepsModule } from 'ng-zorro-antd/steps';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 import { TemplateHub } from '../../services/template-hub';
-import { NzStepsModule } from 'ng-zorro-antd/steps';
 
 @Component({
   standalone: true,
   selector: 'app-template-hub-preview',
-  imports: [
-    CommonModule,
-    NzCardModule,
-    NzTimelineModule,
-    NzTagModule,
-    NzSpinModule,
-     CommonModule,
-  NzStepsModule
-  ],
+  imports: [ CommonModule, NzCardModule, NzTagModule, NzSpinModule, NzStepsModule, NzIconModule],
   templateUrl: './template-hub-preview.html',
   styleUrl: './template-hub-preview.css'
 })
@@ -31,10 +24,15 @@ export class TemplateHubPreviewComponent implements OnInit {
 
   loading = true;
   template: any;
+
   currentStep = 0;
+  stepsDirection: 'horizontal' | 'vertical' = 'horizontal';
 
   ngOnInit(): void {
-    const key = this.route.snapshot.paramMap.get('key')!;
+    const rawKey = this.route.snapshot.paramMap.get('key');
+    if (!rawKey) return;
+
+    const key = decodeURIComponent(rawKey);
     this.load(key);
   }
 
@@ -44,11 +42,32 @@ export class TemplateHubPreviewComponent implements OnInit {
     this.hub.getTemplateDetails(key).subscribe({
       next: res => {
         this.template = res;
-        this.template.stageDefinitions = this.template.stageDefinitions?.sort((a: any, b: any) => a.sequenceOrder - b.sequenceOrder);
 
+        // sort stages
+        this.template.stageDefinitions = this.template.stageDefinitions?.sort(
+            (a: any, b: any) => a.sequenceOrder - b.sequenceOrder);
+
+        // auto vertical for long workflows
+        this.stepsDirection = this.template.stageDefinitions?.length > 4? 'vertical' : 'horizontal';
+
+        this.currentStep = 0;
         this.loading = false;
       },
-      error: () => this.loading = false
+      error: () => {
+        this.loading = false;
+      }
     });
+  }
+
+  /** Icon mapping: User vs Role */
+  getStepIcon(type?: string): string {
+    switch (type) {
+      case 'User':
+        return 'user';
+      case 'Role':
+        return 'team';
+      default:
+        return 'solution';
+    }
   }
 }

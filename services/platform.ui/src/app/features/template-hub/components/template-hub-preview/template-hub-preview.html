@@ -17,11 +17,13 @@
     <nz-steps
       [nzCurrent]="currentStep"
       (nzIndexChange)="currentStep = $event"
+      [nzDirection]="stepsDirection"
       nzSize="default">
 
       <nz-step
         *ngFor="let s of template?.stageDefinitions"
-        [nzTitle]="s.stageName">
+        [nzTitle]="s.stageName"
+        [nzIcon]="getStepIcon(s.assignmentType)">
       </nz-step>
 
     </nz-steps>
@@ -31,12 +33,20 @@
       class="steps-content"
       *ngIf="template?.stageDefinitions?.length">
 
-      <h3>
-        {{ template.stageDefinitions[currentStep]?.sequenceOrder }}.
-        {{ template.stageDefinitions[currentStep]?.stageName }}
-      </h3>
+      <div class="step-header">
+        <i
+          nz-icon
+          [nzType]="getStepIcon(template.stageDefinitions[currentStep]?.assignmentType)"
+          class="step-icon">
+        </i>
 
-      <p>
+        <h3>
+          {{ template.stageDefinitions[currentStep]?.sequenceOrder }}.
+          {{ template.stageDefinitions[currentStep]?.stageName }}
+        </h3>
+      </div>
+
+      <p class="step-desc">
         {{ template.stageDefinitions[currentStep]?.description }}
       </p>
 
