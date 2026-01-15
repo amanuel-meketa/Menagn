@@ -156,22 +156,34 @@
   display: flex;
   justify-content: center;
 }
-
-/* PREVIEW MODAL */
-.preview-body h2 {
-  margin-top: 0;
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.preview-stages h4 {
-  margin: 12px 0 4px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.preview-actions {
+.meta-top {
   display: flex;
-  gap: 8px;
-  margin-top: 12px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.meta-actions button {
+  margin-left: 6px;
+  font-size: 12px;
+}
+
+.meta-title {
+  margin: 0 0 6px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.meta-desc {
+  font-size: 13px;
+  color: #595959;
+  margin-bottom: 12px;
+}
+
+.meta-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 12px;
+  color: #8c8c8c;
 }

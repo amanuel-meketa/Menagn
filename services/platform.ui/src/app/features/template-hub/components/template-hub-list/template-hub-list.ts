@@ -1,40 +1,52 @@
-import { Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
-import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzButtonModule } from 'ng-zorro-antd/button';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
-import { TemplateIndexItem } from '../../../../models/Template-Hub/TemplateIndexItem';
-import { TemplateHub } from '../../services/template-hub';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { FormsModule } from '@angular/forms';
-import { NzAvatarModule } from 'ng-zorro-antd/avatar';
-import { NzEmptyModule } from 'ng-zorro-antd/empty';
-import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { NzBadgeModule } from 'ng-zorro-antd/badge';
-import { Router } from '@angular/router';
+import { TemplateHub } from '../../services/template-hub';
+import { TemplateIndexItem } from '../../../../models/Template-Hub/TemplateIndexItem';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+
 @Component({
   selector: 'app-template-hub-list',
   standalone: true,
-  imports: [ CommonModule, FormsModule,NzCardModule, NzGridModule, NzIconModule, NzButtonModule, NzBadgeModule,
-             NzModalModule, NzInputModule, NzSelectModule, NzAvatarModule, NzTagModule, NzToolTipModule,
-             NzPaginationModule, NzSkeletonModule, NzEmptyModule, NzSpinModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    NzAvatarModule,
+    NzCardModule,
+    NzGridModule,
+    NzButtonModule,
+    NzIconModule,
+    NzBadgeModule,
+    NzTagModule,
+    NzSpinModule,
+    NzInputModule,
+    NzSelectModule,
+    NzPaginationModule,
+    NzEmptyModule,
+    NzSkeletonModule,
+    NzToolTipModule
+  ],
   templateUrl: './template-hub-list.html',
   styleUrl: './template-hub-list.css'
 })
 export class TemplateHubListComponent implements OnInit {
   private readonly hub = inject(TemplateHub);
-  private readonly modal = inject(NzModalService);
   private readonly router = inject(Router);
-
-  @ViewChild('previewTpl', { static: true }) previewTpl!: TemplateRef<any>;
 
   templates: TemplateIndexItem[] = [];
   filtered: TemplateIndexItem[] = [];
@@ -47,9 +59,8 @@ export class TemplateHubListComponent implements OnInit {
   pageIndex = 1;
   pageSize = 9;
 
-  // UI state
-  previewTemplate?: TemplateIndexItem | null = null;
-featuredTemplates: any;
+  // featured templates
+  featuredTemplates: TemplateIndexItem[] = [];
 
   ngOnInit(): void {
     this.load();
@@ -61,6 +72,7 @@ featuredTemplates: any;
       next: (list) => {
         this.templates = list ?? [];
         this.categories = ['All', ...Array.from(new Set(this.templates.map(t => t.category || 'General')))];
+        this.featuredTemplates = this.templates.filter(t => t.featured);
         this.applyFilters();
         this.loading = false;
       },
@@ -85,8 +97,13 @@ featuredTemplates: any;
     const start = (this.pageIndex - 1) * this.pageSize;
     return this.filtered.slice(start, start + this.pageSize);
   }
-  
+
   openPreview(template: TemplateIndexItem): void {
     this.router.navigate(['/template-hub-preview', template.key]);
+  }
+
+  install(template: TemplateIndexItem): void {
+    // TODO: implement install logic
+    console.log('Install clicked:', template.name);
   }
 }
