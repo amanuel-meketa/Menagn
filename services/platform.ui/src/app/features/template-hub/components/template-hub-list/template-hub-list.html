@@ -75,9 +75,6 @@
               <button nz-button nzType="link" nzSize="small" (click)="openPreview(t)" nz-tooltip nzTooltipTitle="Preview">
                 <i nz-icon nzType="eye"></i>
               </button>
-              <button nz-button nzType="primary" nzSize="small" (click)="download(t)" nz-tooltip nzTooltipTitle="Download">
-                <i nz-icon nzType="download"></i>
-              </button>
             </div>
           </div>
 
@@ -107,27 +104,8 @@
       [(nzPageIndex)]="pageIndex"
       (nzPageIndexChange)="pageIndex = $event"
       [nzShowSizeChanger]="true"
-      [nzPageSizeOptions]="[8,16,24]"
+      [nzPageSizeOptions]="[9,18,36,72, 100]"
       class="pager">
     </nz-pagination>
   </div>
-
-  <!-- PREVIEW MODAL -->
-  <ng-template #previewTpl>
-    <div class="preview-body">
-      <h2>{{ previewTemplate?.name }}</h2>
-      <p>{{ previewTemplate?.description }}</p>
-
-      <div class="preview-stages" *ngIf="previewTemplate?.stages">
-        <h4>Stages</h4>
-        <p>{{ previewTemplate?.stages ?? 0 }} stage{{ (previewTemplate?.stages ?? 0) > 1 ? 's' : '' }}</p>
-      </div>
-
-      <div class="preview-actions">
-        <button nz-button nzType="primary" (click)="download(previewTemplate!)">
-          <i nz-icon nzType="download"></i>&nbsp;Download
-        </button>
-      </div>
-    </div>
-  </ng-template>
 </div>

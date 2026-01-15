@@ -1,0 +1,25 @@
+.mt-16 {
+  margin-top: 16px;
+}
+
+.steps-content {
+  margin-top: 24px;
+  padding: 24px;
+  background: #fafafa;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+}
+
+.stage-meta {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.preview-header h1 {
+  margin-bottom: 4px;
+}
+
+.preview-header .desc {
+  color: #666;
+}

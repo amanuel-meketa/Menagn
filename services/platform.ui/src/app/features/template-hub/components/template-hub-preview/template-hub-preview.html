@@ -1,0 +1,57 @@
+<nz-spin [nzSpinning]="loading">
+
+  <!-- HEADER -->
+  <nz-card class="preview-header">
+    <h1>{{ template?.name }}</h1>
+    <p class="desc">{{ template?.description }}</p>
+
+    <nz-tag nzColor="green" *ngIf="template?.isActive">
+      Active
+    </nz-tag>
+  </nz-card>
+
+  <!-- STAGES -->
+  <nz-card nzTitle="Approval Stages" class="mt-16">
+
+    <!-- STEPS -->
+    <nz-steps
+      [nzCurrent]="currentStep"
+      (nzIndexChange)="currentStep = $event"
+      nzSize="default">
+
+      <nz-step
+        *ngFor="let s of template?.stageDefinitions"
+        [nzTitle]="s.stageName">
+      </nz-step>
+
+    </nz-steps>
+
+    <!-- STEP DETAILS -->
+    <div
+      class="steps-content"
+      *ngIf="template?.stageDefinitions?.length">
+
+      <h3>
+        {{ template.stageDefinitions[currentStep]?.sequenceOrder }}.
+        {{ template.stageDefinitions[currentStep]?.stageName }}
+      </h3>
+
+      <p>
+        {{ template.stageDefinitions[currentStep]?.description }}
+      </p>
+
+      <div class="stage-meta">
+        <nz-tag nzColor="blue">
+          {{ template.stageDefinitions[currentStep]?.assignmentType }}
+        </nz-tag>
+
+        <nz-tag nzColor="purple">
+          {{ template.stageDefinitions[currentStep]?.assignmentKey }}
+        </nz-tag>
+      </div>
+
+    </div>
+
+  </nz-card>
+
+</nz-spin>

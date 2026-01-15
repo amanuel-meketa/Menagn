@@ -20,24 +20,4 @@ export class TemplateHub {
   getTemplateDetails(key: string) {
     return this.http.get(`${this.baseUrl}/template-hub/${encodeURIComponent(key)}`);
   }
-
-  downloadTemplate(key: string, filename?: string): void {
-    const url = `${this.baseUrl}/template-hub/${encodeURIComponent(key)}/download`; // backend endpoint should provide a file
-    this.http.get(url, { responseType: 'blob' }).subscribe({
-      next: (blob) => {
-        const name = filename ?? key.replace(/\//g, '-') + '.zip';
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = name;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
-      },
-      error: (err) => {
-        console.error('Download failed', err);
-      }
-    });
-  }
 }

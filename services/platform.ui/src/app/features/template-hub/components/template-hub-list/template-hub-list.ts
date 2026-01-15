@@ -19,18 +19,20 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-template-hub-list',
   standalone: true,
   imports: [ CommonModule, FormsModule,NzCardModule, NzGridModule, NzIconModule, NzButtonModule, NzBadgeModule,
-    NzModalModule, NzInputModule, NzSelectModule, NzAvatarModule, NzTagModule, NzToolTipModule,
-    NzPaginationModule, NzSkeletonModule, NzEmptyModule,NzSpinModule],
+             NzModalModule, NzInputModule, NzSelectModule, NzAvatarModule, NzTagModule, NzToolTipModule,
+             NzPaginationModule, NzSkeletonModule, NzEmptyModule, NzSpinModule],
   templateUrl: './template-hub-list.html',
   styleUrl: './template-hub-list.css'
 })
 export class TemplateHubListComponent implements OnInit {
   private readonly hub = inject(TemplateHub);
   private readonly modal = inject(NzModalService);
+  private readonly router = inject(Router);
 
   @ViewChild('previewTpl', { static: true }) previewTpl!: TemplateRef<any>;
 
@@ -43,7 +45,7 @@ export class TemplateHubListComponent implements OnInit {
   category = 'All';
   categories: string[] = [];
   pageIndex = 1;
-  pageSize = 8;
+  pageSize = 9;
 
   // UI state
   previewTemplate?: TemplateIndexItem | null = null;
@@ -83,19 +85,8 @@ featuredTemplates: any;
     const start = (this.pageIndex - 1) * this.pageSize;
     return this.filtered.slice(start, start + this.pageSize);
   }
-
+  
   openPreview(template: TemplateIndexItem): void {
-    this.previewTemplate = template;
-    this.modal.create({
-      nzTitle: template.name,
-      nzContent: this.previewTpl,
-      nzFooter: null,
-      nzWidth: 780
-    });
-  }
-
-  download(template: TemplateIndexItem): void {
-    this.hub.downloadTemplate(template.key, `${template.name}.zip`);
+    this.router.navigate(['/template-hub-preview', template.key]);
   }
 }
-
