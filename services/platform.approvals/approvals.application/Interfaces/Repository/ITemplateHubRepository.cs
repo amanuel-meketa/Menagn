@@ -5,7 +5,7 @@ namespace approvals.application.Interfaces.Repository
 {
     public interface ITemplateHubRepository
     {
-        Task<List<TemplateIndexItem>> GetTemplateIndexAsync();
+        Task<List<TemplateIndexItemDtos>> GetTemplateIndexAsync();
         Task<ApprovalTemplate?> GetTemplateAsync(string key);
     }
 }

@@ -5,7 +5,7 @@ namespace approvals.application.Interfaces.Services
 {
     public interface ITemplateHubService
     {
-        Task<List<TemplateIndexItem>> ListTemplatesAsync();
+        Task<List<TemplateIndexItemDtos>> ListTemplatesAsync();
         Task<ApprovalTemplate> GetTemplateDetailsAsync(string key);
     }
 }

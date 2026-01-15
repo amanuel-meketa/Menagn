@@ -1,7 +1,7 @@
 ﻿
 namespace approvals.application.DTOs.TemplateHub
 {
-    public class TemplateIndexItem
+    public class TemplateIndexItemDtos
     {
         public string Key { get; set; } = string.Empty;
         public string Name { get; set; } = "Unnamed Template";

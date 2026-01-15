@@ -14,7 +14,7 @@ namespace approvals.application.Services
             _repo = repo;
         }
 
-        public async Task<List<TemplateIndexItem>> ListTemplatesAsync()
+        public async Task<List<TemplateIndexItemDtos>> ListTemplatesAsync()
         {
             return await _repo.GetTemplateIndexAsync();
         }
