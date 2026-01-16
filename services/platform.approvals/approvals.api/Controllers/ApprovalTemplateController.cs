@@ -31,7 +31,7 @@ namespace approvals.api.Controllers
         public async Task<ActionResult<Guid>> Create([FromBody] CreateApprovalTemplateDto createAppDto)
         {
             var newId = await _appTemplateservice.CreateApplicationTypeAsync(createAppDto);
-            return CreatedAtAction(nameof(Get), new { id = newId }, null);
+            return CreatedAtAction(nameof(Get), new { id = newId }, newId);
         }
 
         [HttpPut("{id}")]
