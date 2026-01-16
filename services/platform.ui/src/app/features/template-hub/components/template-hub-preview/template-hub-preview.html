@@ -2,8 +2,21 @@
 
   <!-- HEADER -->
   <nz-card class="preview-header">
-    <h1>{{ template?.name }}</h1>
-    <p class="desc">{{ template?.description }}</p>
+    <div class="header-top" style="display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <h1>{{ template?.name }}</h1>
+        <p class="desc">{{ template?.description }}</p>
+      </div>
+
+      <!-- INSTALL BUTTON -->
+      <button
+        nz-button
+        nzType="primary"
+        (click)="installTemplate()"
+        [nzLoading]="installing">
+        <i nz-icon nzType="download"></i> Install
+      </button>
+    </div>
 
     <nz-tag nzColor="green" *ngIf="template?.isActive">
       Active

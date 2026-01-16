@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { GetAppTypeModel } from '../../../models/Application-Type/GetAppTypeModel';
@@ -28,14 +28,12 @@ export class AppTemplateService {
   getAppDetails(appId: string): Observable<GetAppTypeModel> {
     return this.http.get<GetAppTypeModel>(`${this.baseUrl}/${appId}`);
   }
-  
-  createAppTemplate(role: any): Observable<CreateAppTemplateModel> {
-    return this.http.post<CreateAppTemplateModel>(`${this.baseUrl}`, role).pipe(
-      tap(() => {
-        this.AppTempListUpdated.next(true);
-      }));
+
+  createAppTemplate(payload: any): Observable<HttpResponse<string>> {
+    return this.http.post(this.baseUrl, payload, { observe: 'response', responseType: 'text' }).pipe(
+      tap(() => this.AppTempListUpdated.next(true)));
   }
-  
+
   updateAppTemplate(id: string, appData: UpdateAppTypeMode): Observable<any> {
     return this.http.put(`${this.baseUrl}/${id}`, appData).pipe(
       tap(() => { this.AppTempListUpdated.next(true); }) );

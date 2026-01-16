@@ -129,7 +129,7 @@ export class StageDefinitinCreateComponent implements OnInit {
       description: group.get('description')!.value,
       assignmentType: group.get('assignmentType')!.value,
       assignmentKey: group.get('assignmentKey')!.value,
-      SequenceOrder: Number(idx + 1),
+      sequenceOrder: Number(idx + 1),
       templateId
     }));
 

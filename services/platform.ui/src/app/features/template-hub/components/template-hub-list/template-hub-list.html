@@ -49,17 +49,12 @@
   <!-- TEMPLATE GRID -->
   <div class="grid" *ngIf="!loading && filtered.length > 0">
     <div class="grid-row">
-      <nz-card
-        *ngFor="let t of pageData()"
-        class="template-card"
-        [ngClass]="{ featured: t.featured }"
-        [nzBordered]="false"
-      >
+      <nz-card *ngFor="let t of pageData()" class="template-card"
+            [ngClass]="{ featured: t.featured }" [nzBordered]="false">
         <!-- CARD COVER -->
         <div class="card-cover" [ngStyle]="{'background-color': t.featured ? '#f0f5ff' : '#fafafa'}">
           <div class="cover-placeholder">
-            <i nz-icon nzType="file">   <nz-tag *ngIf="t.category" [nzColor]="t.featured ? 'purple' : 'blue'">{{ t.category }}</nz-tag>
-</i>
+            <i nz-icon nzType="file">   <nz-tag *ngIf="t.category" [nzColor]="t.featured ? 'purple' : 'blue'">{{ t.category }}</nz-tag></i>
           </div>
         </div>
 

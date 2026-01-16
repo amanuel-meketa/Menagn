@@ -16,6 +16,7 @@ import { CreateAppTemplateModel } from '../../../../models/Application-Type/Crea
     templateUrl: './app-template-create.component.html',
     styleUrl: './app-template-create.component.css'
 })
+
 export class AppTemplateCreateComponent {
   private fb = inject(NonNullableFormBuilder);
   private modal = inject(NzModalService);
@@ -47,8 +48,8 @@ export class AppTemplateCreateComponent {
 
     const newTemplate: CreateAppTemplateModel = {
       name: this.validateForm.value.name?.trim() || '',
-      description: this.validateForm.value.description?.trim() || ''
-    };
+      description: this.validateForm.value.description?.trim() || '',
+      isActive: true };
 
     this.appTemplateService.createAppTemplate(newTemplate).subscribe({
       next: (response) => this.onCreateSuccess(response),
