@@ -10,11 +10,12 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzCardModule } from 'ng-zorro-antd/card';
 
 import { AppInstanceService } from '../../services/app-instance.service';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
 
 @Component({
     selector: 'app-instance-list',
-    imports: [CommonModule, NzCardModule, FormsModule, NzListModule, NzIconModule, NzSelectModule, NzAvatarModule,
-        NzTagModule, NzGridModule],
+    imports: [ CommonModule, NzCardModule, FormsModule, NzListModule, NzIconModule, NzSelectModule, NzAvatarModule,
+               NzTagModule, NzGridModule, NzSpaceModule],
     templateUrl: './instance-list.component.html',
     styleUrls: ['./instance-list.component.css']
 })

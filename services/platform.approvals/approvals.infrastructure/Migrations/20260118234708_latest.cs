@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace approvals.infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class latest : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,12 +30,14 @@ namespace approvals.infrastructure.Migrations
                 columns: table => new
                 {
                     InstanceId = table.Column<Guid>(type: "uuid", nullable: false),
-                    TemplateId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CurrentStageOrder = table.Column<int>(type: "integer", nullable: false),
                     OverallStatus = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CompletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    CompletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedBy_UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedBy_FullName = table.Column<string>(type: "text", nullable: false),
+                    TemplateName = table.Column<string>(type: "text", nullable: true),
+                    TemplateId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {

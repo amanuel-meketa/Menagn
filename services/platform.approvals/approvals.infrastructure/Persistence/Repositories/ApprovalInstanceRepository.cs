@@ -1,5 +1,4 @@
-﻿using approvals.application.DTOs.ApprovalInstance;
-using approvals.application.Interfaces.Repository;
+﻿using approvals.application.Interfaces.Repository;
 using approvals.domain.Entities;
 using approvals.infrastructure.Persistence.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
@@ -15,23 +14,38 @@ namespace approvals.infrastructure.Persistence.Repositories
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
+        public async Task<IEnumerable<ApprovalInstance>> ListAsync()
+        {
+            return await _dbContext.ApprovalInstances.Include(ai => ai.Template).Include(ai => ai.StageInstances).AsNoTracking().ToListAsync();
+        }
+
         public override async Task<ApprovalInstance?> GetByIdAsync(Guid id)
         {
-           return  await _dbContext.ApprovalInstances.Include(t => t.StageInstances).FirstOrDefaultAsync(t => t.InstanceId == id);
+            return await _dbContext.ApprovalInstances
+                .Include(t => t.StageInstances)
+                .Include(t => t.Template)
+                .FirstOrDefaultAsync(t => t.InstanceId == id);
         }
 
         public async Task<IEnumerable<ApprovalInstance?>> GetByTemplateIdAsync(Guid templateId)
         {
-            return await _dbContext.ApprovalInstances.Where(t => t.TemplateId == templateId).ToListAsync();
+            return await _dbContext.ApprovalInstances
+                .Include(t => t.StageInstances)
+                .Include(t => t.Template)
+                .Where(t => t.TemplateId == templateId)
+                .ToListAsync();
         }
 
-        public async Task<ApprovalInstance> CreateApprovalInstanceAsync(Guid templateId, Guid createdBy, List<StageDefinition> stageDefinitions)
+        public async Task<ApprovalInstance> CreateApprovalInstanceAsync( Guid templateId, UserInfo createdBy, List<StageDefinition> stageDefinitions)
         {
+            if (createdBy == null)
+                throw new ArgumentNullException(nameof(createdBy));
+
             var instance = new ApprovalInstance
             {
                 InstanceId = Guid.NewGuid(),
                 TemplateId = templateId,
-                CreatedBy = createdBy,
+                CreatedBy = createdBy, 
                 CreatedAt = DateTime.UtcNow,
                 CurrentStageOrder = 1,
                 StageInstances = stageDefinitions
@@ -52,8 +66,13 @@ namespace approvals.infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<ApprovalInstance?>> GetMyAppInstances(Guid userId)
         {
-            return await _dbContext.ApprovalInstances.Include(x => x.Template).Include(x => x.StageInstances)
-                .Where(x => x.CreatedBy == userId).OrderByDescending(x => x.CreatedAt).AsNoTracking().ToListAsync();
+            return await _dbContext.ApprovalInstances
+                .Include(x => x.Template)
+                .Include(x => x.StageInstances)
+                .Where(x => x.CreatedBy.UserId == userId)
+                .OrderByDescending(x => x.CreatedAt)
+                .AsNoTracking()
+                .ToListAsync();
         }
     }
 }

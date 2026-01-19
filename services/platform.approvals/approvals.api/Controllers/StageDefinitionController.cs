@@ -60,7 +60,7 @@ namespace approvals.api.Controllers
         }
 
         [HttpGet("user/{userId:guid}/assigned-task")]
-        public async Task<ActionResult<IEnumerable<GetApprovalInstanceDto>>> GetAssignedTasksAsync(Guid userId)
+        public async Task<ActionResult<IEnumerable<GetAppInstanceWithStageDto>>> GetAssignedTasksAsync(Guid userId)
         {
             return Ok(await _stageDefinService.GetAssignedTasksAsync(userId));
         }

@@ -23,16 +23,16 @@ public class ApprovalInstanceService : IApprovalInstanceService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<GetApprovalInstanceDto>> GetAllAsync()
+    public async Task<IEnumerable<GetAppInstanceDto>> GetAllAsync()
     {
         var list = await _approvalInstanceRepository.ListAsync();
-        return _mapper.Map<IEnumerable<GetApprovalInstanceDto>>(list);
+        return _mapper.Map<IEnumerable<GetAppInstanceDto>>(list);
     }
 
-    public async Task<GetApprovalInstanceDto?> GetByIdAsync(Guid id)
+    public async Task<GetAppInstanceDto?> GetByIdAsync(Guid id)
     {
         var entity = await _approvalInstanceRepository.GetByIdAsync(id);
-        return _mapper.Map<GetApprovalInstanceDto>(entity);
+        return _mapper.Map<GetAppInstanceDto>(entity);
     }
 
     public async Task<Guid> UpdateAsync(Guid id, UpdateApprovaleInstanceDto dto)
@@ -57,17 +57,18 @@ public class ApprovalInstanceService : IApprovalInstanceService
         return true;
     }
 
-    public async Task<Guid> StartAppInstanceAsync(Guid templateId, Guid createdBy)
+    public async Task<Guid> StartAppInstanceAsync(Guid templateId, UserInfoDto createdBy)
     {
         // 1. Get the template with stage definitions - with AsNoTracking already done in repo
         var templateDto = await _approvalTemplateService.GetByIdAsync(templateId);
         var template = _mapper.Map<ApprovalTemplate>(templateDto);
+        var userInfo = _mapper.Map<UserInfo>(createdBy);
 
         // 2. Create new ApprovalInstance with StageInstances referencing StageDefinitions by Id only
         var instance = new ApprovalInstance
         {
             TemplateId = templateId,
-            CreatedBy = createdBy,
+            CreatedBy = userInfo,
             CurrentStageOrder = 1,
             StageInstances = template.StageDefinitions.Select(sd => new StageInstance
             {
@@ -92,10 +93,10 @@ public class ApprovalInstanceService : IApprovalInstanceService
         return instance.InstanceId;
     }
 
-    async Task<IEnumerable<GetApprovalInstanceDto?>> IApprovalInstanceService.GetByTemplateIdAsync(Guid templateId)
+    async Task<IEnumerable<GetAppInstanceDto?>> IApprovalInstanceService.GetByTemplateIdAsync(Guid templateId)
     {
         var result = await _approvalInstanceRepository.GetByTemplateIdAsync(templateId);
-        return _mapper.Map<IEnumerable<GetApprovalInstanceDto>>(result);
+        return _mapper.Map<IEnumerable<GetAppInstanceDto>>(result);
     }
 
     public async Task<IEnumerable<GetMyApprovalInstanceDto?>> GetMyAppInstances(Guid userId)

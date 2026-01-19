@@ -1,89 +1,128 @@
 <div nz-row [nzGutter]="16">
-  <!-- Top Summary Card -->
-  <div nz-col [nzSpan]="24">
-    <nz-card nzBordered [nzBodyStyle]="{ padding: '16px 24px' }" style="margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-      <div class="summary-wrapper">
-        <div class="summary-stats">
-          <div><span class="label">Total:</span> <strong>{{ instances.length }}</strong></div>
-          <div><span class="label">Pending:</span> <strong>{{ countByStatus('Pending') }}</strong></div>
-          <div><span class="label">Approved:</span> <strong>{{ countByStatus('Approved') }}</strong></div>
-          <div><span class="label">Rejected:</span> <strong>{{ countByStatus('Rejected') }}</strong></div>
+
+  <!-- SUMMARY -->
+  <div nz-col nzSpan="24">
+    <nz-card nzBordered class="summary-card">
+      <nz-space nzSize="large" nzAlign="center">
+        <div class="stat">
+          <div class="stat-label">Total</div>
+          <div class="stat-value">{{ instances.length }}</div>
         </div>
-        <div class="last-updated">Last updated: {{ lastUpdated | date: 'short' }}</div>
+        <div class="stat">
+          <div class="stat-label">Pending</div>
+          <div class="stat-value warning">{{ countByStatus('Pending') }}</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Approved</div>
+          <div class="stat-value success">{{ countByStatus('Approved') }}</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Rejected</div>
+          <div class="stat-value danger">{{ countByStatus('Rejected') }}</div>
+        </div>
+      </nz-space>
+
+      <div class="updated-at">
+        Updated {{ lastUpdated | date:'short' }}
       </div>
     </nz-card>
   </div>
 
-  <!-- Filter Bar -->
-  <div nz-col [nzSpan]="24">
-    <div class="filter-bar">
-      <div class="filter-left">
-        <h3 class="section-title">Approval Instances</h3>
-      </div>
-      <div class="filter-right">
+  <!-- FILTERS -->
+  <div nz-col nzSpan="24">
+    <nz-card nzBordered class="filter-card">
+      <nz-space nzSize="middle" nzWrap>
+        <strong class="section-title">Approval Instances</strong>
+
         <nz-select
           nzShowSearch
           nzAllowClear
           [(ngModel)]="selectedValue"
-          nzPlaceHolder="Select Template"
-          class="filter-select"
-        >
-          <nz-option *ngFor="let tmpl of templates" [nzLabel]="tmpl.label" [nzValue]="tmpl.value">
-            <span nz-icon nzType="file" style="margin-right: 8px;"></span>
-            {{ tmpl.label }}
+          nzPlaceHolder="Template"
+          class="filter-select">
+          <nz-option
+            *ngFor="let tmpl of templates"
+            [nzLabel]="tmpl.label"
+            [nzValue]="tmpl.value">
           </nz-option>
         </nz-select>
 
         <nz-select
           nzAllowClear
           [(ngModel)]="statusFilter"
-          nzPlaceHolder="Filter by Status"
-          class="filter-select"
-        >
+          nzPlaceHolder="Status"
+          class="filter-select">
           <nz-option nzLabel="Pending" nzValue="Pending"></nz-option>
           <nz-option nzLabel="Approved" nzValue="Approved"></nz-option>
           <nz-option nzLabel="Rejected" nzValue="Rejected"></nz-option>
         </nz-select>
 
-        <button nz-button nzType="default" (click)="clearFilter()">Clear</button>
+        <button nz-button nzType="default" (click)="clearFilter()">
+          Reset
+        </button>
+      </nz-space>
+    </nz-card>
+  </div>
+
+  <!-- INSTANCE CARDS -->
+  <div nz-col nzSpan="24">
+    <nz-row [nzGutter]="16">
+      <div
+        nz-col
+        nzXs="24"
+        nzSm="24"
+        nzMd="12"
+        nzLg="8"
+        *ngFor="let inst of filteredInstances()">
+
+        <nz-card
+          nzHoverable
+          class="instance-card">
+
+          <!-- HEADER -->
+          <div class="card-header">
+            <nz-avatar nzIcon="file-text" class="card-avatar"></nz-avatar>
+
+            <div class="card-title">
+              <div class="template-id">
+                {{ inst.templateId }}
+              </div>
+              <div class="meta">
+                  Requested by {{ inst.createdBy | slice:0:8 }}…
+              </div>
+            </div>
+
+            <nz-tag
+              [nzColor]="getStatusColor(inst.overallStatus)"
+              class="status-tag">
+              <span nz-icon [nzType]="getStatusIcon(inst.overallStatus)"></span>
+              {{ inst.overallStatus }}
+            </nz-tag>
+          </div>
+
+          <!-- BODY -->
+          <div class="card-body">
+            <div class="info">
+              <span nz-icon nzType="calendar"></span>
+              {{ inst.createdAt | date:'mediumDate' }}
+            </div>
+
+            <div class="info">
+              <span nz-icon nzType="ordered-list"></span>
+              Current Stage: {{ inst.currentStageOrder }}
+            </div>
+          </div>
+
+          <!-- FOOTER (future ready) -->
+          <div class="card-footer">
+            <button nz-button nzType="link">
+              View Details →
+            </button>
+          </div>
+
+        </nz-card>
       </div>
-    </div>
-
-    <p class="filter-summary">{{ filterSummary }}</p>
+    </nz-row>
   </div>
 
-  <!-- List of Instances -->
-  <div nz-col [nzSpan]="24">
-    <nz-list
-      nzItemLayout="vertical"
-      nzBordered
-      [nzLoading]="isLoading"
-    >
-      <nz-list-item *ngFor="let inst of filteredInstances()" style="cursor: pointer;">
-        <nz-list-item-meta
-          [nzTitle]="inst.templateId"
-          [nzDescription]="'Requested by ' + inst.createdBy + ' | ' + (inst.createdAt | date: 'mediumDate')"
-          [nzAvatar]="avatarTpl"
-        >
-        </nz-list-item-meta>
-
-        <!-- Status Tag -->
-        <nz-tag
-          [nzColor]="getStatusColor(inst.overallStatus)"
-          style="font-weight: 1000; margin-top: 20px;"
-        >
-          <span nz-icon [nzType]="getStatusIcon(inst.overallStatus)" style="margin-right: 6px;"></span>
-          {{ inst.overallStatus }}
-        </nz-tag>
-      </nz-list-item>
-
-      <!-- Define avatar template -->
-      <ng-template #avatarTpl>
-        <nz-avatar
-          nzIcon="file-done"
-          nzSize="large"
-          style="background-color: #1890ff;"></nz-avatar>
-      </ng-template>
-    </nz-list>
-  </div>
 </div>

@@ -23,11 +23,15 @@ namespace approvals.infrastructure.Persistence
                 .OnDelete(DeleteBehavior.Cascade);
 
             // ApprovalInstance -> StageInstance
-            modelBuilder.Entity<ApprovalInstance>()
-                .HasMany(ai => ai.StageInstances)
-                .WithOne(si => si.ApprovalInstance)
-                .HasForeignKey(si => si.ApprovalInstanceId)
-                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<ApprovalInstance>(b =>
+            {
+                b.OwnsOne(ai => ai.CreatedBy);
+                b.HasMany(ai => ai.StageInstances)
+                 .WithOne(si => si.ApprovalInstance)
+                 .HasForeignKey(si => si.ApprovalInstanceId)
+                 .OnDelete(DeleteBehavior.Cascade);
+            });
+
 
             // StageInstance -> StageDefinition
             modelBuilder.Entity<StageInstance>()

@@ -7,7 +7,7 @@ namespace approvals.application.DTOs.StageDefinition
         public Guid StageInstanceId { get; set; }
 
         public Guid ApprovalInstanceId { get; set; }
-        public GetApprovalInstanceDto ApprovalInstance { get; set; } = null!;
+        public GetAppInstanceWithStageDto ApprovalInstance { get; set; } = null!;
 
         public Guid StageDefId { get; set; }
         public GetStageDefinitionDto StageDefinition { get; set; } = null!;

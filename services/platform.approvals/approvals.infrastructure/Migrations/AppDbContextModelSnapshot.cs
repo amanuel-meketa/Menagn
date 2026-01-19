@@ -34,9 +34,6 @@ namespace approvals.infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uuid");
-
                     b.Property<int>("CurrentStageOrder")
                         .HasColumnType("integer");
 
@@ -46,6 +43,9 @@ namespace approvals.infrastructure.Migrations
 
                     b.Property<Guid>("TemplateId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("TemplateName")
+                        .HasColumnType("text");
 
                     b.HasKey("InstanceId");
 
@@ -161,6 +161,29 @@ namespace approvals.infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("TemplateId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("approvals.domain.Entities.UserInfo", "CreatedBy", b1 =>
+                        {
+                            b1.Property<Guid>("ApprovalInstanceInstanceId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("FullName")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid");
+
+                            b1.HasKey("ApprovalInstanceInstanceId");
+
+                            b1.ToTable("ApprovalInstances");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ApprovalInstanceInstanceId");
+                        });
+
+                    b.Navigation("CreatedBy")
                         .IsRequired();
 
                     b.Navigation("Template");

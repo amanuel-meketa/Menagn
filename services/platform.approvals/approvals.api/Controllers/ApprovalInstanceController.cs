@@ -1,4 +1,5 @@
 ﻿using approvals.application.DTOs.ApprovalInstance;
+using approvals.domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace approvals.api.Controllers
@@ -14,22 +15,22 @@ namespace approvals.api.Controllers
             _appInstanceservice = appInstanceservice;
         }
 
-        [HttpPost("start")]
-        public async Task<IActionResult> StartApproval([FromBody] StartApprovalRequestDto request)
+        [HttpPost("{templateId}/start")]
+        public async Task<IActionResult> StartApproval(Guid templateId, [FromBody] UserInfoDto userInfoDto)
         {
-            var instanceId = await _appInstanceservice.StartAppInstanceAsync(request.TemplateId, request.UserId);
+            var instanceId = await _appInstanceservice.StartAppInstanceAsync(templateId, userInfoDto);
             return Ok(instanceId);
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GetApprovalInstanceDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<GetAppInstanceWithStageDto>>> GetAll()
         {
             var list = await _appInstanceservice.GetAllAsync();
             return Ok(list);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<GetApprovalInstanceDto>> Get(Guid id)
+        public async Task<ActionResult<GetAppInstanceWithStageDto>> Get(Guid id)
         {
             var item = await _appInstanceservice.GetByIdAsync(id);
             return Ok(item);
@@ -50,7 +51,7 @@ namespace approvals.api.Controllers
         }
 
         [HttpGet("template/{templateId:guid}/instances")]
-        public async Task<ActionResult<IEnumerable<GetApprovalInstanceDto>>> GetByTemplateIdAsync(Guid templateId)
+        public async Task<ActionResult<IEnumerable<GetAppInstanceWithStageDto>>> GetByTemplateIdAsync(Guid templateId)
         {
             return Ok(await _appInstanceservice.GetByTemplateIdAsync(templateId));
         }
