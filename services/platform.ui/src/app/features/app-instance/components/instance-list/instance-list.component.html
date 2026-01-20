@@ -1,3 +1,4 @@
+<!-- SUMMARY AND FILTERS -->
 <div nz-row [nzGutter]="16">
 
   <!-- SUMMARY -->
@@ -34,6 +35,7 @@
       <nz-space nzSize="middle" nzWrap>
         <strong class="section-title">Approval Instances</strong>
 
+        <!-- TEMPLATE FILTER -->
         <nz-select
           nzShowSearch
           nzAllowClear
@@ -47,6 +49,7 @@
           </nz-option>
         </nz-select>
 
+        <!-- STATUS FILTER -->
         <nz-select
           nzAllowClear
           [(ngModel)]="statusFilter"
@@ -64,65 +67,56 @@
     </nz-card>
   </div>
 
-  <!-- INSTANCE CARDS -->
-  <div nz-col nzSpan="24">
-    <nz-row [nzGutter]="16">
-      <div
-        nz-col
-        nzXs="24"
-        nzSm="24"
-        nzMd="12"
-        nzLg="8"
-        *ngFor="let inst of filteredInstances()">
-
-        <nz-card
-          nzHoverable
-          class="instance-card">
-
-          <!-- HEADER -->
-          <div class="card-header">
-            <nz-avatar nzIcon="file-text" class="card-avatar"></nz-avatar>
-
-            <div class="card-title">
-              <div class="template-id">
-                {{ inst.templateId }}
-              </div>
-              <div class="meta">
-                  Requested by {{ inst.createdBy | slice:0:8 }}…
-              </div>
-            </div>
-
-            <nz-tag
-              [nzColor]="getStatusColor(inst.overallStatus)"
-              class="status-tag">
-              <span nz-icon [nzType]="getStatusIcon(inst.overallStatus)"></span>
-              {{ inst.overallStatus }}
-            </nz-tag>
-          </div>
-
-          <!-- BODY -->
-          <div class="card-body">
-            <div class="info">
-              <span nz-icon nzType="calendar"></span>
-              {{ inst.createdAt | date:'mediumDate' }}
-            </div>
-
-            <div class="info">
-              <span nz-icon nzType="ordered-list"></span>
-              Current Stage: {{ inst.currentStageOrder }}
-            </div>
-          </div>
-
-          <!-- FOOTER (future ready) -->
-          <div class="card-footer">
-            <button nz-button nzType="link">
-              View Details →
-            </button>
-          </div>
-
-        </nz-card>
-      </div>
-    </nz-row>
-  </div>
-
 </div>
+
+<!-- RESPONSIVE NG-ZORRO TABLE -->
+<nz-table
+  #instanceTable
+  [nzData]="filteredInstances()"
+  [nzFrontPagination]="true"
+  [nzPageSize]="10"
+  nzBordered
+  nzSize="middle"
+  [nzScroll]="{ x: '1000px' }">
+
+  <thead>
+    <tr>
+      <th nzWidth="40px"></th>
+      <th>Template</th>
+      <th>Created By</th>
+      <th>Status</th>
+      <th>Created At</th>
+      <th>Stage</th>
+      <th>Progress</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let inst of instanceTable.data">
+      <td>
+        <nz-avatar nzIcon="file-text" style="background-color:#1677ff"></nz-avatar>
+      </td>
+      <td>{{ inst.template.name }}</td>
+      <td>{{ inst.createdBy.fullName || '-' }}</td>
+      <td>
+        <nz-tag [nzColor]="getStatusColor(inst.overallStatus)">
+          {{ inst.overallStatus }}
+        </nz-tag>
+      </td>
+      <td>{{ inst.createdAt | date:'mediumDate' }}</td>
+      <td>{{ inst.currentStageOrder }} / {{ inst.allStages || '-' }}</td>
+      <td>
+        <nz-progress
+          [nzPercent]="getProgressPercent(inst)"
+          nzType="circle"
+          [nzWidth]="40"
+          [nzStatus]="inst.overallStatus === 'Rejected' ? 'exception' : 'normal'">
+        </nz-progress>
+      </td>
+      <td>
+        <button nz-button nzType="link" (click)="onViewDetails(inst)">View</button>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>

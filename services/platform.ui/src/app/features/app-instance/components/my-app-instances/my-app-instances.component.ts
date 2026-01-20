@@ -100,8 +100,8 @@ ngOnInit(): void {
     const search = this.templateFilter.trim().toLowerCase();
     if (search) {
       data = data.filter(d =>
-        d.templateName?.toLowerCase().includes(search) ||
-        d.templateId?.toLowerCase().includes(search)
+        d.template?.name?.toLowerCase().includes(search) ||
+        d.template.templateId.toLowerCase().includes(search)
       );
     }
 
@@ -159,7 +159,7 @@ ngOnInit(): void {
   }
 
   openInstance(instance: InstanceList): void {
-    this.selectedTemplateId = instance.templateId ?? null;
+    this.selectedTemplateId = instance.template.templateId ?? null;
     this.isVisible = true;
   }
 

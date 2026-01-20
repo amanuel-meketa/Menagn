@@ -1,89 +1,30 @@
 /* SUMMARY */
 .summary-card {
   box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  margin-bottom: 16px;
 }
-
 .stat {
   text-align: center;
 }
-.stat-label {
-  font-size: 13px;
-  color: #8c8c8c;
-}
-.stat-value {
-  font-size: 22px;
-  font-weight: 600;
-}
+.stat-label { font-size: 13px; color: #8c8c8c; }
+.stat-value { font-size: 22px; font-weight: 600; }
 .stat-value.warning { color: #fa8c16; }
 .stat-value.success { color: #52c41a; }
 .stat-value.danger  { color: #ff4d4f; }
-
-.updated-at {
-  margin-top: 12px;
-  font-size: 12px;
-  color: #999;
-}
+.updated-at { margin-top: 12px; font-size: 12px; color: #999; }
 
 /* FILTER */
-.filter-card {
-  margin-top: 12px;
-}
-.filter-select {
-  width: 220px;
+.filter-card { margin-bottom: 16px; }
+.filter-select { width: 220px; }
+
+/* TABLE RESPONSIVE */
+:host ::ng-deep .ant-table-wrapper {
+  overflow-x: auto;
 }
 
-/* INSTANCE CARD */
-.instance-card {
-  margin-top: 16px;
-  border-radius: 10px;
-  transition: all .2s ease;
-}
-.instance-card:hover {
-  transform: translateY(-2px);
-}
-
-.card-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.card-avatar {
-  background: #1677ff;
-}
-
-.card-title {
-  flex: 1;
-}
-.template-id {
-  font-weight: 600;
-  font-size: 14px;
-}
-.meta {
-  font-size: 12px;
-  color: #8c8c8c;
-}
-
-.status-tag {
-  font-weight: 600;
-}
-
-.card-body {
-  margin-top: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.info {
-  font-size: 13px;
-  color: #595959;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.card-footer {
-  margin-top: 16px;
-  text-align: right;
+/* ELLIPSIS FOR LONG TEXT */
+:host ::ng-deep .ant-table-cell {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }

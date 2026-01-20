@@ -1,11 +1,13 @@
+import { GetAppTypeModel } from '../Application-Type/GetAppTypeModel';
+import { CreatedBy } from '../User/CreatedBy';
+
 export interface InstanceList {
   instanceId: string;
-  templateId?: string;
-  templateName: string;
-  createdBy: string;
   currentStageOrder: number;
+  allStages?: number;
   overallStatus: string;
   createdAt: string;
   completedAt: string | null;
-  stageInstances: any[];
+  createdBy: CreatedBy;
+  template: GetAppTypeModel;
 }
