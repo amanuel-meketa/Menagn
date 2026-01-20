@@ -3,8 +3,6 @@ import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angula
 import { FormsModule } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { Subject, takeUntil } from 'rxjs';
@@ -14,14 +12,13 @@ import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-active-templates',
-    imports: [ CommonModule, FormsModule, NzButtonModule, NzCardModule,
-               NzInputModule, NzIconModule, NzEmptyModule],
+    imports: [ CommonModule, FormsModule, NzButtonModule, NzCardModule, NzEmptyModule ],
     templateUrl: './app-active-templates.component.html',
     styleUrl: './app-active-templates.component.css'
 })
 export class ActiveTemplatesComponent implements OnInit, OnDestroy {
   private readonly _appTemplateService = inject(AppTemplateService);
-  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly cdr = inject(ChangeDetectorRef)
   private readonly message = inject(NzMessageService);
   private readonly destroy$ = new Subject<void>();
   private readonly router = inject(Router);

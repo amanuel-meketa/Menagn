@@ -30,7 +30,7 @@ import { NzProgressModule } from 'ng-zorro-antd/progress';
     NzSpaceModule,
     NzTableModule,
     NzButtonModule,
-    NzProgressModule ],
+    NzProgressModule],
   templateUrl: './instance-list.component.html',
   styleUrl: './instance-list.component.css'
 })
@@ -49,7 +49,6 @@ export class InstanceListComponent implements OnInit {
   // data
   instances: InstanceList[] = [];
   templates: { label: string; value: string }[] = [];
-  lastUpdated = new Date();
 
   // table / sorting helpers exposed to template if you wire them to nzSortFn
   sortByTemplate = (a: InstanceList, b: InstanceList) =>
@@ -74,7 +73,6 @@ export class InstanceListComponent implements OnInit {
       next: (res) => {
         this.instances = res ?? [];
         this.loadTemplatesFromInstances();
-        this.lastUpdated = new Date();
         this.isLoading = false;
       },
       error: () => {

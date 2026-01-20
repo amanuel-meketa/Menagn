@@ -94,7 +94,7 @@ export class AuthService {
 
   private loadMockUser(): Observable<GetCurrentUser> {
     const mockUser: GetCurrentUser = {
-      userId: '338e9b83-b214-453c-af4f-a468ffce6219',
+      userId: '6b0b422d-7759-4215-b398-c4dd556ce8ef',
       username: 'user (mock)',
       email: 'user@debelo.com',
       fullName: 'Debelo User',

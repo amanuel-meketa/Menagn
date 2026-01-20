@@ -9,104 +9,102 @@
 <!-- FILTER BAR -->
 <section class="instance-filter-bar">
   <div class="filter-row">
+
     <label class="filter-item">
       <i nz-icon nzType="search" class="filter-icon"></i>
-      <input nz-input placeholder="Search template name or id" [(ngModel)]="templateFilter" (ngModelChange)="onFilterChange()"class="filter-input" />
+      <input
+        nz-input
+        placeholder="Search template name or id"
+        [(ngModel)]="templateFilter"
+        (ngModelChange)="onFilterChange()"
+      />
     </label>
 
     <label class="filter-item no-grow">
       <i nz-icon nzType="calendar" class="filter-icon"></i>
-      <nz-range-picker [(ngModel)]="dateRange" (ngModelChange)="onFilterChange()" class="filter-input range-picker"></nz-range-picker>
+      <nz-range-picker
+        [(ngModel)]="dateRange"
+        (ngModelChange)="onFilterChange()">
+      </nz-range-picker>
     </label>
 
     <label class="filter-item no-grow">
       <i nz-icon nzType="tag" class="filter-icon"></i>
-      <nz-select [(ngModel)]="statusFilter" (ngModelChange)="onFilterChange()" class="filter-select" nzAllowClear nzPlaceHolder="Status">
+      <nz-select
+        [(ngModel)]="statusFilter"
+        (ngModelChange)="onFilterChange()"
+        nzAllowClear
+        nzPlaceHolder="Status">
+
         <nz-option nzValue="Pending" nzLabel="Pending"></nz-option>
         <nz-option nzValue="Approved" nzLabel="Approved"></nz-option>
         <nz-option nzValue="Rejected" nzLabel="Rejected"></nz-option>
+
       </nz-select>
     </label>
 
-    <div class="filter-actions">
-      <button nz-button nzType="default" (click)="clearFilters()">Clear</button>
-    </div>
+    <button nz-button (click)="clearFilters()">Clear</button>
   </div>
 </section>
 
-<!-- GRID LIST -->
-<main class="instance-list" aria-live="polite">
-  <ng-container *ngIf="pagedList.length > 0; else emptyState">
-    <ng-container *ngFor="let instance of pagedList; let i = index">
+<!-- LIST -->
+<main class="instance-list">
+  <ng-container *ngIf="pagedList.length; else empty">
 
-      <!-- Card actions as templates -->
-      <ng-template #stages>
-        <app-stage-progress
-        [templateId]="instance.templateId"
-        [currentStageOrder]="instance.currentStageOrder">
-      </app-stage-progress>
-      
-      </ng-template>
+ <nz-card
+  *ngFor="let instance of pagedList"
+  class="instance-card"
+  [nzBodyStyle]="{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '12px' }">
 
-      <ng-template #open>
-        <button nz-button nzType="text" nzSize="small" class="action-icon" (click)="openInstance(instance)" title="View">
-          <i nz-icon nzType="eye" class="action-icon-svg"></i>
-        </button>
-      </ng-template>
-
-      <nz-card class="instance-card" [nzActions]="[stages, open]" [nzBodyStyle]="{ padding: '18px 20px' }">
-        <!-- Card meta -->
-        <nz-card-meta
-        [nzTitle]="instance.templateName || instance.templateId || '—'"
-        [nzDescription]="instance.createdAt ? (instance.createdAt | date:'mediumDate') : '—'">
-      </nz-card-meta>
-      
-        <!-- Additional stats -->
-        <div class="meta-stats">
-          <div class="stat-row small">
-            <div class="stat-left">
-              <span class="stat-label">Current Stage</span>
-            </div>
-            <div class="stat-right">{{ instance.currentStageOrder }}</div>
-          </div>
-
-          <div class="stat-row small align-end">
-            <div class="stat-right"> Status </div>
-            <nz-tag [nzColor]="getStatusColor(instance.overallStatus)" class="status-tag">
-              <div class="stat-right">{{ instance.overallStatus }}</div>
-            </nz-tag>            
-          </div>
+  <!-- META -->
+  <div class="meta-main">
+    <div class="meta-header" style="display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <a class="instance-link">
+          {{ instance.template.name || instance.template.templateId || '—' }}
+        </a>
+        <div class="meta-sub">
+          Created: {{ instance.createdAt | date:'mediumDate' }}
         </div>
-      </nz-card>
+      </div>
+    </div>
 
-    </ng-container>
+    <!-- STATS -->
+    <div class="meta-stats" style="display:flex; align-items:center; ">
+      <div>Stage: {{ instance.currentStageOrder }} / {{ instance.allStages || '-' }}</div>
+     
+      <nz-tag [nzColor]="getStatusColor(instance.overallStatus)">
+        {{ instance.overallStatus }}
+      </nz-tag>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrapper">
+    <app-stage-progress
+      [templateId]="instance.template.templateId"
+      [currentStageOrder]="instance.currentStageOrder">
+    </app-stage-progress>
+  </div>
+
+
+</nz-card>
+
   </ng-container>
 
-  <ng-template #emptyState>
-    <div class="empty-state">
-      <i nz-icon nzType="inbox" class="empty-icon"></i>
-      <p class="empty-title">No instances found</p>
-      <p class="empty-sub">Try clearing filters or create a new instance.</p>
-    </div>
+  <ng-template #empty>
+    <p class="empty">No instances found</p>
   </ng-template>
 </main>
 
-<!-- PAGINATION (totalTpl included) -->
-<ng-template #totalTpl let-total let-range="range">
-  Showing {{ range[0] }} - {{ range[1] }} of {{ total }}
-</ng-template>
-
-<footer class="instance-pagination" *ngIf="filteredList.length > 0">
-
-  <nz-pagination
-    [nzPageIndex]="pageIndex"
-    (nzPageIndexChange)="onPageIndexChange($event)"
-    [nzPageSize]="pageSize"
-    (nzPageSizeChange)="onPageSizeChange($event)"
-    [nzTotal]="filteredList.length"
-    [nzPageSizeOptions]="pageSizeOptions"
-    [nzShowSizeChanger]="true"
-    [nzShowQuickJumper]="true"
-    [nzShowTotal]="totalTpl">
-  </nz-pagination>
-</footer>
+<!-- PAGINATION -->
+<nz-pagination
+  *ngIf="filteredList.length"
+  [nzTotal]="filteredList.length"
+  [nzPageIndex]="pageIndex"
+  [nzPageSize]="pageSize"
+  [nzPageSizeOptions]="pageSizeOptions"
+  [nzShowSizeChanger]="true"
+  (nzPageIndexChange)="onPageIndexChange($event)"
+  (nzPageSizeChange)="onPageSizeChange($event)">
+</nz-pagination>

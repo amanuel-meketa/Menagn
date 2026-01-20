@@ -10,6 +10,7 @@ namespace approvals.application.DTOs.ApprovalInstance
         public DateTime CreatedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
 
+        public UserInfoDto? CreatedBy { get; set; }
         public AppTemplateDto? Template { get; set; }
     }
 }

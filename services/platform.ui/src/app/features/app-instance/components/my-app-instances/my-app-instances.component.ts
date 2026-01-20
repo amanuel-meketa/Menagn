@@ -101,7 +101,7 @@ ngOnInit(): void {
     if (search) {
       data = data.filter(d =>
         d.template?.name?.toLowerCase().includes(search) ||
-        d.template.templateId.toLowerCase().includes(search)
+        d.template.templateId?.toLowerCase().includes(search)
       );
     }
 
