@@ -1,7 +1,8 @@
 <!-- HEADER -->
 <header class="instance-header">
   <div class="header-left">
-    <h2 class="page-title">Start Instance</h2>
+      <h1 class="text-3xl font-semibold text-gray-800">Start Application Instance</h1>
+    
     <p class="page-sub">Review and confirm to start a new approval instance.</p>
   </div>
   <div class="header-right">
@@ -21,17 +22,13 @@
       <button nz-button nzType="default" nzGhost (click)="goBack()" class="flex items-center gap-2">
         <i nz-icon nzType="arrow-left"></i> Back
       </button>
-      <h1 class="text-3xl font-semibold text-gray-800">Start Application Instance</h1>
-    </div>
-    <p class="text-gray-500 text-sm md:text-base mt-2 md:mt-0">Review the template and confirm before sending the request</p>
-  </div>
+    
 
-  <!-- Step Tracker -->
-  <nz-steps [nzCurrent]="0" nzSize="small" style="margin-bottom: 32px;">
-    <nz-step nzTitle="Initiated"></nz-step>
-    <nz-step nzTitle="Manager Approval"></nz-step>
-    <nz-step nzTitle="Final Approval"></nz-step>
+  <!-- Step Tracker: render template stages dynamically -->
+  <nz-steps [nzCurrent]="currentStep" nzSize="small" style="margin-bottom: 32px;" *ngIf="stages.length>0">
+    <nz-step *ngFor="let s of stages" [nzTitle]="s.stageName"></nz-step>
   </nz-steps>
+
 
   <!-- Template Info Card -->
   <nz-card nzBordered class="shadow-md rounded-xl p-6 bg-gray-50 mb-6">

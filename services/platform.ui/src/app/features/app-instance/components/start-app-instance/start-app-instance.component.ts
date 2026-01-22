@@ -17,20 +17,14 @@ import { CreatedBy } from '../../../../models/User/CreatedBy';
 import { NzStepsModule } from 'ng-zorro-antd/steps';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { StageDefinitionService } from '../../../stage-definition/services/stage-definition.service';
+import { GetStageDefiModel } from '../../../../models/Stage-Definition/GetStageDefiModel';
 
 @Component({
   selector: 'start-app-instance',
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    NzFormModule,
-    NzCardModule,
-    NzButtonModule,
-    NzDividerModule,
-    NzIconModule,
-    NzInputModule,
-    NzBreadCrumbModule,
-    NzStepsModule, NzModalModule ],
+  imports: [ CommonModule, ReactiveFormsModule, NzFormModule, NzCardModule, NzStepsModule,
+             NzButtonModule, NzDividerModule, NzIconModule, NzInputModule, NzBreadCrumbModule,
+     NzModalModule ],
   templateUrl: './start-app-instance.component.html',
   styleUrls: ['./start-app-instance.component.css']
 })
@@ -42,6 +36,14 @@ export class StartAppInstanceComponent implements OnInit {
   private appInstanceService = inject(AppInstanceService);
   private authService = inject(AuthService);
   private modal = inject(NzModalService);
+  private stageService = inject(StageDefinitionService);
+
+  // optional template details
+  templateDescription: string | null = null;
+  totalInstances?: number;
+  activeInstances?: number;
+  stages: GetStageDefiModel[] = [];
+  currentStep = 0;
 
   templateId!: string | null;
   templateName!: string | null;
@@ -63,6 +65,19 @@ export class StartAppInstanceComponent implements OnInit {
     }
 
     this.validateForm.patchValue({ templateId: this.templateId });
+    // load workflow stages for this template so steps show real stages
+    if (this.templateId) {
+      this.stageService.getStagesByTempId(this.templateId).subscribe({
+        next: (s) => {
+          this.stages = (s || []).slice().sort((a: any, b: any) => (a.sequenceOrder || 0) - (b.sequenceOrder || 0));
+          // default to first step
+          this.currentStep = 0;
+        },
+        error: () => {
+          this.stages = [];
+        }
+      });
+    }
   }
 
   get currentUserDisplay(): string {
