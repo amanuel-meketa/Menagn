@@ -1,59 +1,64 @@
-<div class="template-header">
-  <app-app-template-create></app-app-template-create>
-</div>
+<!-- Header + Create CTA -->
+<header class="instance-header">
+  <div class="header-left">
+    <div class="title-block">
+      <h2 class="page-title">App Templates</h2>
+    </div>
+  </div>
 
-<div class="template-list">
-  <ng-container *ngFor="let data of listOfData">
-    
-    <!-- Card Actions -->
-    <ng-template #stages>
-      <app-template-stages [templateId]="data.templateId"></app-template-stages>
-    </ng-template>
-    
-    <ng-template #edit>
-      <button nz-button nzType="link" nzSize="small">
-        <span nz-icon nzType="edit" class="mr-4"></span> Form 
-      </button>
-    </ng-template>
+  <div class="header-center">
+    <label class="header-search">
+      <i nz-icon nzType="search" class="filter-icon"></i>
+      <input nz-input placeholder="Search templates..." [(ngModel)]="searchQuery" />
+    </label>
+  </div>
 
-    <ng-template #delete>
-      <button nz-button nzType="link" nzDanger nzSize="small" (click)="deleteTemplate(data.templateId)">
-        <span nz-icon nzType="delete"></span> Delete
-      </button>
-    </ng-template>
+  <div class="header-right">
+    <div class="create-wrap">
+      <app-app-template-create></app-app-template-create>
+    </div>
+  </div>
+</header>
 
-    <!-- Description -->
-    <ng-template #description>
-      <div class="template-stats">
-        <div class="stat-row">
-          <span><span nz-icon nzType="play-circle" class="stat-icon active"></span><strong>Active Instances:</strong></span>
-          <span class="stat-value">{{ data.activeInstances || 0 }}</span>
+<!-- Grid -->
+<main class="template-list">
+  <ng-container *ngIf="filteredTemplates().length; else empty">
+    <nz-card *ngFor="let data of filteredTemplates()" class="template-card" nzHoverable>
+      <div class="card-visual">
+        <div class="avatar-bg">{{ data.name ? (data.name | slice:0:1) : 'A' }}</div>
+        <div class="visual-meta">
+          <a [routerLink]="['/app-template-details', data.templateId]" class="template-link template-link--card">{{ data.name }}</a>
         </div>
-        <div class="stat-row">
-          <span><span nz-icon nzType="profile" class="stat-icon total"></span><strong>Total Instances:</strong></span>
-          <span class="stat-value">{{ data.totalInstances || 0 }}</span>
+        
         </div>
-        <div class="stat-row">
-          <nz-tag [nzColor]="data.isActive ? 'green' : 'default'" class="status-tag">
-            {{ data.isActive ? 'Active' : 'Inactive' }}
-          </nz-tag>
+     <div class="card-body">
+        <p class="template-desc" *ngIf="data.description">{{ data.description }}</p>
+<nz-tag [nzColor]="data.isActive ? 'green' : 'default'" class="status-tag small visual-tag">{{ data.isActive ? 'Active' : 'Inactive' }}</nz-tag>
+   
+    
+        <div class="card-bottom">
+          <div class="stats">
+            <div class="stat-item">
+              <span class="stat-value">{{ data.activeInstances || 0 }}</span>
+              <span class="stat-label">Active</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">{{ data.totalInstances || 0 }}</span>
+              <span class="stat-label">Total</span>
+            </div>
+          </div>
+
+          <div class="actions">
+            <app-template-stages [templateId]="data.templateId"></app-template-stages>
+            <button nz-button nzType="link" nzSize="small" [routerLink]="['/app-template-update', data.templateId]">Form</button>
+            <button nz-button nzType="link" nzDanger nzSize="small" (click)="deleteTemplate(data.templateId)">Delete</button>
+          </div>
         </div>
       </div>
-    </ng-template>
-
-    <!-- Title -->
-    <ng-template #title>
-      <div class="template-title">
-        <span nz-icon nzType="cluster" class="title-icon"></span>
-        <a [routerLink]="['/app-template-details', data.templateId]" class="template-link">
-          {{ data.name }}
-        </a>
-      </div>
-    </ng-template>
-
-    <!-- Card -->
-    <nz-card class="template-card" [nzActions]="[stages, edit, delete]" [nzBodyStyle]="{ padding: '16px 24px' }">
-      <nz-card-meta [nzTitle]="title" [nzDescription]="description"></nz-card-meta>
     </nz-card>
   </ng-container>
-</div>
+
+  <ng-template #empty>
+    <p class="empty">No templates found</p>
+  </ng-template>
+</main>

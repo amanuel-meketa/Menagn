@@ -12,6 +12,7 @@ import { AppTemplateService } from '../../services/app-template.service';
 import { AppTemplateCreateComponent } from '../app-template-create/app-template-create.component';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { AppInstanceService } from '../../../app-instance/services/app-instance.service';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { TemplateStagesComponent } from '../../../stage-definition/components/template-stages/template-stages.component';
@@ -19,7 +20,7 @@ import { TemplateStagesComponent } from '../../../stage-definition/components/te
 @Component({
     selector: 'app-app-template-list',
     imports: [NzButtonModule, NzGridModule, NzIconModule, NzModalModule, NzCardModule, CommonModule, RouterModule,
-        AppTemplateCreateComponent, NzTagModule, TemplateStagesComponent],
+      AppTemplateCreateComponent, NzTagModule, TemplateStagesComponent, FormsModule],
     templateUrl: './app-template-list.component.html',
     styleUrl: './app-template-list.component.css'
 })
@@ -32,6 +33,7 @@ export class AppTemplateListComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
   private readonly model = inject(NzModalService);
   listOfData: GetAppTypeModel[] = [];
+  searchQuery = '';
  
   customColumn: CustomColumn[] = [
     { name: 'Name', value: 'name', default: true, required: true, position: 'left', width: 100, fixWidth: true },
@@ -60,7 +62,7 @@ export class AppTemplateListComponent implements OnInit, OnDestroy {
    private loadAppTypeList(): void {
     this._appTemplateService.getAppTemplateList().subscribe({
       next: (data: GetAppTypeModel[]) => {
-        this.listOfData = data;
+        this.listOfData = data.map(t => ({ ...t, showFullDescription: false } as any));
   
         data.forEach(template => {
           this._appInstanceeService.getInstanceByTempId(template.templateId).subscribe(instances => {
@@ -82,6 +84,13 @@ export class AppTemplateListComponent implements OnInit, OnDestroy {
       error: () => this.message.error('Failed to load application types.')
     });
   }  
+
+  filteredTemplates(): (GetAppTypeModel & { showFullDescription?: boolean })[] {
+    if (!this.searchQuery) return this.listOfData as any;
+    return (this.listOfData as any).filter((t: any) =>
+      t.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+    );
+  }
 
   deleteTemplate(templateId: string): void {
     this.model.confirm({
