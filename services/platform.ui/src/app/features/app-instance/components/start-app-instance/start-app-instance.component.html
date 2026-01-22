@@ -27,9 +27,9 @@
   <!-- Template Info Card -->
   <nz-card nzBordered class="shadow-md rounded-xl p-6 bg-gray-50 mb-6">
     <h3 class="text-lg font-semibold mb-4">Template Summary</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700">
       <div>
-        <strong>Name:</strong> {{ validateForm.value.templateId }}
+        <strong>Name:</strong> {{ templateName || templateId }}
       </div>
       <div>
         <strong>Estimated Steps:</strong> {{ "expected steps" }}
@@ -54,15 +54,31 @@
           </nz-form-control>
         </nz-form-item>
 
+        <!-- Template name (readonly) -->
+        <nz-form-item *ngIf="validateForm.get('templateName')?.value">
+          <nz-form-label>Template Name</nz-form-label>
+          <nz-form-control>
+            <input nz-input id="templateName" formControlName="templateName" readonly class="bg-gray-100" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <!-- Starting user -->
+        <nz-form-item>
+          <nz-form-label>Starting As</nz-form-label>
+          <nz-form-control>
+            <input nz-input readonly [value]="currentUserDisplay" class="bg-gray-100" />
+          </nz-form-control>
+        </nz-form-item>
+
        
       </div>
       
       <!-- Actions -->
      <div class="flex justify-end mt-8">
-  <button nz-button nzType="default" (click)="goBack()" style="margin-right: 16px;">
+  <button nz-button nzType="default" type="button" (click)="goBack()" style="margin-right: 16px;">
     Cancel
   </button>
-  <button nz-button nzType="primary" [disabled]="validateForm.invalid || starting"
+  <button nz-button nzType="primary" type="submit" [disabled]="validateForm.invalid || starting"
           [nzLoading]="starting" class="flex items-center gap-2">
     <i nz-icon nzType="play-circle"></i> Start Instance
   </button>

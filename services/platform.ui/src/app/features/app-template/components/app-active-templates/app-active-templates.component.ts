@@ -53,7 +53,8 @@ export class ActiveTemplatesComponent implements OnInit, OnDestroy {
 
   /** Navigate to StartAppInstanceComponent */
   startApp(template: GetAppTypeModel): void {
-    this.router.navigate(['/start-instance', template.templateId]);
+    // pass template name as a query param so the start component can display it
+    this.router.navigate(['/start-instance', template.templateId], { queryParams: { name: template.name } });
   }
 
   ngOnDestroy(): void {

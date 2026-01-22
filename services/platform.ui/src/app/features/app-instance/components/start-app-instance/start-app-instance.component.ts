@@ -13,7 +13,7 @@ import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 
 import { AppInstanceService } from '../../services/app-instance.service';
 import { AuthService } from '../../../../shared/services/auth-service.service';
-import { ApprovalRequest } from '../../../../models/Approval-Instances/ApprovalRequest';
+import { CreatedBy } from '../../../../models/User/CreatedBy';
 import { NzStepsModule } from 'ng-zorro-antd/steps';
 
 @Component({
@@ -41,6 +41,7 @@ export class StartAppInstanceComponent implements OnInit {
   private authService = inject(AuthService);
 
   templateId!: string | null;
+  templateName!: string | null;
   starting = false;
 
   // Form only contains templateId
@@ -50,6 +51,7 @@ export class StartAppInstanceComponent implements OnInit {
 
   ngOnInit(): void {
     this.templateId = this.route.snapshot.paramMap.get('id');
+    this.templateName = this.route.snapshot.queryParamMap.get('name');
 
     if (!this.templateId) {
       this.message.error('No template selected. Redirecting...');
@@ -64,24 +66,26 @@ export class StartAppInstanceComponent implements OnInit {
       return this.authService.currentUser?.username || this.authService.currentUser?.email || '';
   }
 
-  submitForm(): void {
-    if (this.validateForm.invalid) return;
+ submitForm(): void {
+  if (this.validateForm.invalid || !this.templateId) return;
 
-    const currentUser = this.authService.currentUser;
-    if (!currentUser) {
-      this.message.error('User not loaded. Please refresh.');
-      return;
-    }
+  const currentUser = this.authService.currentUser;
+  if (!currentUser) {
+    this.message.error('User not loaded. Please refresh.');
+    return;
+  }
 
-    this.starting = true;
-    this.validateForm.disable();
+  this.starting = true;
+  this.validateForm.disable();
 
-    const newInstance: ApprovalRequest = {
-      templateId: this.validateForm.value.templateId!,
-      userId: currentUser.userId || currentUser.userId
-    };
+  const userInfo: CreatedBy = {
+    userId: currentUser.userId,
+    fullName: currentUser.fullName || ''
+  };
 
-    this.appInstanceService.startApprovalInstance(newInstance).subscribe({
+  this.appInstanceService
+    .startApprovalInstance(this.templateId, userInfo)
+    .subscribe({
       next: () => {
         this.message.success('Approval instance started successfully!');
         this.router.navigate(['/app-active-templates']);
@@ -89,10 +93,11 @@ export class StartAppInstanceComponent implements OnInit {
       error: (err) => {
         this.message.error(err?.error?.message || 'Failed to start instance');
         this.validateForm.enable();
-      },
-      complete: () => (this.starting = false)
+        this.starting = false;
+      }
     });
-  }
+}
+
 
   goBack(): void {
     this.router.navigate(['/app-active-templates']);

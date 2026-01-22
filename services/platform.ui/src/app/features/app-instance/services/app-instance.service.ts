@@ -4,6 +4,7 @@ import { Observable, tap } from 'rxjs';
 import { ApprovalRequest } from '../../../models/Approval-Instances/ApprovalRequest';
 import { InstanceList } from '../../../models/Approval-Instances/InstanceList';
 import { environment } from '../../../../environments/environment';
+import { CreatedBy } from '../../../models/User/CreatedBy';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +23,8 @@ export class AppInstanceService {
     return this.http.get<InstanceList[]>(`${this.baseUrl}/template/${tempId}/instances`, { headers: this.jsonHeaders });
   }  
 
-  startApprovalInstance(data: ApprovalRequest): Observable<any> {
-    return this.http.post(`${this.baseUrl}/start`, data, { headers: this.jsonHeaders });
+  startApprovalInstance(templateId: string, data: CreatedBy): Observable<any> {
+    return this.http.post(`${this.baseUrl}/${templateId}/start`, data, { headers: this.jsonHeaders });
   }
   
   getMyInstances(userId: string): Observable<InstanceList[]> {
