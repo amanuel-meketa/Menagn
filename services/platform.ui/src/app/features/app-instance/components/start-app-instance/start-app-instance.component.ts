@@ -15,6 +15,8 @@ import { AppInstanceService } from '../../services/app-instance.service';
 import { AuthService } from '../../../../shared/services/auth-service.service';
 import { CreatedBy } from '../../../../models/User/CreatedBy';
 import { NzStepsModule } from 'ng-zorro-antd/steps';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'start-app-instance',
@@ -28,7 +30,7 @@ import { NzStepsModule } from 'ng-zorro-antd/steps';
     NzIconModule,
     NzInputModule,
     NzBreadCrumbModule,
-    NzStepsModule ],
+    NzStepsModule, NzModalModule ],
   templateUrl: './start-app-instance.component.html',
   styleUrls: ['./start-app-instance.component.css']
 })
@@ -39,6 +41,7 @@ export class StartAppInstanceComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private appInstanceService = inject(AppInstanceService);
   private authService = inject(AuthService);
+  private modal = inject(NzModalService);
 
   templateId!: string | null;
   templateName!: string | null;
@@ -75,27 +78,36 @@ export class StartAppInstanceComponent implements OnInit {
     return;
   }
 
-  this.starting = true;
-  this.validateForm.disable();
-
   const userInfo: CreatedBy = {
     userId: currentUser.userId,
     fullName: currentUser.fullName || ''
   };
 
-  this.appInstanceService
-    .startApprovalInstance(this.templateId, userInfo)
-    .subscribe({
-      next: () => {
-        this.message.success('Approval instance started successfully!');
-        this.router.navigate(['/app-active-templates']);
-      },
-      error: (err) => {
-        this.message.error(err?.error?.message || 'Failed to start instance');
-        this.validateForm.enable();
-        this.starting = false;
-      }
-    });
+  this.modal.confirm({
+    nzTitle: 'Start approval instance',
+    nzContent: `Start an approval instance from template "${this.templateName || this.templateId}" as ${this.currentUserDisplay}?`,
+    nzOkText: 'Start',
+    nzCancelText: 'Cancel',
+    nzOnOk: () => {
+      this.starting = true;
+      this.validateForm.disable();
+      return new Promise<void>((resolve, reject) => {
+        this.appInstanceService.startApprovalInstance(this.templateId!, userInfo).subscribe({
+          next: () => {
+            this.message.success('Approval instance started successfully!');
+            this.router.navigate(['/app-active-templates']);
+            resolve();
+          },
+          error: (err) => {
+            this.message.error(err?.error?.message || 'Failed to start instance');
+            this.validateForm.enable();
+            this.starting = false;
+            reject(err);
+          }
+        });
+      });
+    }
+  });
 }
 
 

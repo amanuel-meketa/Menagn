@@ -4,6 +4,30 @@
   padding: 1rem;
 }
 
+/* Header styles (match Active Templates header) */
+.instance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 8px;
+  margin-bottom: 16px;
+  background: linear-gradient(
+    180deg,
+    rgba(231, 229, 229, 0.95),
+    rgba(253,253,255,.89)
+  );
+  border-radius: 8px;
+  box-shadow: 0 1px 0 rgba(15,23,42,.04);
+}
+
+.page-title { margin: 0; font-size: 20px; font-weight: 700; color: #111827; }
+.page-sub { margin: 2px 0 0; font-size: 13px; color: #64748b; }
+
+/* header right breadcrumb */
+.header-right { display:flex; align-items:center; gap:12px; }
+.breadcrumb-link { color: #096dd9; text-decoration: none; }
+.breadcrumb-link:hover { text-decoration: underline; }
+
 .title {
   margin-bottom: 1.5rem;
   font-size: 1.6rem;
@@ -18,6 +42,32 @@
   border: 1px solid #e5e7eb;
   border-radius: 8px;
 }
+
+.template-summary { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.template-summary .summary-left { flex: 1 1 auto; }
+.template-summary .summary-right { flex: 0 0 auto; display:flex; align-items:center; }
+.template-summary .meta-row { margin-top: 8px; color: #6b7280; }
+
+.form-card { padding: 24px; }
+.form-actions { display:flex; justify-content:flex-end; gap:12px; margin-top:20px }
+
+/* Typography & spacing tweaks */
+.page-wrap { max-width: 900px; margin: 2.25rem auto; padding: 1.25rem; }
+.header h1 { font-size: 1.75rem; margin: 0; color: #111827; }
+.header p { margin: 0; color: #6b7280; }
+.template-summary h3 { font-size: 1.125rem; margin-bottom: 6px; }
+.template-summary p { margin: 0 0 8px 0; color: #4b5563; line-height: 1.4; }
+
+/* Form input readonly style */
+input[readonly] { background: #f3f4f6; border-radius: 6px; padding: 8px; }
+
+.card-action button { min-width: 140px; }
+
+/* subtle spacing for breadcrumb */
+nz-breadcrumb { margin-bottom: 20px; }
+
+/* focus styles for accessibility */
+button:focus, input:focus { outline: 2px solid rgba(14,165,233,.12); box-shadow: 0 0 0 3px rgba(14,165,233,.04); }
 
 .ant-advanced-search-form {
   padding: 24px;
