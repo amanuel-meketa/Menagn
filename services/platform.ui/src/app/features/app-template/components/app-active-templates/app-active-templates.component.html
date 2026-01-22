@@ -18,28 +18,52 @@
 
 <!-- LIST -->
 <main class="instance-list">
-  <ng-container *ngIf="filteredTemplates().length; else empty">
-    <nz-card *ngFor="let template of filteredTemplates()" class="instance-card" nzHoverable>
-      <div class="meta-main">
-        <div class="meta-header">
-          <div>
-            <a class="instance-link">{{ template.name }}</a>
-            <div class="meta-sub">{{ template.description ? (template.description | slice:0:80) : '' }}</div>
+  <ng-container *ngIf="!isLoading; else loading">
+    <ng-container *ngIf="displayedTemplates().length; else empty">
+      <nz-card *ngFor="let template of displayedTemplates()" class="instance-card" nzHoverable>
+        <div class="meta-main">
+          <div class="meta-header">
+            <div>
+              <a class="instance-link" [nz-tooltip]="template.description && template.description.length>200 ? template.description : null">{{ template.name }}</a>
+            </div>
+          </div>
+
+          <div class="meta-sub" [class.clamped]="!template.showFullDescription && (template.description.length>200)">
+            <ng-container *ngIf="template.description; else noDesc">
+              <span *ngIf="!template.showFullDescription">{{ template.description }}</span>
+              <span *ngIf="template.showFullDescription">{{ template.description }}</span>
+              <a class="read-toggle" *ngIf="template.description.length>200" (click)="template.showFullDescription = !template.showFullDescription">
+                {{ template.showFullDescription ? 'Show Less' : 'Read More' }}
+              </a>
+            </ng-container>
+            <ng-template #noDesc></ng-template>
+          </div>
+
+          <div class="card-action">
+            <button nz-button nzType="primary" (click)="startApp(template)">Start Request</button>
           </div>
         </div>
-
-        <div class="meta-stats">
-          <div>Type: {{ template.name }}</div>
-        </div>
-
-        <div class="card-action">
-          <button nz-button nzType="primary" (click)="startApp(template)">Start Request</button>
-        </div>
-      </div>
-    </nz-card>
+      </nz-card>
+    </ng-container>
   </ng-container>
 
   <ng-template #empty>
-    <p class="empty">No templates found</p>
+    <div class="empty-state">
+      <nz-empty nzNotFoundImage="default"></nz-empty>
+      <p>No templates found</p>
+    </div>
   </ng-template>
-</main>
+
+  <ng-template #loading>
+    <div class="skeleton-grid">
+      <ng-container *ngFor="let i of [1,2,3]">
+        <nz-skeleton [nzActive]="true" [nzTitle]="true" [nzParagraph]="true" [nzAvatar]="false"></nz-skeleton>
+      </ng-container>
+    </div>
+  </ng-template>
+
+  </main>
+
+  <footer class="instance-footer" *ngIf="!isLoading && filteredTemplates().length">
+    <nz-pagination [nzPageIndex]="pageIndex" [nzPageSize]="pageSize" [nzTotal]="filteredTemplates().length" (nzPageIndexChange)="onPageChange($event)" [nzPageSizeOptions]="pageSizeOptions"></nz-pagination>
+  </footer>

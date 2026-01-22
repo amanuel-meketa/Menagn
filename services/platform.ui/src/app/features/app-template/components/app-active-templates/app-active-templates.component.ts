@@ -5,6 +5,12 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 import { Subject, takeUntil } from 'rxjs';
 import { GetAppTypeModel } from '../../../../models/Application-Type/GetAppTypeModel';
 import { AppTemplateService } from '../../services/app-template.service';
@@ -12,7 +18,7 @@ import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-active-templates',
-    imports: [ CommonModule, FormsModule, NzButtonModule, NzCardModule, NzEmptyModule ],
+    imports: [ CommonModule, FormsModule, NzButtonModule, NzCardModule, NzEmptyModule, NzSkeletonModule, NzPaginationModule, NzSelectModule, NzAvatarModule, NzToolTipModule, NzIconModule ],
     templateUrl: './app-active-templates.component.html',
     styleUrl: './app-active-templates.component.css'
 })
@@ -25,6 +31,14 @@ export class ActiveTemplatesComponent implements OnInit, OnDestroy {
   
   listOfData: (GetAppTypeModel & { showFullDescription?: boolean })[] = [];
   searchQuery = '';
+  isLoading = true;
+
+  // pagination and sorting
+  pageIndex = 1;
+  pageSize = 9;
+  pageSizeOptions = [6, 9, 12];
+  sortOption: 'newest' | 'mostUsed' = 'newest';
+  selectedCategory = '';
 
   ngOnInit(): void {
     this.loadAppTypeList();
@@ -35,12 +49,17 @@ export class ActiveTemplatesComponent implements OnInit, OnDestroy {
   }
 
   private loadAppTypeList(): void {
+    this.isLoading = true;
     this._appTemplateService.getAppTemplateList().subscribe({
       next: (data: GetAppTypeModel[]) => {
         this.listOfData = data.map(t => ({ ...t, showFullDescription: false }));
+        this.isLoading = false;
         this.cdr.detectChanges();
       },
-      error: () => this.message.error('Failed to load templates')
+      error: () => {
+        this.isLoading = false;
+        this.message.error('Failed to load templates')
+      }
     });
   }
   
@@ -49,6 +68,23 @@ export class ActiveTemplatesComponent implements OnInit, OnDestroy {
     return this.listOfData.filter(t =>
       t.name.toLowerCase().includes(this.searchQuery.toLowerCase())
     );
+  }
+
+  displayedTemplates(): (GetAppTypeModel & { showFullDescription?: boolean })[] {
+    const filtered = this.filteredTemplates();
+    // simple client-side sort
+    let sorted = filtered.slice();
+    if (this.sortOption === 'newest') {
+      // no created date on model - keep original order
+    } else if (this.sortOption === 'mostUsed') {
+      sorted.sort((a, b) => (b.totalInstances || 0) - (a.totalInstances || 0));
+    }
+    const start = (this.pageIndex - 1) * this.pageSize;
+    return sorted.slice(start, start + this.pageSize);
+  }
+
+  onPageChange(page: number): void {
+    this.pageIndex = page;
   }
 
   /** Navigate to StartAppInstanceComponent */
