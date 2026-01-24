@@ -5,6 +5,6 @@ namespace approvals.application.Interfaces.Repository
 {
     public interface IStageInstanceRepository : IGenericRepository<StageInstance> 
     {
-        Task ApproveStageAsync(Guid instanceId, Guid approverId, string comment);
+        
     }
 }

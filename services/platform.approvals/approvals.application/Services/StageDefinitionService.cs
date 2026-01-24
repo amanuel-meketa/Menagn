@@ -8,13 +8,15 @@ using AutoMapper;
 public class StageDefinitionService : IStageDefinitionService
 {
     private readonly IStageDefinitionRepository _repository;
+    private readonly IApprovalInstanceRepository _instanceRepo;
     private readonly IApprovalInstanceService _approvalInstanceService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public StageDefinitionService(IStageDefinitionRepository repository, IApprovalInstanceService approvalInstanceService, IUnitOfWork unitOfWork, IMapper mapper)
+    public StageDefinitionService(IStageDefinitionRepository repository, IApprovalInstanceRepository instanceRepo, IApprovalInstanceService approvalInstanceService, IUnitOfWork unitOfWork, IMapper mapper)
     {
         _repository = repository;
+        _instanceRepo = instanceRepo;
         _approvalInstanceService = approvalInstanceService;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -69,30 +71,44 @@ public class StageDefinitionService : IStageDefinitionService
 
     public async Task<Guid> ApproveStageAsync(Guid instanceId, Guid approverId, string comment)
     {
-        var instance = await _approvalInstanceService.GetByIdAsync(instanceId);
+        // Load the domain entity (including stage instances)
+        var instance = await _instanceRepo.GetByIdAsync(instanceId);
         if (instance == null) throw new Exception("Instance not found");
 
-        var instanceUpdate = _mapper.Map<UpdateApprovaleInstanceDto>(instance);
+        if (instance.StageInstances == null || !instance.StageInstances.Any())
+            throw new Exception("Instance has no stage instances");
 
-        var currentStage = instanceUpdate.StageInstances.First(si => si.SequenceOrder == instanceUpdate.CurrentStageOrder);
+        // Get current stage domain object
+        var currentStage = instance.StageInstances
+            .FirstOrDefault(si => si.SequenceOrder == instance.CurrentStageOrder);
+
+        if (currentStage == null)
+            throw new Exception($"Current stage {instance.CurrentStageOrder} not found");
+
+        // Domain operations (these should be methods on StageInstance)
         currentStage.Complete("Approved", approverId, comment);
 
-        var nextStage = instanceUpdate.StageInstances.FirstOrDefault(si => si.SequenceOrder == currentStage.SequenceOrder + 1);
+        // Move to next stage if exists
+        var nextStage = instance.StageInstances
+            .OrderBy(si => si.SequenceOrder)
+            .FirstOrDefault(si => si.SequenceOrder > currentStage.SequenceOrder);
+
         if (nextStage != null)
         {
             nextStage.Activate();
-            instanceUpdate.CurrentStageOrder = nextStage.SequenceOrder;
+            instance.CurrentStageOrder = nextStage.SequenceOrder;
         }
         else
         {
-            instanceUpdate.OverallStatus = "Approved";
-            //instance.CurrentStageOrder = nextStage.SequenceOrder;
-            instanceUpdate.CompletedAt = DateTime.UtcNow;
+            instance.OverallStatus = "Approved";
+            instance.CompletedAt = DateTime.UtcNow;
         }
 
-        await _approvalInstanceService.UpdateAsync(instanceUpdate.InstanceId, instanceUpdate);
+        // Persist and commit: repository only persists the domain entity
+        await _instanceRepo.UpdateAsync(instance);
         await _unitOfWork.CommitAsync();
-        return instanceUpdate.InstanceId;
+
+        return instance.InstanceId;
     }
 
     public async Task<IEnumerable<GetStageDefinitionDto?>> GetStagesByTempIdAsync(Guid tempId)

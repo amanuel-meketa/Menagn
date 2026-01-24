@@ -14,6 +14,6 @@ namespace approvals.application.DTOs.ApprovalInstance
         public DateTime CreatedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
 
-        public List<StageInstance> StageInstances { get; set; }
+        public List<StageInstance>? StageInstances { get; set; }
     }
 }

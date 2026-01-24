@@ -18,7 +18,9 @@ namespace approvals.application.Profiles
 
             // ----- ApprovalInstance -----
             CreateMap<ApprovalInstance, GetAppInstanceWithStageDto>().ReverseMap();
-
+            CreateMap<ApprovalInstance, CreateApprovaleInstanceDto>().ReverseMap();
+            CreateMap<ApprovalInstance, UpdateApprovaleInstanceDto>().ReverseMap();
+            CreateMap<GetAppInstanceWithStageDto, UpdateApprovaleInstanceDto>().ReverseMap();
             CreateMap<ApprovalInstance, GetAppInstanceDto>()
                 .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy))
                 .ForMember(dest => dest.AllStages, opt => opt.MapFrom(src => src.StageInstances.Count));
@@ -26,11 +28,6 @@ namespace approvals.application.Profiles
             CreateMap<ApprovalInstance, GetMyApprovalInstanceDto>()
                 .ForMember(dest => dest.AllStages, opt => opt.MapFrom(src => src.StageInstances.Count));
 
-            CreateMap<ApprovalInstance, CreateApprovaleInstanceDto>().ReverseMap();
-            CreateMap<ApprovalInstance, UpdateApprovaleInstanceDto>().ReverseMap();
-
-            // Optional: mapping from GetApprovalInstanceDto → UpdateApprovaleInstanceDto
-            CreateMap<GetAppInstanceWithStageDto, UpdateApprovaleInstanceDto>().ReverseMap();
 
             // ----- StageDefinition -----
             CreateMap<StageDefinition, GetStageDefinitionDto>().ReverseMap();
@@ -40,9 +37,7 @@ namespace approvals.application.Profiles
             // ----- StageInstance -----
             CreateMap<StageInstance, GetStageInstanceDto>().ReverseMap();
             CreateMap<StageInstance, CreateStageInstanceDto>().ReverseMap();
-            CreateMap<StageInstance, UpdateApprovaleInstanceDto>().ReverseMap();
 
-            // ----- UserInfo -----
             CreateMap<UserInfo, UserInfoDto>().ReverseMap();
         }
     }

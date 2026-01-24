@@ -41,11 +41,9 @@ namespace approvals.infrastructure.Persistence.Repositories
         {
             try
             {
-                var templateUrl =
-                    $"https://raw.githubusercontent.com/{_options.Owner}/{_options.Repo}/{_options.Branch}/{key}/template.json";
+                var templateUrl = $"https://raw.githubusercontent.com/{_options.Owner}/{_options.Repo}/{_options.Branch}/{key}/template.json";
 
-                var stagesUrl =
-                    $"https://raw.githubusercontent.com/{_options.Owner}/{_options.Repo}/{_options.Branch}/{key}/stages.json";
+                var stagesUrl = $"https://raw.githubusercontent.com/{_options.Owner}/{_options.Repo}/{_options.Branch}/{key}/stages.json";
 
                 var templateContent = await _http.GetStringAsync(templateUrl);
                 var stagesContent = await _http.GetStringAsync(stagesUrl);

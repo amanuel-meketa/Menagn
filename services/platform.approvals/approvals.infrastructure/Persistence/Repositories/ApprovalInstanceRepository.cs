@@ -74,5 +74,11 @@ namespace approvals.infrastructure.Persistence.Repositories
                 .AsNoTracking()
                 .ToListAsync();
         }
+
+        public async Task UpdateAsync(ApprovalInstance instance)
+        {
+            _dbContext.ApprovalInstances.Update(instance);
+            await Task.CompletedTask;
+        }
     }
 }
