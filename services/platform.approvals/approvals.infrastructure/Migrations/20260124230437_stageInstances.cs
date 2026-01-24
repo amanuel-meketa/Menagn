@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace approvals.infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class latest : Migration
+    public partial class stageInstances : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -86,6 +86,7 @@ namespace approvals.infrastructure.Migrations
                     StartedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CompletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Comments = table.Column<string>(type: "text", nullable: true),
+                    AssignedApproverId = table.Column<Guid>(type: "uuid", nullable: true),
                     ApprovedBy = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>

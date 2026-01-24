@@ -1,20 +1,26 @@
 ﻿using approvals.application.Interfaces.Repository;
 using approvals.domain.Entities;
 using approvals.infrastructure.Persistence.Repositories.Base;
-using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace approvals.infrastructure.Persistence.Repositories
 {
-    public class StageInstanceRepository : GenericRepository<StageInstance>, IStageInstanceRepository
+    public class StageInstanceRepository(AppDbContext dbContext) : GenericRepository<StageInstance>(dbContext), IStageInstanceRepository
     {
-        private readonly IApprovalInstanceService _instanceService;
-        private readonly IMapper _mapper;
-        public StageInstanceRepository(AppDbContext dbContext, IApprovalInstanceService instanceService, IMapper mapper) : base(dbContext)
+        private readonly AppDbContext _dbContext = dbContext;
+
+        public async Task<StageInstance?> GetByIdAsync(Guid stageInstanceId)
         {
-            _instanceService = instanceService;
-            _mapper =  mapper;
+            return await _dbContext.StageInstances.FirstOrDefaultAsync(si => si.StageInstanceId == stageInstanceId);
         }
 
-       
+        public async Task UpdateAsync(StageInstance stageInstance)
+        {
+            _dbContext.StageInstances.Update(stageInstance);
+        }
+
     }
 }
+
+
+

@@ -19,6 +19,7 @@ namespace approvals.domain.Entities
         public DateTime? StartedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
         public string? Comments { get; set; }
+        public Guid? AssignedApproverId { get; set; }
         public Guid? ApprovedBy { get; set; }
 
         public void Activate()
@@ -33,6 +34,16 @@ namespace approvals.domain.Entities
             ApprovedBy = approverId;
             Comments = comment;
             CompletedAt = DateTime.UtcNow;
+        }
+
+        public void AssignApprover(Guid approverId)
+        {
+            AssignedApproverId = approverId;
+        }
+
+        public void UnassignApprover()
+        {
+            AssignedApproverId = null;
         }
     }
 }

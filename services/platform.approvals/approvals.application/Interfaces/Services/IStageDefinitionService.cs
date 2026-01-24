@@ -1,5 +1,4 @@
-﻿using approvals.application.DTOs.ApprovalInstance;
-using approvals.application.DTOs.StageDefinition;
+﻿using approvals.application.DTOs.StageDefinition;
 
 public interface IStageDefinitionService
 {

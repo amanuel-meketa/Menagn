@@ -14,10 +14,11 @@ namespace approvals.application.DTOs.StageDefinition
 
         public string StageName { get; set; } = string.Empty;
         public int SequenceOrder { get; set; }
-        public string Status { get; set; }
+        public string? Status { get; set; }
         public DateTime? StartedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
         public string? Comments { get; set; }
+        public Guid? AssignedApproverId { get; set; }
         public Guid? ApprovedBy { get; set; }
 
     }

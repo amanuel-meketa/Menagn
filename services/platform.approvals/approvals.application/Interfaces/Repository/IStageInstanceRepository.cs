@@ -5,6 +5,7 @@ namespace approvals.application.Interfaces.Repository
 {
     public interface IStageInstanceRepository : IGenericRepository<StageInstance> 
     {
-        
+        Task<StageInstance?> GetByIdAsync(Guid stageInstanceId);
+        Task UpdateAsync(StageInstance stageInstance);
     }
 }

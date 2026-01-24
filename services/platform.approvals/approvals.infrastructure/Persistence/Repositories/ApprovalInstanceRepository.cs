@@ -13,7 +13,7 @@ namespace approvals.infrastructure.Persistence.Repositories
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
-
+         
         public async Task<IEnumerable<ApprovalInstance>> ListAsync()
         {
             return await _dbContext.ApprovalInstances.Include(ai => ai.Template).Include(ai => ai.StageInstances).AsNoTracking().ToListAsync();

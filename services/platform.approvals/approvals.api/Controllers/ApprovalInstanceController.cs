@@ -1,5 +1,4 @@
 ﻿using approvals.application.DTOs.ApprovalInstance;
-using approvals.domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace approvals.api.Controllers

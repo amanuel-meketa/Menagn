@@ -1,4 +1,6 @@
 ﻿using approvals.application.DTOs.ApplicationType.Validator;
+using approvals.application.Interfaces.Services;
+using approvals.application.Services;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -15,6 +17,8 @@ namespace approvals.application
             services.AddScoped<IApprovalTemplateService, ApprovalTemplateService>();
             services.AddScoped<IStageDefinitionService, StageDefinitionService>();
             services.AddScoped<IApprovalInstanceService, ApprovalInstanceService>();
+            services.AddScoped<IStageInstanceService, StageInstanceService>();
+
             return services;
         }
     }

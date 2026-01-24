@@ -50,6 +50,7 @@ namespace platform.Infrastructure.Extensions
             services.AddScoped<IApprovalInstanceRepository, ApprovalInstanceRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ITemplateHubService, TemplateHubService>();
+            services.AddScoped<IStageInstanceRepository, StageInstanceRepository>();
 
             return services;
         }

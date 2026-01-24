@@ -12,8 +12,8 @@ using approvals.infrastructure.Persistence;
 namespace approvals.infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260118234708_latest")]
-    partial class latest
+    [Migration("20260124230437_stageInstances")]
+    partial class stageInstances
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -124,6 +124,9 @@ namespace approvals.infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ApprovedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AssignedApproverId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Comments")

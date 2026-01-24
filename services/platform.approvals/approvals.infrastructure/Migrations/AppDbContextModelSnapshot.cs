@@ -123,6 +123,9 @@ namespace approvals.infrastructure.Migrations
                     b.Property<Guid?>("ApprovedBy")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("AssignedApproverId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Comments")
                         .HasColumnType("text");
 
