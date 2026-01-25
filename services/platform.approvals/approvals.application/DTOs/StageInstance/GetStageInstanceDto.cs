@@ -1,6 +1,4 @@
-﻿using approvals.application.DTOs.ApprovalInstance;
-
-namespace approvals.application.DTOs.StageDefinition
+﻿namespace approvals.application.DTOs.StageDefinition
 {
     public class GetStageInstanceDto
     {

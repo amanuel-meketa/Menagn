@@ -1,8 +1,9 @@
-﻿using approvals.application.DTOs.ApprovalInstance;
+﻿using approvals.application.DTOs.EnumDtos;
 using approvals.application.DTOs.StageDefinition;
 using approvals.application.Interfaces;
 using approvals.application.Interfaces.Repository;
 using approvals.domain.Entities;
+using approvals.domain.Enums;
 using AutoMapper;
 
 public class StageDefinitionService : IStageDefinitionService
@@ -69,42 +70,85 @@ public class StageDefinitionService : IStageDefinitionService
         return true;
     }
 
-    public async Task<Guid> ApproveStageAsync(Guid instanceId, Guid approverId, string comment)
+    public async Task<Guid> ActOnStageAsync(Guid instanceId, Guid approverId, StageInstanceStatus action, string comment)
     {
-        // Load the domain entity (including stage instances)
+        // 1️⃣ Load approval instance
         var instance = await _instanceRepo.GetByIdAsync(instanceId);
-        if (instance == null) throw new Exception("Instance not found");
+        if (instance == null)
+            throw new Exception("Approval instance not found");
 
         if (instance.StageInstances == null || !instance.StageInstances.Any())
-            throw new Exception("Instance has no stage instances");
+            throw new Exception("Approval instance has no stages");
 
-        // Get current stage domain object
-        var currentStage = instance.StageInstances
-            .FirstOrDefault(si => si.SequenceOrder == instance.CurrentStageOrder);
+        // 2️⃣ Find active stage (NOT by sequence blindly)
+        var currentStage = instance.StageInstances.FirstOrDefault(s => s.Status == StageInstanceStatus.Active);
 
         if (currentStage == null)
-            throw new Exception($"Current stage {instance.CurrentStageOrder} not found");
+            throw new Exception("No active stage found");
 
-        // Domain operations (these should be methods on StageInstance)
-        currentStage.Complete("Approved", approverId, comment);
+        // 3️⃣ Apply the action to current stage
+        currentStage.Complete(action, approverId, comment);
 
-        // Move to next stage if exists
-        var nextStage = instance.StageInstances
-            .OrderBy(si => si.SequenceOrder)
-            .FirstOrDefault(si => si.SequenceOrder > currentStage.SequenceOrder);
-
-        if (nextStage != null)
+        switch (action)
         {
-            nextStage.Activate();
-            instance.CurrentStageOrder = nextStage.SequenceOrder;
-        }
-        else
-        {
-            instance.OverallStatus = "Approved";
-            instance.CompletedAt = DateTime.UtcNow;
+            case StageInstanceStatus.Approved:
+                // ✅ Move to next stage if exists
+                var nextStage = instance.StageInstances
+                    .OrderBy(s => s.SequenceOrder)
+                    .FirstOrDefault(s => s.Status == StageInstanceStatus.Pending);
+
+                if (nextStage != null)
+                {
+                    nextStage.Activate();
+                    instance.CurrentStageOrder = nextStage.SequenceOrder;
+                    instance.OverallStatus = ApprovalInstanceStatus.InProgress;
+                }
+                else
+                {
+                    instance.OverallStatus = ApprovalInstanceStatus.Approved;
+                    instance.CompletedAt = DateTime.UtcNow;
+                }
+                break;
+
+            case StageInstanceStatus.Rejected:
+                // ❌ Stop the process immediately
+                instance.OverallStatus = ApprovalInstanceStatus.Rejected;
+                instance.CompletedAt = DateTime.UtcNow;
+                break;
+
+            case StageInstanceStatus.Cancelled:
+                // ❌ Stop the process immediately
+                instance.OverallStatus = ApprovalInstanceStatus.Cancelled;
+                instance.CompletedAt = DateTime.UtcNow;
+                break;
+
+            case StageInstanceStatus.Skipped:
+                // ⚡ Skip this stage and move to next
+                var nextPendingStage = instance.StageInstances
+                    .OrderBy(s => s.SequenceOrder)
+                    .FirstOrDefault(s => s.Status == StageInstanceStatus.Pending);
+
+                if (nextPendingStage != null)
+                {
+                    nextPendingStage.Activate();
+                    instance.CurrentStageOrder = nextPendingStage.SequenceOrder;
+                    instance.OverallStatus = ApprovalInstanceStatus.InProgress;
+                }
+                else
+                {
+                    instance.OverallStatus = ApprovalInstanceStatus.Approved;
+                    instance.CompletedAt = DateTime.UtcNow;
+                }
+                break;
+
+            case StageInstanceStatus.Pending:
+            case StageInstanceStatus.Active:
+            default:
+                // ⚠ Usually shouldn't happen, ignore or throw
+                break;
         }
 
-        // Persist and commit: repository only persists the domain entity
+        // 4️⃣ Persist changes
         await _instanceRepo.UpdateAsync(instance);
         await _unitOfWork.CommitAsync();
 
@@ -113,7 +157,7 @@ public class StageDefinitionService : IStageDefinitionService
 
     public async Task<IEnumerable<GetStageDefinitionDto?>> GetStagesByTempIdAsync(Guid tempId)
     {
-        var result =  await _repository.GetStagesByTempIdAsync(tempId);
+        var result = await _repository.GetStagesByTempIdAsync(tempId);
         return _mapper.Map<IEnumerable<GetStageDefinitionDto?>>(result);
     }
 
@@ -122,4 +166,5 @@ public class StageDefinitionService : IStageDefinitionService
         var result = await _repository.GetAssignedTasksAsync(userId);
         return _mapper.Map<IEnumerable<GetStageDefinitionDto>>(result);
     }
+
 }

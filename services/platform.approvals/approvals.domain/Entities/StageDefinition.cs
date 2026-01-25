@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using approvals.domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace approvals.domain.Entities
 {
@@ -10,7 +11,7 @@ namespace approvals.domain.Entities
         public string StageName { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public int SequenceOrder { get; set; }
-        public string AssignmentType { get; set; } = string.Empty;
+        public AssignmentType AssignmentType { get; set; }
         public string AssignmentKey { get; set; } = string.Empty;
         public ApprovalTemplate Template { get; set; } = null!;
     }

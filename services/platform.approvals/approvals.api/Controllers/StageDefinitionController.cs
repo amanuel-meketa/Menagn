@@ -1,5 +1,8 @@
 ﻿using approvals.application.DTOs.ApprovalInstance;
+using approvals.application.DTOs.EnumDtos;
 using approvals.application.DTOs.StageDefinition;
+using approvals.application.DTOs.StageInstance;
+using approvals.domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace approvals.api.Controllers
@@ -47,10 +50,21 @@ namespace approvals.api.Controllers
             return NoContent();
         }
 
-        [HttpPost("approve")]
-        public async Task<ActionResult<Guid>> ApproveStage([FromBody] ApproveStageRequestDto request)
+        [HttpPost("Instance/{id}/action")]
+        public async Task<IActionResult> ActOnStage(Guid id, [FromBody] StageActionDto actionDto)
         {
-            return await _stageDefinService.ApproveStageAsync(request.InstanceId, request.ApproverId, request.Comment);
+            var domainAction = actionDto.Action switch
+            {
+                StageInstanceStatusDto.Approved => StageInstanceStatus.Approved,
+                StageInstanceStatusDto.Rejected => StageInstanceStatus.Rejected,
+                StageInstanceStatusDto.Skipped => StageInstanceStatus.Skipped,
+                StageInstanceStatusDto.Cancelled => StageInstanceStatus.Cancelled,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            await _stageDefinService.ActOnStageAsync(id, actionDto.UserId, domainAction, actionDto.Comment);
+
+            return Ok();
         }
 
         [HttpGet("{templateId}/stages")]

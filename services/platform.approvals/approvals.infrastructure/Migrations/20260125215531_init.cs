@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace approvals.infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class stageInstances : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,7 +31,7 @@ namespace approvals.infrastructure.Migrations
                 {
                     InstanceId = table.Column<Guid>(type: "uuid", nullable: false),
                     CurrentStageOrder = table.Column<int>(type: "integer", nullable: false),
-                    OverallStatus = table.Column<string>(type: "text", nullable: false),
+                    OverallStatus = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CompletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy_UserId = table.Column<Guid>(type: "uuid", nullable: false),
@@ -59,7 +59,7 @@ namespace approvals.infrastructure.Migrations
                     StageName = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
                     SequenceOrder = table.Column<int>(type: "integer", nullable: false),
-                    AssignmentType = table.Column<string>(type: "text", nullable: false),
+                    AssignmentType = table.Column<int>(type: "integer", nullable: false),
                     AssignmentKey = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -82,7 +82,7 @@ namespace approvals.infrastructure.Migrations
                     StageDefId = table.Column<Guid>(type: "uuid", nullable: false),
                     StageName = table.Column<string>(type: "text", nullable: false),
                     SequenceOrder = table.Column<int>(type: "integer", nullable: false),
-                    Status = table.Column<string>(type: "text", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
                     StartedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CompletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Comments = table.Column<string>(type: "text", nullable: true),

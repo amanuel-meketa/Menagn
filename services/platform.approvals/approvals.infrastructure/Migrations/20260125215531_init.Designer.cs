@@ -12,8 +12,8 @@ using approvals.infrastructure.Persistence;
 namespace approvals.infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260124230437_stageInstances")]
-    partial class stageInstances
+    [Migration("20260125215531_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,9 +40,8 @@ namespace approvals.infrastructure.Migrations
                     b.Property<int>("CurrentStageOrder")
                         .HasColumnType("integer");
 
-                    b.Property<string>("OverallStatus")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("OverallStatus")
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("TemplateId")
                         .HasColumnType("uuid");
@@ -89,9 +88,8 @@ namespace approvals.infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("AssignmentType")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("AssignmentType")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -148,9 +146,8 @@ namespace approvals.infrastructure.Migrations
                     b.Property<DateTime?>("StartedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.HasKey("StageInstanceId");
 

@@ -2,6 +2,7 @@
 using approvals.application.Interfaces;
 using approvals.application.Interfaces.Repository;
 using approvals.domain.Entities;
+using approvals.domain.Enums;
 using AutoMapper;
 
 public class ApprovalInstanceService : IApprovalInstanceService
@@ -75,7 +76,7 @@ public class ApprovalInstanceService : IApprovalInstanceService
                 StageDefId = sd.StageDefId,
                 StageName = sd.StageName,
                 SequenceOrder = sd.SequenceOrder,
-                Status = "Pending"
+                Status = StageInstanceStatus.Pending
             }).ToList()
         };
 

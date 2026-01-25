@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using approvals.domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace approvals.domain.Entities
 {
@@ -15,7 +16,7 @@ namespace approvals.domain.Entities
 
         public string StageName { get; set; } = string.Empty;
         public int SequenceOrder { get; set; }
-        public string Status { get; set; } = "Pending";
+        public StageInstanceStatus Status { get; set; } = StageInstanceStatus.Pending;
         public DateTime? StartedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
         public string? Comments { get; set; }
@@ -24,13 +25,13 @@ namespace approvals.domain.Entities
 
         public void Activate()
         {
-            Status = "InProgress";
+            Status = StageInstanceStatus.Active;
             StartedAt = DateTime.UtcNow;
         }
 
-        public void Complete(string decision, Guid approverId, string comment)
+        public void Complete(StageInstanceStatus status, Guid approverId, string comment)
         {
-            Status = decision;
+            Status = status;
             ApprovedBy = approverId;
             Comments = comment;
             CompletedAt = DateTime.UtcNow;

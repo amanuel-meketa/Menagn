@@ -37,9 +37,8 @@ namespace approvals.infrastructure.Migrations
                     b.Property<int>("CurrentStageOrder")
                         .HasColumnType("integer");
 
-                    b.Property<string>("OverallStatus")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("OverallStatus")
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("TemplateId")
                         .HasColumnType("uuid");
@@ -86,9 +85,8 @@ namespace approvals.infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("AssignmentType")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("AssignmentType")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -145,9 +143,8 @@ namespace approvals.infrastructure.Migrations
                     b.Property<DateTime?>("StartedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.HasKey("StageInstanceId");
 

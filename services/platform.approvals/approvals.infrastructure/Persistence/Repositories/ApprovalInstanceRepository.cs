@@ -1,5 +1,6 @@
 ﻿using approvals.application.Interfaces.Repository;
 using approvals.domain.Entities;
+using approvals.domain.Enums;
 using approvals.infrastructure.Persistence.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
 
@@ -56,7 +57,7 @@ namespace approvals.infrastructure.Persistence.Repositories
                         StageDefId = def.StageDefId,
                         SequenceOrder = def.SequenceOrder,
                         StageName = def.StageName,
-                        Status = "Pending"
+                        Status = StageInstanceStatus.Pending
                     }).ToList()
             };
 

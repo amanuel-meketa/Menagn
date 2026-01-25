@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using approvals.domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace approvals.domain.Entities
 {
@@ -7,7 +8,7 @@ namespace approvals.domain.Entities
         [Key]
         public Guid InstanceId { get; set; } = Guid.NewGuid();
         public int CurrentStageOrder { get; set; }
-        public string OverallStatus { get; set; } = "Pending";
+        public ApprovalInstanceStatus OverallStatus { get; set; } = ApprovalInstanceStatus.InProgress;
         public DateTime CreatedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
 

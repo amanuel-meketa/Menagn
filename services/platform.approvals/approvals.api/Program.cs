@@ -7,11 +7,15 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using platform.Infrastructure.Extensions;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ---- Controllers
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(o => 
+{
+    o.JsonSerializerOptions.Converters.Add( new JsonStringEnumConverter());
+});
 
 // ---- Swagger
 builder.Services.AddEndpointsApiExplorer();
