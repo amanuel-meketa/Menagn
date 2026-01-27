@@ -3,6 +3,7 @@ using approvals.application.Interfaces.Repository;
 using approvals.domain.Entities;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace approvals.infrastructure.Persistence.Repositories
 {
@@ -11,25 +12,31 @@ namespace approvals.infrastructure.Persistence.Repositories
         private readonly HttpClient _http;
         private readonly GitHubTemplateOptions _options;
 
-        private static readonly JsonSerializerOptions JsonOptions =
-            new()
-            {
-                PropertyNameCaseInsensitive = true
-            };
+        // LOCAL Json options
+        private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            Converters = {  new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+        };
 
         public TemplateHubRepository(HttpClient http, IOptions<GitHubTemplateOptions> options)
         {
             _http = http;
             _options = options.Value;
+
             _http.DefaultRequestHeaders.UserAgent.ParseAdd("TemplateHubApp");
 
             if (!string.IsNullOrWhiteSpace(_options.Token))
-                _http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _options.Token);
+            {
+                _http.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _options.Token);
+            }
         }
 
         public async Task<List<TemplateIndexItemDtos>> GetTemplateIndexAsync()
         {
-            var url = $"https://raw.githubusercontent.com/{_options.Owner}/{_options.Repo}/{_options.Branch}/{_options.IndexFile}";
+            var url =
+                $"https://raw.githubusercontent.com/{_options.Owner}/{_options.Repo}/{_options.Branch}/{_options.IndexFile}";
 
             var content = await _http.GetStringAsync(url);
 
@@ -43,7 +50,7 @@ namespace approvals.infrastructure.Persistence.Repositories
             {
                 var templateUrl = $"https://raw.githubusercontent.com/{_options.Owner}/{_options.Repo}/{_options.Branch}/{key}/template.json";
 
-                var stagesUrl = $"https://raw.githubusercontent.com/{_options.Owner}/{_options.Repo}/{_options.Branch}/{key}/stages.json";
+                var stagesUrl =  $"https://raw.githubusercontent.com/{_options.Owner}/{_options.Repo}/{_options.Branch}/{key}/stages.json";
 
                 var templateContent = await _http.GetStringAsync(templateUrl);
                 var stagesContent = await _http.GetStringAsync(stagesUrl);
@@ -54,7 +61,6 @@ namespace approvals.infrastructure.Persistence.Repositories
                 if (template == null || stages == null)
                     return null;
 
-                // Generate IDs and attach stages
                 template.TemplateId = Guid.NewGuid();
 
                 foreach (var stage in stages)
@@ -64,12 +70,15 @@ namespace approvals.infrastructure.Persistence.Repositories
                 }
 
                 template.StageDefinitions = stages;
-
                 return template;
+            }
+            catch (JsonException jsonEx)
+            {
+                throw new Exception("Invalid stage definition JSON .", jsonEx);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error fetching template data from GitHub.", ex);
+                throw new Exception("Error fetching template data.", ex);
             }
         }
     }
