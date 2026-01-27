@@ -8,5 +8,6 @@ namespace approvals.application.Interfaces.Services
         Task<IEnumerable<GetStageInstanceDto>> GetAllAsync();
         Task AssignApproverAsync(AssignmentDto assignment);
         Task UnassignApproverAsync(AssignmentDto assignment);
+        Task<List<GetStageInstanceDto>> GetActiveTasksForUserAsync(Guid userId);
     }
 }

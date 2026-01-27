@@ -7,5 +7,6 @@ namespace approvals.application.Interfaces.Repository
     {
         Task<StageInstance?> GetByIdAsync(Guid stageInstanceId);
         Task UpdateAsync(StageInstance stageInstance);
+        Task<List<StageInstance>> GetActiveTasksForUserAsync(Guid userId);
     }
 }

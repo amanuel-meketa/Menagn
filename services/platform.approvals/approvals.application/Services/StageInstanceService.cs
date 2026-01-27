@@ -47,6 +47,12 @@ namespace approvals.application.Services
             await _repository.UpdateAsync(stage);
             await _unitOfWork.CommitAsync();
         }
+
+        public async Task<List<GetStageInstanceDto>> GetActiveTasksForUserAsync(Guid userId)
+        {
+           var assignedTasks = await _repository.GetActiveTasksForUserAsync(userId);
+            return _mapper.Map<List<GetStageInstanceDto>>(assignedTasks);
+        }
     }
 
 }

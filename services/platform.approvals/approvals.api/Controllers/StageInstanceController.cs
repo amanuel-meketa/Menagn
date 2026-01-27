@@ -36,5 +36,12 @@ namespace approvals.api.Controllers
             await _stageInstanceService.UnassignApproverAsync(assignment);
             return Ok(new { message = "Approver unassigned successfully" });
         }
+
+        [HttpGet("myTask/{userId}")]
+        public async Task<IActionResult> GetMyTasks(Guid userId)
+        {
+            var tasks = await _stageInstanceService.GetActiveTasksForUserAsync(userId);
+            return Ok(tasks);
+        }
     }
 }
